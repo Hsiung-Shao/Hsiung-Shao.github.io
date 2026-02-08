@@ -1,0 +1,53 @@
+---
+import HeroScene from './three/HeroScene.tsx';
+import TypeWriter from './react/TypeWriter.tsx';
+---
+
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <HeroScene client:load />
+
+  <div class="relative z-10 text-center px-6 max-w-3xl mx-auto">
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 leading-tight">
+      <span class="bg-gradient-to-r from-[var(--color-accent-indigo)] to-[var(--color-accent-violet)] bg-clip-text text-transparent">
+        熊少愆
+      </span>
+    </h1>
+
+    <div class="text-xl sm:text-2xl md:text-3xl font-semibold text-[var(--color-text-primary)] mb-6 h-10">
+      <TypeWriter
+        client:load
+        texts={['Backend Engineer', 'Full Stack Developer', 'Problem Solver']}
+        speed={80}
+        deleteSpeed={40}
+        pauseDuration={2500}
+      />
+    </div>
+
+    <p class="text-[var(--color-text-secondary)] text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+      3+ 年後端工程經驗，專注於建構高效能的 Web 應用程式。<br />
+      熱愛以程式碼解決真實世界的問題。
+    </p>
+
+    <div class="flex items-center justify-center gap-4">
+      <a
+        href="/projects"
+        class="px-6 py-3 rounded-lg bg-gradient-to-r from-[var(--color-accent-indigo)] to-[var(--color-accent-violet)] text-white font-medium text-sm hover:opacity-90 transition-opacity"
+      >
+        查看專案作品
+      </a>
+      <a
+        href="/contact"
+        class="px-6 py-3 rounded-lg border border-[var(--color-card-border)] text-[var(--color-text-primary)] font-medium text-sm hover:border-[var(--color-accent-cyan)] hover:text-[var(--color-accent-cyan)] transition-colors"
+      >
+        聯絡我
+      </a>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+    <svg class="w-6 h-6 text-[var(--color-text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+    </svg>
+  </div>
+</section>
