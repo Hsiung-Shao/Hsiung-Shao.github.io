@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import AboutSection from '../components/AboutSection.astro';
+import FeaturedProjects from '../components/react/FeaturedProjects.tsx';
+---
+
+<Layout title="熊少愆 | Backend Engineer">
+  <HeroSection />
+  <AboutSection />
+  <FeaturedProjects client:visible />
+</Layout>

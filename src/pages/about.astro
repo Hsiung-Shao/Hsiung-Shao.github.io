@@ -1,0 +1,156 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SkillSphere from '../components/three/SkillSphere.tsx';
+---
+
+<Layout title="關於我 | 熊少愆">
+  <section class="max-w-6xl mx-auto px-6 py-20">
+    <!-- Page Header -->
+    <div class="text-center mb-16">
+      <h1 class="text-4xl font-bold text-[var(--color-text-primary)] mb-3">關於我</h1>
+      <p class="text-[var(--color-text-secondary)] text-lg">Backend Engineer with passion for building</p>
+    </div>
+
+    <!-- Personal Intro -->
+    <div class="grid md:grid-cols-2 gap-12 mb-20">
+      <div class="space-y-5">
+        <h2 class="text-2xl font-bold text-[var(--color-text-primary)]">個人介紹</h2>
+        <p class="text-[var(--color-text-secondary)] leading-relaxed">
+          我是熊少愆（Jerry），一位專注於後端開發的軟體工程師。擁有 3 年以上的開發經驗，
+          擅長設計並建構穩健的伺服器端應用程式與資料庫架構。
+        </p>
+        <p class="text-[var(--color-text-secondary)] leading-relaxed">
+          在工作中，我從零開始建構了企業級 ERP 系統，從傳統 PHP 到現代 React + Supabase 全端架構，
+          持續追求更好的開發體驗與系統效能。工作之餘，我也積極投入個人專案，
+          包括遊戲工具網站與自動化 Discord Bot 等作品。
+        </p>
+        <div class="p-4 rounded-xl bg-[var(--color-card-bg)] border border-[var(--color-card-border)]">
+          <p class="text-[var(--color-text-secondary)] leading-relaxed italic">
+            「我是一個不愛出門的宅男，常會看到一些很酷的新技術就會去嘗試玩看看。」
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-5">
+        <h2 class="text-2xl font-bold text-[var(--color-text-primary)]">基本資訊</h2>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-[var(--color-accent-indigo)]"></span>
+            <span class="text-[var(--color-text-secondary)]">姓名：</span>
+            <span class="text-[var(--color-text-primary)]">熊少愆 (Jerry)</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-[var(--color-accent-indigo)]"></span>
+            <span class="text-[var(--color-text-secondary)]">職稱：</span>
+            <span class="text-[var(--color-text-primary)]">後端工程師</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-[var(--color-accent-indigo)]"></span>
+            <span class="text-[var(--color-text-secondary)]">信箱：</span>
+            <a href="mailto:jerry29221979@gmail.com" class="text-[var(--color-accent-cyan)] hover:underline">jerry29221979@gmail.com</a>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-[var(--color-accent-indigo)]"></span>
+            <span class="text-[var(--color-text-secondary)]">GitHub：</span>
+            <a href="https://github.com/Hsiung-Shao" target="_blank" rel="noopener noreferrer" class="text-[var(--color-accent-cyan)] hover:underline">github.com/Hsiung-Shao</a>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-[var(--color-accent-indigo)]"></span>
+            <span class="text-[var(--color-text-secondary)]">Discord：</span>
+            <span class="text-[var(--color-text-primary)]">hsiung0108</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-[var(--color-accent-indigo)]"></span>
+            <span class="text-[var(--color-text-secondary)]">X (Twitter)：</span>
+            <a href="https://x.com/Hsiungshao" target="_blank" rel="noopener noreferrer" class="text-[var(--color-accent-cyan)] hover:underline">x.com/Hsiungshao</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hobbies & Interests -->
+    <div class="mb-20">
+      <h2 class="text-2xl font-bold text-[var(--color-text-primary)] mb-8 text-center">興趣與日常</h2>
+      <div class="grid sm:grid-cols-3 gap-6">
+        <!-- 興趣 -->
+        <div class="p-5 rounded-xl bg-[var(--color-card-bg)] border border-[var(--color-card-border)]">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-lg">🎯</span>
+            <h3 class="text-lg font-semibold text-[var(--color-text-primary)]">興趣</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1 text-sm rounded-full bg-[var(--color-accent-indigo)]/10 text-[var(--color-accent-indigo)]">遊戲</span>
+            <span class="px-3 py-1 text-sm rounded-full bg-[var(--color-accent-cyan)]/10 text-[var(--color-accent-cyan)]">程式設計</span>
+            <span class="px-3 py-1 text-sm rounded-full bg-[var(--color-accent-violet)]/10 text-[var(--color-accent-violet)]">看動漫</span>
+          </div>
+        </div>
+        <!-- 喜歡的遊戲 -->
+        <div class="p-5 rounded-xl bg-[var(--color-card-bg)] border border-[var(--color-card-border)]">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-lg">🎮</span>
+            <h3 class="text-lg font-semibold text-[var(--color-text-primary)]">喜歡的遊戲</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 text-xs rounded-md bg-[var(--color-bg-primary)]/60 text-[var(--color-text-secondary)] border border-[var(--color-card-border)]">Brown Dust 2</span>
+            <span class="px-2.5 py-1 text-xs rounded-md bg-[var(--color-bg-primary)]/60 text-[var(--color-text-secondary)] border border-[var(--color-card-border)]">Valorant</span>
+            <span class="px-2.5 py-1 text-xs rounded-md bg-[var(--color-bg-primary)]/60 text-[var(--color-text-secondary)] border border-[var(--color-card-border)]">LoL</span>
+            <span class="px-2.5 py-1 text-xs rounded-md bg-[var(--color-bg-primary)]/60 text-[var(--color-text-secondary)] border border-[var(--color-card-border)]">黑色沙漠</span>
+            <span class="px-2.5 py-1 text-xs rounded-md bg-[var(--color-bg-primary)]/60 text-[var(--color-text-secondary)] border border-[var(--color-card-border)]">Minecraft</span>
+          </div>
+        </div>
+        <!-- 喜歡的動漫 -->
+        <div class="p-5 rounded-xl bg-[var(--color-card-bg)] border border-[var(--color-card-border)]">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-lg">📺</span>
+            <h3 class="text-lg font-semibold text-[var(--color-text-primary)]">喜歡的動漫</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 text-xs rounded-md bg-[var(--color-bg-primary)]/60 text-[var(--color-text-secondary)] border border-[var(--color-card-border)]">鋼之鍊金術師</span>
+            <span class="px-2.5 py-1 text-xs rounded-md bg-[var(--color-bg-primary)]/60 text-[var(--color-text-secondary)] border border-[var(--color-card-border)]">刀劍神域</span>
+            <span class="px-2.5 py-1 text-xs rounded-md bg-[var(--color-bg-primary)]/60 text-[var(--color-text-secondary)] border border-[var(--color-card-border)]">鬼滅之刃</span>
+            <span class="px-2.5 py-1 text-xs rounded-md bg-[var(--color-bg-primary)]/60 text-[var(--color-text-secondary)] border border-[var(--color-card-border)]">咒術迴戰</span>
+            <span class="px-2.5 py-1 text-xs rounded-md bg-[var(--color-bg-primary)]/60 text-[var(--color-text-secondary)] border border-[var(--color-card-border)]">遊戲人生</span>
+            <span class="px-2.5 py-1 text-xs rounded-md bg-[var(--color-bg-primary)]/60 text-[var(--color-text-secondary)] border border-[var(--color-card-border)]">葬送的芙莉蓮</span>
+            <span class="px-2.5 py-1 text-xs rounded-md bg-[var(--color-bg-primary)]/60 text-[var(--color-text-secondary)] border border-[var(--color-card-border)]">無職轉生</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Work Experience Timeline -->
+    <div class="mb-20">
+      <h2 class="text-2xl font-bold text-[var(--color-text-primary)] mb-8 text-center">工作經歷</h2>
+      <div class="relative max-w-2xl mx-auto">
+        <!-- Timeline line -->
+        <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[var(--color-accent-indigo)] to-[var(--color-accent-violet)]"></div>
+
+        <!-- Timeline item -->
+        <div class="relative pl-12 md:pl-0 md:grid md:grid-cols-2 md:gap-8 mb-8">
+          <div class="md:text-right md:pr-8">
+            <span class="text-sm text-[var(--color-accent-cyan)]">2022 — 現在</span>
+          </div>
+          <!-- Dot -->
+          <div class="absolute left-2.5 md:left-1/2 md:-translate-x-1/2 top-1 w-3 h-3 rounded-full bg-[var(--color-accent-indigo)] ring-4 ring-[var(--color-bg-primary)]"></div>
+          <div class="md:pl-8">
+            <h3 class="text-lg font-semibold text-[var(--color-text-primary)]">後端工程師</h3>
+            <p class="text-[var(--color-accent-violet)] text-sm mb-2">萬灃國際有限公司</p>
+            <ul class="space-y-1 text-sm text-[var(--color-text-secondary)]">
+              <li>• 獨立開發與維護企業 ERP 系統</li>
+              <li>• 以 React + Supabase 重構舊有 PHP 系統</li>
+              <li>• 設計資料庫架構與 REST API</li>
+              <li>• 整合第三方電商平台（蝦皮、EasyStore、Line）</li>
+              <li>• 開發 Excel 報表匯出功能</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D Skills Sphere -->
+    <div class="mb-20">
+      <h2 class="text-2xl font-bold text-[var(--color-text-primary)] mb-3 text-center">技能樹</h2>
+      <p class="text-[var(--color-text-secondary)] text-center mb-8">拖曳旋轉 3D 技能球，探索我的技術棧</p>
+      <SkillSphere client:visible />
+    </div>
+  </section>
+</Layout>
