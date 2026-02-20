@@ -57,21 +57,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 'poe-build-viewer',
-    title: 'POE Build Viewer',
-    description: 'Path of Exile 流派配置分享平台，解碼 POB code 並可視化角色配置。',
-    longDescription:
-      '專為 POE 玩家設計的 Web 應用程式，用於解碼並可視化 Path of Building 匯出的角色配置。取代傳統的 Google Excel 分享方式，提供更直觀、美觀且無人數限制的流派分享體驗。',
-    tech: ['Next.js 14', 'TypeScript', 'Zustand', 'TailwindCSS', 'Pako', 'fast-xml-parser'],
-    category: 'frontend',
-    highlights: [
-      'POB 解碼 — Base64 + Zlib + XML 完整解析',
-      '裝備展示 — 含稀有度視覺與詞綴標記',
-      '繁體中文 — 整合 GGPK 遊戲資料翻譯',
-      'Trade 連結 — 自動生成 POE 交易搜尋',
-    ],
-  },
-  {
     id: 'discord-bot',
     title: 'Discord Bot',
     description: '多功能 Discord 機器人，整合遊戲新聞爬蟲、伺服器管理與自動備份。',
