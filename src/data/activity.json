@@ -1,0 +1,44 @@
+[
+  {
+    "date": "2026-02-23",
+    "project": "multi-stream",
+    "tier": "personal",
+    "summary": "新增 RWD 手機版專屬介面與橫向模式;工具列互動改為滑鼠靠近螢幕底部才彈出,提升多實況觀看時的沉浸度。",
+    "tags": ["RWD", "UX"]
+  },
+  {
+    "date": "2026-02-16",
+    "project": "multi-stream",
+    "tier": "personal",
+    "summary": "Feedback 系統從 localStorage 遷移到 Supabase;整合 Umami 網站分析;新增 Brave 瀏覽器的 Twitch 相容性偵測與 FAQ 教學。",
+    "tags": ["Supabase", "Umami", "Brave"]
+  },
+  {
+    "date": "2026-01-18",
+    "project": "multi-stream",
+    "tier": "personal",
+    "summary": "修復 Canvas 高效能畫布在 React 渲染週期中串流關閉/重新載入時的錯誤,並整理版本迭代至 v3.0.x 系列。",
+    "tags": ["Canvas", "React", "bugfix"]
+  },
+  {
+    "date": "2026-04-20",
+    "project": "minecraftTranslate",
+    "tier": "personal",
+    "summary": "首次發佈 Minecraft MOD 本地化翻譯工具 — 整合 LM Studio 本地 LLM、分頁式 GUI、PyInstaller 打包為 Windows exe。",
+    "tags": ["LLM", "LM Studio", "PyInstaller"]
+  },
+  {
+    "date": "2026-04-20",
+    "project": "minecraftTranslate",
+    "tier": "personal",
+    "summary": "上線完整 benchmark 文件 — RTX 5070 12GB 實測,Enable Thinking 開關造成 10-20 倍效能落差(1.5h vs 16-33h),並列出不同 VRAM 等級的模型推薦。",
+    "tags": ["benchmark", "thinking", "效能"]
+  },
+  {
+    "date": "2026-02-20",
+    "project": "myweb",
+    "tier": "personal",
+    "summary": "建立個人作品集網站雛形 — Astro 5 + React 19 + Tailwind 4 + Three.js,部署至 GitHub Pages。",
+    "tags": ["Astro", "portfolio"]
+  }
+]

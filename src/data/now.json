@@ -1,0 +1,21 @@
+{
+  "updated": "2026-04-21T01:45:00.000Z",
+  "focus": "聚焦個人實驗性專案 — 本地 LLM 翻譯工具、多實況整合平台、個人網站自動化。",
+  "projects": [
+    {
+      "name": "multi-stream",
+      "tier": "personal",
+      "status": "v3.0.x 穩定期,聚焦 RWD、Supabase 後端整合、瀏覽器相容性"
+    },
+    {
+      "name": "minecraftTranslate",
+      "tier": "personal",
+      "status": "首次公開發佈,完成 GUI + Windows 打包 + benchmark 文件"
+    },
+    {
+      "name": "myweb",
+      "tier": "personal",
+      "status": "加入 blog / activity / now 三個頁面,建立自動彙整 git 紀錄的 workflow"
+    }
+  ]
+}

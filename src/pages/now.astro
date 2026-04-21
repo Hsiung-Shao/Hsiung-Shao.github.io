@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { now } from '../data/now';
+
+const updatedLabel = now.updated
+  ? new Date(now.updated).toLocaleString('zh-TW', { dateStyle: 'long', timeStyle: 'short' })
+  : '尚未更新';
+---
+
+<Layout title="Now | 熊少愆">
+  <section class="max-w-3xl mx-auto px-6 py-16">
+    <header class="mb-10">
+      <h1 class="text-4xl font-bold mb-2">Now</h1>
+      <p class="text-sm text-[var(--color-text-secondary)]">最後更新:{updatedLabel}</p>
+    </header>
+
+    <div class="rounded-xl border border-[var(--color-card-border)] bg-[var(--color-card-bg)] p-6 mb-8">
+      <p class="whitespace-pre-wrap leading-relaxed">{now.focus}</p>
+    </div>
+
+    {now.projects.length > 0 && (
+      <div>
+        <h2 class="text-xl font-semibold mb-4">進行中專案</h2>
+        <ul class="space-y-3">
+          {now.projects.map(p => (
+            <li class="rounded-lg border border-[var(--color-card-border)] bg-[var(--color-card-bg)] p-4">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="font-medium">{p.name}</span>
+                <span class:list={[
+                  'text-xs px-2 py-0.5 rounded-full',
+                  p.tier === 'protected'
+                    ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+                    : 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
+                ]}>
+                  {p.tier === 'protected' ? '客戶專案' : '個人專案'}
+                </span>
+              </div>
+              <p class="text-sm text-[var(--color-text-secondary)]">{p.status}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </section>
+</Layout>

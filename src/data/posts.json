@@ -1,0 +1,22 @@
+[
+  {
+    "slug": "enable-thinking-benchmark-minecraft-translate",
+    "title": "本地 LLM 翻譯 Minecraft MOD — Enable Thinking 的致命陷阱",
+    "date": "2026-04-20",
+    "tags": ["LLM", "LM Studio", "benchmark", "Minecraft"],
+    "draft": true,
+    "excerpt": "同樣的硬體、同樣的模型、同樣的 prompt,只因為 LM Studio 的「Enable Thinking」選項開與關,一個 MOD 檔案的翻譯時間從 1.5 小時變成 16-33 小時。這不是 2-3 倍,是一個數量級的差距。",
+    "body": "## 問題\n\n我寫了一個把 Minecraft MOD 的 `en_us.json` 翻成繁體中文的小工具,底層呼叫本機 LM Studio 的 OpenAI-compatible endpoint。第一次實測跑了 16 小時,單個中型 MOD(CTE2)還沒翻完。以為是模型不夠強,把 Qwen3 8B 換成更大的 14B,預計只會更慢 — 結果同事看了一眼設定後說「你 Thinking 沒關掉」。\n\n關掉後,同一個 MOD 在同一顆 RTX 5070 12GB 上 **1.5 小時**跑完。差距不是 2-3 倍,是 **10-20 倍**。\n\n## 為什麼差這麼多\n\nThinking-capable 模型(Qwen3、DeepSeek-R1 等)預設會在生成答案前產出一段 `<think>...</think>` 的內部推理。對需要邏輯推演的問題這是優勢,但對**翻譯這種 I/O 密集、語意對應為主的任務**,推理段往往比實際翻譯結果還長 — 每條字串都白白吃掉幾秒 GPU 時間。\n\n我用 `curl` 打同一個 key、同一個 prompt,觀察 token 數:\n\n| 狀態 | 平均 token/回應 | 每條字串耗時 |\n|---|---|---|\n| Thinking ON | 800-1500 | 8-15 秒 |\n| Thinking OFF | 40-80 | 0.4-0.8 秒 |\n\n## 實務建議\n\nLM Studio 的 Enable Thinking 在 Model Panel 右側,預設是**開的**。對翻譯、摘要、分類、正規化這類「回答就是答案」的任務,一律關掉。只保留給需要多步推理的場景(程式碼除錯、數學題、複雜規劃)。\n\n另一個踩雷點:**量化位元 > 模型大小**。12GB VRAM 跑 14B Q4 的實測結果,比跑 8B Q8 更好 — 同記憶體預算下,較大模型用低位元量化通常比小模型用高位元量化的品質高。\n\n## 測試環境\n\n- CPU: Ryzen 7 9800X3D\n- GPU: RTX 5070 12GB\n- RAM: 64GB\n- LM Studio 本地 server\n- 測試 MOD: CTE2、ATMons(皆為中型繁中翻譯需求)",
+    "project": "minecraftTranslate"
+  },
+  {
+    "slug": "spa-oauth-token-survival-session-storage",
+    "title": "SPA 路由導航會吃掉 OAuth token — 一個看似簡單的修法",
+    "date": "2026-02-15",
+    "tags": ["OAuth", "SPA", "Twitch", "React Router"],
+    "draft": true,
+    "excerpt": "使用者按下「連結 Twitch 帳號」,OAuth 重導回來時明明拿到了 token,但點一下任何選單頁 token 就消失。問題不在 OAuth flow,而在 SPA 路由切換時的狀態管理。",
+    "body": "## 症狀\n\nMultiStream Hub 的「匯入追蹤頻道」功能走 Twitch OAuth:使用者授權 → 重導回站上帶著 `access_token` → 前端用 token 呼叫 Twitch API 抓追蹤清單 → 匯入收藏。\n\nbug 回報是:授權回來**第一次**呼叫 API 正常,但只要 React Router 切到任何其他頁面再回來,token 就不見了,全部要重走一次授權。\n\n## 原因\n\n原本的實作把 token 放在 `useState` 裡。React 狀態在 SPA 路由**切換時元件 unmount 就消失**,這是基本行為,但在 OAuth 這種「短生命週期 + 跨頁」的場景很容易被忽略。放 Redux/Zustand 可解但過度;放 `localStorage` 持久化又違反 Twitch token 的「最短存留」原則(授權 token 不該寫入長存媒介)。\n\n## 解法\n\n用 `sessionStorage` 做**分頁級別**的暫存:\n\n```ts\n// useTwitchAuth.ts\nconst TOKEN_KEY = 'twitch_user_token';\n\nexport function useTwitchAuth() {\n  const [token, setToken] = useState(() => sessionStorage.getItem(TOKEN_KEY));\n\n  const saveToken = (t: string) => {\n    sessionStorage.setItem(TOKEN_KEY, t);\n    setToken(t);\n  };\n\n  const clearToken = () => {\n    sessionStorage.removeItem(TOKEN_KEY);\n    setToken(null);\n  };\n\n  return { token, saveToken, clearToken };\n}\n```\n\n搭配兩條原則:\n\n1. **匯入完成後立即清除**(`clearToken()` 在匯入流程 finally 區塊呼叫)\n2. **視窗/分頁關閉自動清除**(sessionStorage 天生行為)\n\n## 額外收穫\n\n一起加上了「OAuth 回來自動跳回原本頁面」— 授權前把 `location.pathname` 存進 sessionStorage,回來時讀出來 `navigate(it)`。這解決了使用者從收藏頁觸發授權、回來卻被丟到首頁的另一個老問題。\n\n## 取捨\n\n`sessionStorage` 仍有 XSS 風險(被 JS 讀到),但考量:\n\n- Twitch User Access Token 不是長期 refresh token,壽命短\n- 本站是純前端、無後端,沒有「放 HttpOnly cookie」這個選項\n- 使用場景就是「取得 → 立即用 → 清除」\n\n用 sessionStorage 是這組約束下最輕量且合適的解。",
+    "project": "multi-stream"
+  }
+]

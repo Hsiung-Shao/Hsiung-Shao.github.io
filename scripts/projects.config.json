@@ -1,0 +1,9 @@
+{
+  "projects": [
+    { "name": "multi-stream",       "path": "D:/codeproject/web/multi-stream",      "tier": "personal" },
+    { "name": "minecraftTranslate", "path": "D:/codeproject/minecraftTranslate",    "tier": "personal" },
+    { "name": "myweb",              "path": "D:/codeproject/web/myweb",             "tier": "personal" }
+  ],
+  "forbiddenTerms": [],
+  "maxCommitsPerRun": 40
+}

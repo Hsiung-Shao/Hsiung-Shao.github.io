@@ -1,0 +1,73 @@
+[
+  {
+    "id": "multistream-hub",
+    "title": "MultiStream Hub",
+    "description": "免費的多平台直播串流觀看工具,支援同時觀看多個 Twitch 和 YouTube 直播。",
+    "longDescription": "一個純前端架構的多平台直播觀看工具,支援 Twitch 與 YouTube 同時觀看,提供 24 種以上的畫布布局、智慧拖曳交換視窗、聊天室整合、收藏系統與多語言支援(繁中、簡中、英文、日文、韓文)。RWD 手機版含橫向模式,Feedback 系統使用 Supabase,整合 Umami 網站分析。部署於 Cloudflare Pages。",
+    "tech": ["React 19", "TypeScript", "Vite", "TailwindCSS", "Shadcn/UI", "Zustand", "TanStack Query", "i18next", "Supabase", "Umami"],
+    "category": "frontend",
+    "link": "https://multistreaming.org",
+    "highlights": [
+      "多平台串流 — Twitch / YouTube 同時觀看,支援 Brave 瀏覽器相容性偵測",
+      "智慧畫布 — 24+ 種進階布局、智慧拖曳交換、全螢幕動態島控制",
+      "收藏系統 — 多標籤管理、分類資料夾、匯入/匯出",
+      "RWD 體驗 — 手機版專屬介面與橫向模式、滑鼠靠近底部才彈出工具列"
+    ]
+  },
+  {
+    "id": "minecraft-translate",
+    "title": "Minecraft MOD 翻譯工具",
+    "description": "基於本地 LLM 的 Minecraft MOD 繁中翻譯 GUI 工具,整合 LM Studio 的 OpenAI 相容 API。",
+    "longDescription": "為 Minecraft 玩家打造的 MOD 本地化翻譯工具,透過本地 LLM(Qwen3、Llama 3.1 等)將 en_us.json 轉成繁中,避免送資料到雲端。Tkinter 分頁式 GUI、PyInstaller 打包為 Windows exe、完整的硬體 benchmark 文件(RTX 5070 12GB 實測),踩過 Enable Thinking 造成 10-20 倍效能落差的雷,文件中特別標註。",
+    "tech": ["Python", "Tkinter", "LM Studio", "PyInstaller", "Qwen3", "OpenAI-compatible API"],
+    "category": "tool",
+    "highlights": [
+      "本地 LLM — 隱私零上傳,支援 LM Studio 任何 OpenAI 相容 endpoint",
+      "效能洞察 — Enable Thinking 關閉後速度提升 10-20 倍(1.5h vs 16-33h)",
+      "完整打包 — PyInstaller 產出單檔 .exe,含自訂圖示",
+      "教學導向 — README 含 LM Studio 設定步驟截圖、VRAM 分級模型推薦"
+    ]
+  },
+  {
+    "id": "modern-management-system",
+    "title": "現代化管理系統(React + Supabase)",
+    "description": "自主設計開發的中型管理系統,採 React 19 + Supabase 全端架構,作為個人實驗作品。",
+    "longDescription": "個人實驗性質的中型管理系統,練習從零建立 React 19 + Supabase 的全端應用。核心體驗包含:型別安全的 Zod schema 驗證、Row Level Security 設計、PostgreSQL view 的 security_invoker 處理、ExcelJS 報表生成、複雜狀態機設計。專注於架構層面的可重用模式,而非特定業務邏輯。",
+    "tech": ["React 19", "TypeScript", "Supabase", "PostgreSQL", "TailwindCSS", "shadcn/ui", "Vite", "Zod"],
+    "category": "fullstack",
+    "highlights": [
+      "全端架構 — React 19 + Supabase BaaS + PostgreSQL RLS",
+      "型別安全 — Zod schema 雙向驗證、TypeScript strict mode",
+      "資料安全 — RLS 策略設計、view 的 security_invoker 處理",
+      "報表匯出 — ExcelJS 處理中等規模資料集匯出"
+    ]
+  },
+  {
+    "id": "legacy-management-system",
+    "title": "傳統 PHP 管理系統",
+    "description": "早期以 PHP + MySQL 建構的中型管理系統個人實驗作品,涵蓋訂單、庫存、報表等模組。",
+    "longDescription": "學習階段的中型系統實驗作品,採 PHP 8 + MySQL + Bootstrap 5 傳統三層式架構。重點在練習進銷存邏輯、多種 Excel 報表格式、第三方 API 整合等。雖然後來轉向現代前端,但這個專案沉澱了許多後端與資料設計的經驗。",
+    "tech": ["PHP 8", "MySQL", "Bootstrap 5", "jQuery", "Chart.js", "PhpSpreadsheet"],
+    "category": "backend",
+    "highlights": [
+      "模組化業務邏輯 — 訂單、進貨、產品、報表等獨立模組",
+      "庫存演算 — 安全庫存警示、組合包拆解、多倉儲支援",
+      "報表多格式 — PhpSpreadsheet 產出多種 Excel 報表",
+      "第三方整合 — 練習多個 API 的資料正規化與錯誤處理"
+    ]
+  },
+  {
+    "id": "discord-bot",
+    "title": "Discord Bot 自動化機器人",
+    "description": "多功能 Discord 機器人,整合遊戲伺服器管理、新聞爬蟲、多伺服器推送、自動備份。",
+    "longDescription": "基於 discord.py 開發的多功能機器人,以 Cog 模組化架構組織功能。在自家伺服器以 NSSM 註冊為 Windows Service 長時間運行,對外透過 Cloudflare Tunnel 暴露必要端點。持續擴充中,近期加入多個伺服器同時推送通知、新聞爬蟲抗改版邏輯。",
+    "tech": ["Python", "discord.py", "APScheduler", "BeautifulSoup4", "aiohttp", "Twikit", "Cloudflare Tunnel", "NSSM"],
+    "category": "tool",
+    "highlights": [
+      "伺服器管理 — RCON 控制 Minecraft / 7DTD,遠端指令介面",
+      "新聞爬蟲 — FF14、BD2、Valorant 等多遊戲新聞自動追蹤",
+      "多伺服器推送 — 單次事件同步推送到多個 Discord Server 指定頻道",
+      "長期運行 — NSSM Windows Service + APScheduler 定時備份與心跳"
+    ]
+  }
+]

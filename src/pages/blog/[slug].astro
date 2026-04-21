@@ -1,0 +1,38 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { posts } from '../../data/posts';
+import { marked } from 'marked';
+
+export async function getStaticPaths() {
+  return posts
+    .filter(p => !p.draft)
+    .map(p => ({ params: { slug: p.slug }, props: { post: p } }));
+}
+
+const { post } = Astro.props;
+const html = marked.parse(post.body);
+---
+
+<Layout title={`${post.title} | 熊少愆`} description={post.excerpt}>
+  <article class="max-w-3xl mx-auto px-6 py-16">
+    <header class="mb-10">
+      <div class="flex items-center gap-2 mb-3 text-xs text-[var(--color-text-secondary)]">
+        <time>{post.date}</time>
+        {post.project && <><span>·</span><span>{post.project}</span></>}
+      </div>
+      <h1 class="text-4xl font-bold mb-4">{post.title}</h1>
+      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">{post.excerpt}</p>
+      {post.tags.length > 0 && (
+        <div class="mt-4 flex flex-wrap gap-1">
+          {post.tags.map(t => <span class="text-xs px-2 py-0.5 rounded bg-[var(--color-card-bg)] border border-[var(--color-card-border)]">#{t}</span>)}
+        </div>
+      )}
+    </header>
+
+    <div class="prose prose-invert max-w-none" set:html={html}></div>
+
+    <footer class="mt-16 pt-8 border-t border-[var(--color-card-border)]">
+      <a href="/blog" class="text-sm text-[var(--color-accent-cyan)] hover:underline">← 回到部落格</a>
+    </footer>
+  </article>
+</Layout>

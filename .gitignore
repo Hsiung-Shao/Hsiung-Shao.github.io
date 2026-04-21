@@ -7,3 +7,5 @@ dist/
 *.log
 .claude/
 docs/
+scripts/.lastrun.json
+scripts/pending-digest.md
