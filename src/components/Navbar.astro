@@ -1,78 +1,65 @@
 ---
-const mainLinks = [
-  { href: '/projects', label: '工作索引' },
-  { href: '/blog', label: '文章' },
-  { href: '/now', label: '現在進行式' },
-  { href: '/about', label: '關於' },
+const links = [
+  { href: '/projects', code: '01', label: '專案' },
+  { href: '/blog', code: '02', label: '文章' },
+  { href: '/activity', code: '03', label: '活動' },
+  { href: '/now', code: '04', label: '現在' },
+  { href: '/about', code: '05', label: '關於' },
 ];
-
-const secondaryLinks = [
-  { href: '/activity', label: '活動日誌' },
-  { href: '/support', label: '支持本站' },
+const utility = [
+  { href: '/support', label: '支持' },
   { href: '/contact', label: '聯絡' },
 ];
-
 const currentPath = Astro.url.pathname;
 const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
 ---
 
-<header class="sticky top-0 z-50 border-b border-[var(--line-strong)] bg-[var(--paper)]/95 backdrop-blur-sm">
-  <div class="site-shell flex h-[58px] items-center justify-between gap-4">
-    <a href="/" class="flex items-baseline gap-2 text-[var(--ink)] no-underline" aria-label="熊少愆首頁">
-      <strong class="display-type text-lg">熊少愆</strong>
-      <span class="hidden font-mono text-[10px] text-[var(--quiet)] sm:inline">HSIUNG-SHAO / WORKLOG</span>
+<header class="spatial-nav">
+  <div class="spatial-nav-inner">
+    <a href="/" class="spatial-brand" aria-label="熊少愆首頁">
+      <span class="brand-signal" aria-hidden="true"></span>
+      <span><strong>HSIUNG</strong><small>SHAO / 00</small></span>
     </a>
 
-    <nav class="hidden items-center gap-6 lg:flex" aria-label="主要導覽">
-      {mainLinks.map(link => (
-        <a
-          href={link.href}
-          aria-current={isActive(link.href) ? 'page' : undefined}
-          class:list={[
-            'border-b-2 py-[18px] text-xs font-semibold no-underline transition-colors',
-            isActive(link.href)
-              ? 'border-[var(--blue)] text-[var(--blue)]'
-              : 'border-transparent text-[var(--muted)] hover:text-[var(--ink)]'
-          ]}
-        >
-          {link.label}
-        </a>
-      ))}
-      <span class="h-5 w-px bg-[var(--line)]"></span>
-      {secondaryLinks.map(link => (
-        <a
-          href={link.href}
-          class:list={[
-            'text-xs font-medium no-underline',
-            isActive(link.href) ? 'text-[var(--red)]' : 'text-[var(--muted)] hover:text-[var(--ink)]'
-          ]}
-        >
-          {link.label}
+    <nav class="spatial-links" aria-label="主要導覽">
+      {links.map(link => (
+        <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
+          <small>{link.code}</small><span>{link.label}</span>
         </a>
       ))}
     </nav>
 
-    <button id="menu-toggle" class="h-10 w-10 border border-[var(--ink)] bg-transparent text-lg lg:hidden" aria-label="開啟導覽" aria-expanded="false" aria-controls="mobile-menu">≡</button>
+    <nav class="spatial-utility" aria-label="次要導覽">
+      {utility.map(link => <a href={link.href} class:list={{ active: isActive(link.href) }}>{link.label}</a>)}
+    </nav>
+
+    <button id="menu-toggle" class="spatial-menu-toggle" aria-label="開啟導覽" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span>
+    </button>
   </div>
 
-  <nav id="mobile-menu" class="hidden border-t border-[var(--line)] bg-[var(--surface)] lg:hidden" aria-label="行動版導覽">
-    <div class="site-shell grid grid-cols-2 gap-px bg-[var(--line)] py-px">
-      {[...mainLinks, ...secondaryLinks].map(link => (
-        <a href={link.href} class:list={['bg-[var(--surface)] px-4 py-4 text-sm font-semibold no-underline', isActive(link.href) ? 'text-[var(--blue)]' : 'text-[var(--ink)]']}>
-          {link.label}
-        </a>
-      ))}
-    </div>
+  <nav id="mobile-menu" class="spatial-mobile-menu" aria-label="行動版導覽">
+    {[...links, ...utility.map((item, index) => ({ ...item, code: `0${index + 6}` }))].map(link => (
+      <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}><small>{link.code}</small><span>{link.label}</span></a>
+    ))}
   </nav>
 </header>
 
 <script>
-  const toggle = document.getElementById('menu-toggle');
-  const menu = document.getElementById('mobile-menu');
-  toggle?.addEventListener('click', () => {
-    const expanded = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', String(!expanded));
-    toggle.textContent = expanded ? '≡' : '×';
-    menu?.classList.toggle('hidden');
-  });
+  function setupSpatialNav() {
+    const toggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    if (!toggle || !menu || toggle.dataset.bound === 'true') return;
+
+    toggle.dataset.bound = 'true';
+    toggle.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      toggle.setAttribute('aria-label', expanded ? '開啟導覽' : '關閉導覽');
+      menu.classList.toggle('is-open', !expanded);
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupSpatialNav);
+  setupSpatialNav();
 </script>

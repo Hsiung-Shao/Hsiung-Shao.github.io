@@ -41,7 +41,7 @@ const guideImages: Record<string, string> = {
           <article><a class="post-row" href={`/blog/${post.slug}`}>
             <div class="font-mono text-xs text-[var(--quiet)]"><time>{post.date}</time><div class="mt-2 text-[var(--red)]">{post.type ? typeLabels[post.type] : '文章'}</div></div>
             <div><h2>{post.title}</h2><p>{post.excerpt}</p></div>
-            <div class="flex flex-wrap content-start gap-1">{post.tags.slice(0, 4).map(tag => <span class="tag">{tag}</span>)}</div>
+            <div class="post-tags">{post.tags.slice(0, 4).map(tag => <span class="tag">{tag}</span>)}</div>
           </a></article>
         ))}
       </div>

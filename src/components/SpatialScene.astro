@@ -1,0 +1,276 @@
+<div class="spatial-scene" data-spatial-scene transition:persist="spatial-scene" aria-hidden="true">
+  <canvas></canvas>
+  <div class="scene-coordinate coordinate-x">X / 24.91</div>
+  <div class="scene-coordinate coordinate-y">Y / 08.05</div>
+  <div class="scene-corner corner-a"></div>
+  <div class="scene-corner corner-b"></div>
+</div>
+
+<script>
+  let disposeSpatialScene = () => {};
+  let updateSpatialMode = () => {};
+
+  async function setupSpatialScene() {
+    const root = document.querySelector<HTMLElement>('[data-spatial-scene]');
+    const canvas = root?.querySelector<HTMLCanvasElement>('canvas');
+    if (!root || !canvas || root.dataset.initialized === 'true') {
+      updateSpatialMode();
+      return;
+    }
+
+    root.dataset.initialized = 'true';
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const abortController = new AbortController();
+    const { signal } = abortController;
+    let animationFrame = 0;
+    let disposed = false;
+    let running = !document.hidden;
+
+    try {
+      const THREE = await import('three');
+      if (!root.isConnected) return;
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance',
+      });
+      renderer.setClearColor(0x080a09, 1);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x080a09, 0.055);
+      const camera = new THREE.PerspectiveCamera(47, 1, 0.1, 60);
+      camera.position.set(0, 1.1, 9);
+      camera.lookAt(0, 0, -5);
+
+      const world = new THREE.Group();
+      const routeLayer = new THREE.Group();
+      scene.add(world);
+      world.add(routeLayer);
+
+      const permanentResources: Array<{ dispose: () => void }> = [];
+      let routeResources: Array<{ dispose: () => void }> = [];
+      let routeObjects: Array<{ material?: { opacity?: number }; position: { z: number } }> = [];
+
+      const floor = new THREE.GridHelper(34, 34, 0x5cf2d6, 0x26312a);
+      floor.position.set(0, -3.25, -7);
+      floor.material.transparent = true;
+      floor.material.opacity = 0.34;
+      world.add(floor);
+      permanentResources.push(floor.geometry, floor.material);
+
+      const tunnelFrames: Array<{ position: { z: number }; rotation: { z: number } }> = [];
+      for (let index = 0; index < 10; index += 1) {
+        const box = new THREE.BoxGeometry(13 + index * 0.4, 7.4 + index * 0.22, 0.02);
+        const edges = new THREE.EdgesGeometry(box);
+        const material = new THREE.LineBasicMaterial({
+          color: index % 2 === 0 ? 0xd8ff3e : 0x5cf2d6,
+          transparent: true,
+          opacity: index % 2 === 0 ? 0.12 : 0.08,
+        });
+        const frame = new THREE.LineSegments(edges, material);
+        frame.position.z = 2 - index * 2.2;
+        frame.rotation.z = index * 0.008;
+        world.add(frame);
+        tunnelFrames.push(frame);
+        permanentResources.push(box, edges, material);
+      }
+
+      const clearRouteLayer = () => {
+        while (routeLayer.children.length) routeLayer.remove(routeLayer.children[0]);
+        routeResources.forEach(resource => resource.dispose());
+        routeResources = [];
+        routeObjects = [];
+      };
+
+      const addWireBox = (width: number, height: number, depth: number, color: number, position: [number, number, number], opacity = 0.55) => {
+        const box = new THREE.BoxGeometry(width, height, depth);
+        const edges = new THREE.EdgesGeometry(box);
+        const material = new THREE.LineBasicMaterial({ color, transparent: true, opacity });
+        const object = new THREE.LineSegments(edges, material);
+        object.position.set(...position);
+        routeLayer.add(object);
+        routeResources.push(box, edges, material);
+        routeObjects.push(object);
+        return object;
+      };
+
+      const buildHome = () => {
+        const mobile = window.innerWidth < 760;
+        const loader = new THREE.TextureLoader();
+        const assets = [
+          '/images/guides/pobtools/pobtools-pob-main.png',
+          '/images/guides/multistream/multistream-live-grid.png',
+          '/images/guides/minecraft/00-app-overview.png',
+        ];
+
+        assets.forEach((source, index) => {
+          const texture = loader.load(source);
+          texture.colorSpace = THREE.SRGBColorSpace;
+          const geometry = new THREE.PlaneGeometry(mobile ? 6.2 : 5.5, mobile ? 3.1 : 2.75);
+          const material = new THREE.MeshBasicMaterial({
+            map: texture,
+            transparent: true,
+            opacity: mobile ? 0.16 : 0.52,
+            side: THREE.DoubleSide,
+          });
+          const plane = new THREE.Mesh(geometry, material);
+          plane.position.set(mobile ? 0 : 3.35 + index * 0.42, 1.9 - index * 2.15, -1.5 - index * 1.4);
+          plane.rotation.set(-0.04 + index * 0.025, mobile ? 0 : -0.28, -0.018 * index);
+          routeLayer.add(plane);
+          routeResources.push(texture, geometry, material);
+          routeObjects.push(plane);
+          addWireBox(mobile ? 6.35 : 5.7, mobile ? 3.25 : 2.95, 0.08, index === 1 ? 0xd8ff3e : 0x5cf2d6, [plane.position.x, plane.position.y, plane.position.z - 0.06], 0.68);
+        });
+      };
+
+      const buildProjects = () => {
+        for (let index = 0; index < 12; index += 1) {
+          const column = index % 4;
+          const row = Math.floor(index / 4);
+          const object = addWireBox(1.8, 0.8, 0.8, index % 3 === 0 ? 0xd8ff3e : 0x5cf2d6, [column * 2.35 - 3.5, 1.7 - row * 1.7, -1.8 - row * 1.15], 0.48);
+          object.rotation.y = column * 0.045 - 0.08;
+        }
+      };
+
+      const buildWriting = () => {
+        for (let index = 0; index < 9; index += 1) {
+          const object = addWireBox(3.4, 4.5, 0.06, index % 3 === 0 ? 0xff6b52 : 0x5cf2d6, [index * 1.05 - 4.3, (index % 2) * 0.6 - 0.2, -2.5 - index * 0.7], 0.3);
+          object.rotation.y = -0.35 + index * 0.08;
+        }
+      };
+
+      const buildActivity = () => {
+        const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(0, 5, -3),
+          new THREE.Vector3(0, -8, -8),
+        ]);
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xd8ff3e, transparent: true, opacity: 0.72 });
+        routeLayer.add(new THREE.Line(lineGeometry, lineMaterial));
+        routeResources.push(lineGeometry, lineMaterial);
+        for (let index = 0; index < 15; index += 1) {
+          addWireBox(0.34, 0.34, 0.34, index % 4 === 0 ? 0xff6b52 : 0x5cf2d6, [Math.sin(index) * 0.9, 4.2 - index * 0.82, -3.2 - index * 0.32], 0.72);
+        }
+      };
+
+      const buildProfile = () => {
+        for (let index = 0; index < 7; index += 1) {
+          const object = addWireBox(3 + index * 0.9, 3 + index * 0.55, 0.12, index % 2 === 0 ? 0xd8ff3e : 0x5cf2d6, [2.1, 0.1, -2 - index * 1.15], 0.28);
+          object.rotation.z = index * 0.11;
+          object.rotation.y = -0.18;
+        }
+      };
+
+      const buildUtility = () => {
+        for (let index = 0; index < 8; index += 1) {
+          addWireBox(1.25 + (index % 3) * 0.55, 1.25, 1.25, index % 2 === 0 ? 0x5cf2d6 : 0xff6b52, [(index % 4) * 2.1 - 3.2, Math.floor(index / 4) * -2 + 1, -3 - index * 0.65], 0.34);
+        }
+      };
+
+      updateSpatialMode = () => {
+        if (disposed) return;
+        clearRouteLayer();
+        const path = window.location.pathname;
+        root.dataset.mode = path === '/' ? 'home' : path.split('/').filter(Boolean)[0] ?? 'home';
+        routeLayer.scale.setScalar(0.82);
+        routeLayer.rotation.set(0.08, -0.12, 0);
+        if (path === '/') buildHome();
+        else if (path === '/projects') buildProjects();
+        else if (path.startsWith('/blog')) buildWriting();
+        else if (path === '/activity') buildActivity();
+        else if (path === '/about') buildProfile();
+        else buildUtility();
+      };
+
+      const pointerTarget = new THREE.Vector2();
+      const pointer = new THREE.Vector2();
+      const routeScaleTarget = new THREE.Vector3(1, 1, 1);
+      let scrollProgress = 0;
+      let previousTime = performance.now();
+
+      const resize = () => {
+        renderer.setSize(window.innerWidth, window.innerHeight, false);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      };
+
+      const handlePointer = (event: PointerEvent) => {
+        pointerTarget.set((event.clientX / window.innerWidth) * 2 - 1, -((event.clientY / window.innerHeight) * 2 - 1));
+      };
+
+      const handleScroll = () => {
+        const range = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+        scrollProgress = Math.min(window.scrollY / range, 1);
+      };
+
+      const render = (time: number) => {
+        if (disposed || !running) return;
+        const delta = Math.min((time - previousTime) / 1000, 0.05);
+        previousTime = time;
+        pointer.lerp(pointerTarget, 0.04);
+
+        world.rotation.y += (pointer.x * 0.075 - world.rotation.y) * 0.025;
+        world.rotation.x += (-pointer.y * 0.035 - world.rotation.x) * 0.025;
+        camera.position.x += (pointer.x * 0.32 - camera.position.x) * 0.025;
+        camera.position.y += (1.1 - scrollProgress * 1.6 - camera.position.y) * 0.025;
+        routeLayer.scale.lerp(routeScaleTarget, 0.035);
+        routeLayer.rotation.y += (-0.02 - routeLayer.rotation.y) * 0.025;
+        routeLayer.rotation.x += (scrollProgress * 0.13 - routeLayer.rotation.x) * 0.025;
+
+        if (!reduceMotion) {
+          tunnelFrames.forEach((frame, index) => {
+            frame.position.z += delta * (0.28 + index * 0.006);
+            if (frame.position.z > 2.5) frame.position.z -= 22;
+          });
+          routeObjects.forEach((object, index) => {
+            object.position.z += Math.sin(time * 0.00035 + index) * 0.0008;
+          });
+        }
+
+        renderer.render(scene, camera);
+        if (!reduceMotion) animationFrame = requestAnimationFrame(render);
+      };
+
+      const handleVisibility = () => {
+        running = !document.hidden;
+        if (running && !reduceMotion && !animationFrame) {
+          previousTime = performance.now();
+          animationFrame = requestAnimationFrame(render);
+        } else if (!running && animationFrame) {
+          cancelAnimationFrame(animationFrame);
+          animationFrame = 0;
+        }
+      };
+
+      window.addEventListener('resize', resize, { passive: true, signal });
+      window.addEventListener('pointermove', handlePointer, { passive: true, signal });
+      window.addEventListener('scroll', handleScroll, { passive: true, signal });
+      document.addEventListener('visibilitychange', handleVisibility, { signal });
+      document.addEventListener('astro:page-load', updateSpatialMode, { signal });
+
+      resize();
+      handleScroll();
+      updateSpatialMode();
+      render(performance.now());
+      root.classList.add('is-ready');
+
+      disposeSpatialScene = () => {
+        disposed = true;
+        abortController.abort();
+        if (animationFrame) cancelAnimationFrame(animationFrame);
+        clearRouteLayer();
+        permanentResources.forEach(resource => resource.dispose());
+        renderer.dispose();
+      };
+      window.addEventListener('pagehide', disposeSpatialScene, { once: true });
+    } catch {
+      root.classList.add('is-unavailable');
+      abortController.abort();
+    }
+  }
+
+  document.addEventListener('astro:page-load', setupSpatialScene);
+  setupSpatialScene();
+</script>
