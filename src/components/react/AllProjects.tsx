@@ -14,7 +14,7 @@ export default function AllProjects() {
       >
         <h1 className="text-4xl font-bold text-[var(--color-text-primary)] mb-3">專案作品</h1>
         <p className="text-[var(--color-text-secondary)] text-lg">
-          以下是我近年來的開發作品，涵蓋後端系統、全端應用到自動化工具
+          開發中的實驗、持續維護的工具，以及只談工程方法的客戶技術案例
         </p>
       </motion.div>
 

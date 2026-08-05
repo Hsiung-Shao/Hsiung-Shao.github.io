@@ -1,8 +1,18 @@
 {
   "projects": [
-    { "name": "multi-stream",       "path": "D:/codeproject/web/multi-stream",      "tier": "personal" },
-    { "name": "minecraftTranslate", "path": "D:/codeproject/minecraftTranslate",    "tier": "personal" },
-    { "name": "myweb",              "path": "D:/codeproject/web/myweb",             "tier": "personal" }
+    { "name": "gameservercontroll", "path": "D:/codeproject/gameservercontroll", "tier": "personal", "status": "active", "contentPolicy": "full" },
+    { "name": "local-task-manager", "path": "D:/codeproject/local-task-manager", "tier": "personal", "status": "active", "contentPolicy": "full" },
+    { "name": "multi-stream", "path": "D:/codeproject/web/multi-stream", "tier": "personal", "status": "maintained", "contentPolicy": "full" },
+    { "name": "Pob2", "path": "D:/codeproject/Pob2", "tier": "personal", "status": "maintained", "contentPolicy": "full" },
+    { "name": "Awakened PoE Trade-zh-TW", "path": "D:/codeproject/apt-patched", "tier": "personal", "status": "active", "contentPolicy": "full" },
+    { "name": "DiscordBot", "path": "D:/codeproject/python/DiscordBot", "tier": "personal", "status": "maintained", "contentPolicy": "full" },
+    { "name": "minecraftTranslate", "path": "D:/codeproject/python/minecraftTranslate", "tier": "personal", "status": "maintained", "contentPolicy": "full" },
+    { "name": "ai-Music", "path": "D:/codeproject/ai-Music", "tier": "personal", "status": "paused", "contentPolicy": "disabled" },
+    { "name": "poe-build", "path": "D:/codeproject/web/poe-build", "tier": "personal", "status": "archived", "contentPolicy": "disabled" },
+    { "name": "protected-commerce-site", "path": "D:/codeproject/web/protected-commerce-site", "tier": "protected", "status": "client", "contentPolicy": "technical-only" },
+    { "name": "protected-management-platform", "path": "D:/codeproject/web/protected-management-platform", "tier": "protected", "status": "client", "contentPolicy": "technical-only" },
+    { "name": "poeMarketTranslate", "path": "D:/codeproject/poeMarketTranslate", "tier": "manual", "status": "maintained", "contentPolicy": "disabled" },
+    { "name": "myweb", "path": "D:/codeproject/web/myweb", "tier": "personal", "status": "active", "contentPolicy": "full" }
   ],
   "forbiddenTerms": [],
   "maxCommitsPerRun": 40

@@ -16,6 +16,14 @@ const categoryLabels: Record<string, string> = {
   tool: 'Tool',
 };
 
+const statusStyles = {
+  active: { label: '開發中', color: '#22c55e' },
+  maintained: { label: '維護中', color: '#22d3ee' },
+  paused: { label: '暫時擱置', color: '#f59e0b' },
+  archived: { label: '已封存', color: '#94a3b8' },
+  client: { label: '客戶案例', color: '#e879f9' },
+} as const;
+
 interface ProjectCardProps {
   project: Project;
   index: number;
@@ -24,6 +32,7 @@ interface ProjectCardProps {
 export default function ProjectCard({ project, index }: ProjectCardProps) {
   const [expanded, setExpanded] = useState(false);
   const color = categoryColors[project.category];
+  const status = statusStyles[project.status];
 
   return (
     <motion.div
@@ -31,18 +40,19 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group relative rounded-xl border border-[var(--color-card-border)] bg-[var(--color-card-bg)] backdrop-blur-sm overflow-hidden hover:border-[var(--color-accent-indigo)]/50 transition-all duration-300"
+      className="group relative rounded-lg border border-[var(--color-card-border)] bg-[var(--color-card-bg)] backdrop-blur-sm overflow-hidden hover:border-[var(--color-accent-indigo)]/50 transition-all duration-300"
     >
-      {/* Category badge */}
-      <div
-        className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium"
-        style={{ backgroundColor: `${color}20`, color }}
-      >
-        {categoryLabels[project.category]}
-      </div>
-
       <div className="p-6">
-        <h3 className="text-xl font-bold text-[var(--color-text-primary)] mb-2 pr-20">
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <span className="px-2 py-1 rounded text-xs font-medium" style={{ backgroundColor: `${status.color}18`, color: status.color }}>
+            {status.label}
+          </span>
+          <span className="px-2 py-1 rounded text-xs font-medium" style={{ backgroundColor: `${color}18`, color }}>
+            {categoryLabels[project.category]}
+          </span>
+        </div>
+
+        <h3 className="text-xl font-bold text-[var(--color-text-primary)] mb-2">
           {project.title}
         </h3>
         <p className="text-sm text-[var(--color-text-secondary)] mb-4 leading-relaxed">
@@ -83,6 +93,15 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
               Live Demo
             </a>
           )}
+          {project.articles.map((slug, articleIndex) => (
+            <a
+              key={slug}
+              href={`/blog/${slug}`}
+              className="text-sm font-medium text-[var(--color-accent-cyan)] hover:underline"
+            >
+              {articleIndex === 0 ? '閱讀文章' : `文章 ${articleIndex + 1}`}
+            </a>
+          ))}
         </div>
 
         <AnimatePresence>

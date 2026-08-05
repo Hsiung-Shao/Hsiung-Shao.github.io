@@ -1,5 +1,77 @@
 [
   {
+    "date": "2026-08-05",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "發佈 v0.16.0：翻譯資料可改放外部資料夾，啟動器介面納入翻譯，並拆分程式與翻譯資料的更新流程。",
+    "tags": ["Path of Building", "i18n", "release"],
+    "commits": ["0977281", "3b1250b"]
+  },
+  {
+    "date": "2026-08-04",
+    "project": "Awakened PoE Trade-zh-TW",
+    "tier": "personal",
+    "summary": "更新至 3.29.905，完成介面繁體中文化，並補齊上游資料庫缺少的傳奇物品與發布更新流程。",
+    "tags": ["Path of Exile", "繁體中文", "Electron"],
+    "commits": ["61f5cbf", "c4e094f", "be02901"]
+  },
+  {
+    "date": "2026-07-31",
+    "project": "品牌網站技術案例",
+    "tier": "protected",
+    "summary": "後台內容管理加入手動排序與置頂規則，讓營運人員能控制前台展示順序，同時維持既有內容流程。",
+    "tags": ["React", "內容管理", "排序"],
+    "commits": ["454f82e"]
+  },
+  {
+    "date": "2026-07-27",
+    "project": "Discord Bot",
+    "tier": "personal",
+    "summary": "新增表情身分組、多專案版本公告與 NLLB-200 本地翻譯引擎，擴充社群自動化與發布通知能力。",
+    "tags": ["Discord", "NLLB-200", "automation"],
+    "commits": ["0e600e7", "3c0d4f7", "86868b2"]
+  },
+  {
+    "date": "2026-07-22",
+    "project": "客戶資料平台技術案例",
+    "tier": "protected",
+    "summary": "修正數值資料的型別邊界與計算一致性，並讓當日報表改用即時指標，降低顯示結果與來源資料不同步的風險。",
+    "tags": ["TypeScript", "資料一致性", "reporting"],
+    "commits": ["8ff1719", "6c64b9d"]
+  },
+  {
+    "date": "2026-07-19",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "聊天室工具列改為獨立佔位，不再遮擋 Twitch 互動介面；同步補齊專案結構與維護交接文件。",
+    "tags": ["Twitch", "UX", "documentation"],
+    "commits": ["4b67022", "d143903"]
+  },
+  {
+    "date": "2026-07-06",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "動態島新增邊緣停靠模式並支援 YouTube 頻道搜尋；背景同步流程改為批次與分片排程，避開服務請求上限。",
+    "tags": ["YouTube", "Cloudflare", "UX"],
+    "commits": ["8b4e739", "64571f8", "37bb269"]
+  },
+  {
+    "date": "2026-07-06",
+    "project": "Game Server Control Panel",
+    "tier": "personal",
+    "summary": "完成 Fastify、WebSocket、SQLite 與程序管理核心；當一般終止命令失敗時加入 Windows 原生程序終止備援。",
+    "tags": ["Fastify", "WebSocket", "Windows"],
+    "commits": ["cadc779", "43437e3"]
+  },
+  {
+    "date": "2026-06-11",
+    "project": "Local Task Manager",
+    "tier": "personal",
+    "summary": "完成專案導向工作區、任意分割面板與 plan.md 同步，並修復介面重新載入後的終端工作階段還原與輸出重播競態。",
+    "tags": ["Electron", "PTY", "workspace"],
+    "commits": ["87a381d", "25d68c0"]
+  },
+  {
     "date": "2026-02-23",
     "project": "multi-stream",
     "tier": "personal",

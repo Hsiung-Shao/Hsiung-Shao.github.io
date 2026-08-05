@@ -7,10 +7,14 @@ export interface Project {
   longDescription: string;
   tech: string[];
   category: 'backend' | 'fullstack' | 'frontend' | 'tool';
+  status: 'active' | 'maintained' | 'paused' | 'archived' | 'client';
+  visibility: 'public' | 'protected';
+  featured: boolean;
   highlights: string[];
+  articles: string[];
   link?: string;
 }
 
 export const projects = rawProjects as Project[];
 
-export const featuredProjects = projects.slice(0, 3);
+export const featuredProjects = projects.filter(project => project.featured);

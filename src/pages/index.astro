@@ -1,12 +1,113 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import HeroSection from '../components/HeroSection.astro';
-import AboutSection from '../components/AboutSection.astro';
-import FeaturedProjects from '../components/react/FeaturedProjects.tsx';
+import { posts } from '../data/posts';
+import { projects } from '../data/projects';
+
+const activeWork = projects.filter(project => project.status === 'active').slice(0, 3);
+const latestPosts = posts.filter(post => !post.draft).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
+const typeLabels = { engineering: '開發筆記', 'case-study': '技術案例', retrospective: '回顧', guide: '使用指南' };
 ---
 
-<Layout title="熊少愆 | Full-stack Engineer">
-  <HeroSection />
-  <AboutSection />
-  <FeaturedProjects client:visible />
+<Layout title="熊少愆 | 獨立軟體開發與技術工作誌" description="熊少愆的個人工作誌：全端系統、本地工具、遊戲資料與可驗證的繁體中文化工程。">
+  <section class="home-hero" aria-labelledby="hero-title">
+    <div class="hero-work-wall" aria-hidden="true">
+      <img src="/images/guides/pobtools/pobtools-pob-main.png" alt="" />
+      <img src="/images/guides/multistream/multistream-live-grid.png" alt="" />
+      <img src="/images/guides/minecraft/00-app-overview.png" alt="" />
+    </div>
+    <div class="hero-shade"></div>
+    <div class="site-shell hero-copy">
+      <div>
+        <span class="kicker !text-[#8fb2ff]">Independent software builder</span>
+        <h1 id="hero-title">熊少愆</h1>
+        <p class="lead">全端工程師，也是長期維護工具的人。從資料模型、桌面程式到遊戲在地化，我在意的不只是功能能跑，而是資料可信、邊界清楚，下一次改版仍然能繼續走下去。</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/projects" class="command-link !border-white !bg-white !text-black hover:!bg-[#8fb2ff]">查看工作索引</a>
+          <a href="/blog" class="command-link secondary !border-white !text-white hover:!bg-white hover:!text-black">閱讀技術文章</a>
+        </div>
+      </div>
+      <div class="hero-foot" aria-label="工作重點">
+        <div><strong>Build</strong><span>React / TypeScript / C++ / Python</span></div>
+        <div><strong>Current</strong><span>控制面板、開發工作台、PoE 工具</span></div>
+        <div><strong>Principle</strong><span>Local-first / verifiable / maintainable</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="site-shell py-20">
+    <div class="section-heading">
+      <div><span class="kicker">Current desk</span><h2>現在正在做的事</h2></div>
+      <p>不是待辦清單，而是目前真正持續投入、會產生下一個版本的工作。</p>
+    </div>
+    <div>
+      {activeWork.map((project, index) => (
+        <article class="work-row">
+          <span class="index">0{index + 1}</span>
+          <div>
+            <h3>{project.title}</h3>
+            <p>{project.description}</p>
+          </div>
+          <div class="work-meta">
+            <p class="meta-label mb-2 text-[var(--blue)]">In development</p>
+            <p>{project.highlights[0]}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+    <div class="mt-6 text-right"><a class="text-link" href="/now">查看完整近況 →</a></div>
+  </section>
+
+  <section class="border-y border-[var(--line-strong)] bg-[var(--surface)]">
+    <div class="site-shell py-20">
+      <div class="section-heading mb-10">
+        <div><span class="kicker">Selected work 01</span><h2>讓多直播觀看變成一個工作區</h2></div>
+        <p>已上線的 MultiStream Hub，把播放器、聊天室、收藏與響應式布局收進同一塊畫布。</p>
+      </div>
+      <div class="media-feature">
+        <figure><img src="/images/guides/multistream/multistream-live-grid.png" alt="MultiStream Hub 同時觀看三個直播與聊天室的畫面" loading="lazy" /></figure>
+        <div class="copy">
+          <div>
+            <span class="meta-label text-[var(--green)]">React / Cloudflare / Supabase</span>
+            <h3>MultiStream Hub</h3>
+            <p>從多 iframe 的生命週期、手機橫向操作，到 Twitch 與 YouTube 的平台限制，這是一個持續在真實瀏覽器環境裡修正的產品。</p>
+          </div>
+          <div class="mt-8 flex flex-wrap gap-4">
+            <a class="text-link" href="/blog/multistream-hub-guide">閱讀完整指南 →</a>
+            <a class="text-link !text-[var(--green)]" href="https://multistreaming.org" target="_blank" rel="noopener noreferrer">開啟網站 ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="site-shell py-20">
+    <div class="section-heading mb-10">
+      <div><span class="kicker">How I work</span><h2>我把工程品質放在哪裡</h2></div>
+      <p>從過去的錯誤紀錄與專案決策裡，逐漸形成的四個工作原則。</p>
+    </div>
+    <div class="principle-grid">
+      <div><span class="meta-label text-[var(--blue)]">01 / Evidence</span><strong>先確認，再敘述</strong><p>文件、版本、資料來源與實際操作都要能交叉核對，尤其是公開指南與遊戲資料。</p></div>
+      <div><span class="meta-label text-[var(--red)]">02 / Boundaries</span><strong>保護不該公開的部分</strong><p>客戶案例只談可重用的工程方法；設定、憑證與營運細節不拿來填充作品集。</p></div>
+      <div><span class="meta-label text-[var(--green)]">03 / Continuity</span><strong>讓上游繼續更新</strong><p>能以低侵入方式共存，就不複製整套系統。PobTools 的零污染策略正是這種選擇。</p></div>
+      <div><span class="meta-label text-[var(--yellow)]">04 / Record</span><strong>把錯誤變成資產</strong><p>問題不只修掉，也記錄症狀、根因、修法與預防方式，減少下一次用相同代價學習。</p></div>
+    </div>
+  </section>
+
+  <section class="border-y border-[var(--line-strong)] bg-[var(--surface)]">
+    <div class="site-shell py-20">
+      <div class="section-heading mb-4">
+        <div><span class="kicker">Latest writing</span><h2>最近整理的文章</h2></div>
+        <a class="text-link" href="/blog">全部文章 →</a>
+      </div>
+      <div class="post-index">
+        {latestPosts.map(post => (
+          <article><a class="post-row" href={`/blog/${post.slug}`}>
+            <div class="font-mono text-xs text-[var(--quiet)]"><time>{post.date}</time><div class="mt-2 text-[var(--red)]">{post.type ? typeLabels[post.type] : '文章'}</div></div>
+            <div><h2>{post.title}</h2><p>{post.excerpt}</p></div>
+            <div class="flex flex-wrap content-start gap-1">{post.tags.slice(0, 4).map(tag => <span class="tag">{tag}</span>)}</div>
+          </a></article>
+        ))}
+      </div>
+    </div>
+  </section>
 </Layout>

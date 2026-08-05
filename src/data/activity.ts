@@ -6,6 +6,7 @@ export interface ActivityEntry {
   tier: 'personal' | 'protected';
   summary: string;
   tags?: string[];
+  commits?: string[];
   link?: string;
 }
 

@@ -2,38 +2,49 @@
 import Layout from '../../layouts/Layout.astro';
 import { posts } from '../../data/posts';
 
-const published = posts.filter(p => !p.draft).sort((a, b) => b.date.localeCompare(a.date));
+const published = posts.filter(post => !post.draft).sort((a, b) => b.date.localeCompare(a.date));
+const guides = published.filter(post => post.type === 'guide');
+const records = published.filter(post => post.type !== 'guide');
+const typeLabels = { engineering: '開發筆記', 'case-study': '技術案例', retrospective: '回顧', guide: '使用指南' };
+const guideImages: Record<string, string> = {
+  'multistream-hub-guide': '/images/guides/multistream/multistream-live-grid.png',
+  'pobtools-installation-guide': '/images/guides/pobtools/pobtools-pob-main.png',
+  'poe-market-zh-guide': '/images/guides/poe-market/poemarketzh-1-popup.png',
+  'minecraft-mod-translation-guide': '/images/guides/minecraft/00-app-overview.png',
+};
 ---
 
-<Layout title="部落格 | 熊少愆">
-  <section class="max-w-3xl mx-auto px-6 py-16">
-    <header class="mb-10">
-      <h1 class="text-4xl font-bold mb-2">Blog</h1>
-      <p class="text-sm text-[var(--color-text-secondary)]">從實作中整理出的技術筆記與設計心得。</p>
-    </header>
+<Layout title="文章與使用指南 | 熊少愆" description="專案使用指南、工程決策、技術案例與開發回顧。">
+  <header class="page-intro site-shell">
+    <span class="kicker">Field notes / {published.length} articles</span>
+    <h1>從使用方法，寫到決策背後。</h1>
+    <p>公開工具需要能被正確使用，工程成果也需要留下原因。文章分成可照著操作的完整指南，以及記錄架構、取捨與失敗經驗的工作筆記。</p>
+  </header>
 
-    {published.length === 0 ? (
-      <p class="text-[var(--color-text-secondary)]">尚未有已發佈的文章。草稿會先通過人工審閱再上架。</p>
-    ) : (
-      <ul class="space-y-6">
-        {published.map(p => (
-          <li>
-            <a href={`/blog/${p.slug}`} class="block rounded-lg border border-[var(--color-card-border)] bg-[var(--color-card-bg)] p-6 hover:border-[var(--color-accent-cyan)] transition-colors">
-              <div class="flex items-center gap-2 mb-2 text-xs text-[var(--color-text-secondary)]">
-                <time>{p.date}</time>
-                {p.project && <><span>·</span><span>{p.project}</span></>}
-              </div>
-              <h2 class="text-xl font-semibold mb-2">{p.title}</h2>
-              <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">{p.excerpt}</p>
-              {p.tags.length > 0 && (
-                <div class="mt-3 flex flex-wrap gap-1">
-                  {p.tags.map(t => <span class="text-xs px-2 py-0.5 rounded bg-[var(--color-bg-primary)]">#{t}</span>)}
-                </div>
-              )}
-            </a>
-          </li>
+  <section class="site-shell py-20">
+    <div class="section-heading mb-10"><div><span class="kicker">Practical guides</span><h2>可以實際完成任務的指南</h2></div><p>安裝、設定、驗證與常見問題放在同一篇文章裡，不把重要步驟藏在零散說明中。</p></div>
+    <div class="guide-lead-grid">
+      {guides.slice(0, 3).map((post, index) => (
+        <a class="guide-lead" href={`/blog/${post.slug}`}>
+          <figure>{guideImages[post.slug] && <img src={guideImages[post.slug]} alt={`${post.project ?? post.title} 操作畫面`} loading={index === 0 ? 'eager' : 'lazy'} />}</figure>
+          <div><span class="meta-label text-[var(--red)]">Guide {String(index + 1).padStart(2, '0')}</span><h2>{post.title}</h2><p>{post.excerpt}</p></div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="border-y border-[var(--line-strong)] bg-[var(--surface)]">
+    <div class="site-shell py-20">
+      <div class="section-heading mb-4"><div><span class="kicker">All writing</span><h2>完整文章索引</h2></div><p>依發布時間排列，涵蓋公開指南、專案回顧與去識別化技術案例。</p></div>
+      <div class="post-index">
+        {[...guides.slice(3), ...records].sort((a, b) => b.date.localeCompare(a.date)).map(post => (
+          <article><a class="post-row" href={`/blog/${post.slug}`}>
+            <div class="font-mono text-xs text-[var(--quiet)]"><time>{post.date}</time><div class="mt-2 text-[var(--red)]">{post.type ? typeLabels[post.type] : '文章'}</div></div>
+            <div><h2>{post.title}</h2><p>{post.excerpt}</p></div>
+            <div class="flex flex-wrap content-start gap-1">{post.tags.slice(0, 4).map(tag => <span class="tag">{tag}</span>)}</div>
+          </a></article>
         ))}
-      </ul>
-    )}
+      </div>
+    </div>
   </section>
 </Layout>

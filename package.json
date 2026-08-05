@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "npm run validate-content && astro build",
+    "validate-content": "node scripts/validate-content.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "update-site": "node scripts/update-site.mjs"

@@ -1,8 +1,98 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import AllProjects from '../components/react/AllProjects.tsx';
+import { projects } from '../data/projects';
+
+const statusLabels = {
+  active: '開發中',
+  maintained: '持續維護',
+  paused: '暫時擱置',
+  archived: '已封存',
+  client: '技術案例',
+};
+
+const categoryLabels = {
+  backend: 'Backend',
+  fullstack: 'Full stack',
+  frontend: 'Frontend',
+  tool: 'Tooling',
+};
+
+const primary = projects.filter(project => ['active', 'maintained'].includes(project.status));
+const historical = projects.filter(project => ['paused', 'archived'].includes(project.status));
+const protectedCases = projects.filter(project => project.visibility === 'protected');
+
+const groups = [
+  { label: 'Current & maintained', title: '仍在推進的系統', description: '正在開發或持續維護的公開專案。展開每一列可以查看設計重點、技術組合與相關文章。', items: primary },
+  { label: 'Archive', title: '已暫停與完成的探索', description: '不是刪除紀錄，而是保留當時解決的問題、做過的取捨與可以延續的技術成果。', items: historical },
+];
 ---
 
-<Layout title="專案作品 | 熊少愆">
-  <AllProjects client:visible />
+<Layout title="工作索引 | 熊少愆" description="熊少愆的公開專案、開發中系統與去識別化技術案例。">
+  <header class="page-intro site-shell">
+    <span class="kicker">Work index / {projects.length} records</span>
+    <h1>系統、工具與長期維護。</h1>
+    <p>這裡不是作品縮圖牆，而是一份可以追溯的工作索引。每個專案都保留它解決的問題、目前狀態，以及實際可閱讀的技術紀錄。</p>
+  </header>
+
+  {groups.map(group => group.items.length > 0 && (
+    <section class="site-shell py-20">
+      <div class="section-heading mb-4">
+        <div><span class="kicker">{group.label}</span><h2>{group.title}</h2></div>
+        <p>{group.description}</p>
+      </div>
+      <div class="project-index">
+        {group.items.map((project, index) => (
+          <article>
+            <details>
+              <summary class="project-summary">
+                <span class="meta-label text-[var(--quiet)]">{String(index + 1).padStart(2, '0')}</span>
+                <div><h2>{project.title}</h2><span class="meta-label text-[var(--blue)]">{statusLabels[project.status]} / {categoryLabels[project.category]}</span></div>
+                <p>{project.description}</p>
+                <span class="toggle" aria-hidden="true">+</span>
+              </summary>
+              <div class="project-detail">
+                <div>
+                  <p>{project.longDescription}</p>
+                  <div class="mt-5 flex flex-wrap gap-1">{project.tech.map(item => <span class="tag">{item}</span>)}</div>
+                </div>
+                <div>
+                  <span class="meta-label">Key decisions</span>
+                  <ul class="mt-3 list-square pl-5">{project.highlights.map(item => <li>{item}</li>)}</ul>
+                  <div class="mt-5 flex flex-wrap gap-5">
+                    {project.articles.map(slug => <a class="text-link" href={`/blog/${slug}`}>閱讀相關文章 ↗</a>)}
+                    {project.link && <a class="text-link !text-[var(--green)]" href={project.link} target="_blank" rel="noopener noreferrer">查看專案 ↗</a>}
+                  </div>
+                </div>
+              </div>
+            </details>
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  {protectedCases.length > 0 && (
+    <section class="border-y border-[var(--line-strong)] bg-[var(--night)] text-white">
+      <div class="site-shell py-20">
+        <div class="section-heading !border-white/40 mb-4">
+          <div><span class="kicker !text-[#8fb2ff]">Protected work</span><h2>客戶專案的技術切面</h2></div>
+          <p class="!text-white/65">只談可公開的架構、工程方法與解題方向；不揭露客戶名稱、營運資料與商業細節。</p>
+        </div>
+        <div class="project-index">
+          {protectedCases.map((project, index) => (
+            <article class="!border-white/25">
+              <details>
+                <summary class="project-summary">
+                  <span class="meta-label text-white/50">C{String(index + 1).padStart(2, '0')}</span>
+                  <div><h2>{project.title}</h2><span class="meta-label text-[#8fb2ff]">Technical case</span></div>
+                  <p class="!text-white/65">{project.description}</p><span class="toggle !text-[#8fb2ff]">+</span>
+                </summary>
+                <div class="project-detail"><p class="!text-white/65">{project.longDescription}</p><ul class="list-square pl-5 text-white/65">{project.highlights.map(item => <li>{item}</li>)}</ul></div>
+              </details>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 </Layout>

@@ -22,7 +22,7 @@ function isGitRepo(path) {
 }
 
 function gitCmd(repo, args) {
-  return execSync(`git -C "${repo}" ${args}`, { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  return execSync(`git -c safe.directory="${repo}" -C "${repo}" ${args}`, { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 }
 
 function getNewCommits(repo, sinceSha, maxCount) {
@@ -60,6 +60,7 @@ function main() {
   const nextLastrun = { projects: { ...lastrun.projects } };
 
   for (const project of config.projects) {
+    if (project.contentPolicy === 'disabled') { log(`略過(內容更新已停用):${project.name}`); continue; }
     if (!isGitRepo(project.path)) { log(`略過(非 git repo):${project.name}`); continue; }
     const lastSha = lastrun.projects[project.name];
     const commits = getNewCommits(project.path, lastSha, config.maxCommitsPerRun ?? 40);
@@ -67,8 +68,8 @@ function main() {
     totalCommits += commits.length;
     log(`${project.name}: ${commits.length} 個新 commit`);
 
-    const rules = project.tier === 'protected'
-      ? '⚠ **此為客戶/公司專案**,摘要時只能講「設計理念與架構層面」,嚴禁出現客戶名、品牌名、表名、欄位名、業務流程術語。不嵌 code snippet。'
+    const rules = project.contentPolicy === 'technical-only'
+      ? '⚠ **此為客戶專案**,只能產出去識別化的技術案例。嚴禁出現客戶名、品牌名、表名、欄位名、業務資料與實際流程。不嵌 code snippet，發佈前必須人工審閱。'
       : '個人專案,可詳述功能與實作,若有教學價值可產出 blogDraft,可嵌不超過 15 行 code snippet。';
 
     const lines = [];
@@ -125,12 +126,12 @@ function main() {
     '',
     '1. **activity.json**:每個專案挑 1-3 則最具代表性的活動,append 到陣列末尾。格式:',
     '   ```json',
-    '   { "date": "YYYY-MM-DD", "project": "專案名", "tier": "personal|protected", "summary": "40-80字摘要", "tags": ["tag"] }',
+    '   { "date": "YYYY-MM-DD", "project": "專案名", "tier": "personal|protected", "summary": "40-80字摘要", "tags": ["tag"], "commits": ["7字元短 SHA"] }',
     '   ```',
     '',
-    '2. **posts.json**(僅限 personal 專案):若有明確教學價值的 commit,產出一則 blog 草稿 append 到陣列末尾,`draft: true`。格式:',
+    '2. **posts.json**:若有明確教學價值的 commit,產出一則 blog 草稿 append 到陣列末尾,`draft: true`。protected 專案只能產出去識別化的技術案例。格式:',
     '   ```json',
-    '   { "slug": "短英文-slug", "title": "標題", "date": "YYYY-MM-DD", "tags": ["tag"], "draft": true, "excerpt": "120字內摘要", "body": "Markdown 內文", "project": "專案名" }',
+    '   { "slug": "短英文-slug", "title": "標題", "date": "YYYY-MM-DD", "tags": ["tag"], "draft": true, "type": "engineering|case-study|retrospective", "visibility": "public|protected", "excerpt": "120字內摘要", "body": "Markdown 內文", "project": "專案名或客戶技術案例" }',
     '   ```',
     '',
     '3. **now.json**:覆蓋整個物件,`updated` 設為現在 ISO 時間,`projects` 列出有進展的專案(最多 6 個)。格式:',
@@ -141,6 +142,9 @@ function main() {
     '**護欄**:',
     `- ${config.projects.filter(p => p.tier === 'protected').map(p => p.name).join('、')} 是客戶專案,只能講設計理念與架構,禁止出現客戶名、表名、欄位名、業務術語、特定 API 路徑`,
     `- forbiddenTerms: ${JSON.stringify(config.forbiddenTerms ?? [])} — 若要出現必須先跟使用者確認`,
+    '- protected 文章必須使用 `type: "case-study"`、`visibility: "protected"`，且 `project` 只能寫「客戶技術案例」',
+    '- 所有文章先保持 `draft: true`，人工確認後才能發佈',
+    '- activity 必須保留來源 commit 的 7 字元短 SHA；同一批相關 commit 應合併成一則代表性活動，避免逐筆灌入頁面',
     '- 完成後把 `scripts/.lastrun.json` 更新為下方的 nextLastrun 值',
     '',
     '**nextLastrun**(完成後寫入 `scripts/.lastrun.json`):',

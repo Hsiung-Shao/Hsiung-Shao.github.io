@@ -22,6 +22,10 @@
 | `/` | 首頁 — 3D Hero Scene、個人簡介、精選專案 |
 | `/about` | 關於我 — 個人介紹、基本資訊、興趣、工作經歷、3D 技能球 |
 | `/projects` | 專案作品 — 所有專案卡片（可展開詳情） |
+| `/blog` | 開發部落格 — 開發筆記、技術案例與專案回顧 |
+| `/activity` | 開發活動 — 從各專案整理的代表性進度 |
+| `/now` | 目前動態 — 當前開發焦點與專案狀態 |
+| `/support` | 贊助支持 — Buy Me a Coffee 與揭露過的聯盟連結 |
 | `/contact` | 聯絡方式 — Email、GitHub、Discord、X (Twitter)、留言表單 |
 
 ## Project Structure
@@ -42,14 +46,16 @@ src/
 │   ├── Footer.astro
 │   ├── HeroSection.astro
 │   └── Navbar.astro
-├── data/
-│   └── projects.ts      # 專案資料
+├── data/                # 專案、文章、活動與 Now 資料
 ├── layouts/
 │   └── Layout.astro     # 共用版面
 ├── pages/
 │   ├── index.astro
 │   ├── about.astro
 │   ├── projects.astro
+│   ├── blog/            # 文章列表與靜態文章頁
+│   ├── activity.astro
+│   ├── now.astro
 │   └── contact.astro
 └── styles/
     └── global.css
@@ -76,6 +82,14 @@ npm run preview
 推送到 `main` 分支後，GitHub Actions 會自動建置並部署到 GitHub Pages。
 
 工作流程定義在 `.github/workflows/deploy.yml`。
+
+## Content Workflow
+
+- `src/data/projects.json` 保存專案狀態、公開層級與文章關聯。
+- `src/data/posts.json` 保存文章；新內容預設應以草稿加入，人工確認後才發佈。
+- `scripts/projects.config.json` 定義專案來源與內容政策。客戶專案只能使用 `technical-only`。
+- `npm run validate-content` 檢查資料結構、文章關聯與客戶案例護欄。
+- `npm run update-site` 掃描允許的 Git 專案並產生待審閱 digest。
 
 ## License
 
