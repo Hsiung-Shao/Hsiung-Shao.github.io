@@ -6,9 +6,10 @@ interface Props {
   title: string;
   description: string;
   variant: 'editorial' | 'cinematic' | 'bento';
+  showChooser?: boolean;
 }
 
-const { title, description, variant } = Astro.props;
+const { title, description, variant, showChooser = true } = Astro.props;
 ---
 
 <!doctype html>
@@ -22,7 +23,7 @@ const { title, description, variant } = Astro.props;
     <title>{title}</title>
   </head>
   <body class={`concept-page concept-${variant}`}>
-    <ConceptChooser />
+    {showChooser && <ConceptChooser />}
     <slot />
   </body>
 </html>
