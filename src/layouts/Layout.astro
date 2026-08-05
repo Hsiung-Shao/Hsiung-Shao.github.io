@@ -1,6 +1,8 @@
 ---
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import MotionSystem from '../components/MotionSystem.astro';
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 
 interface Props {
@@ -21,6 +23,7 @@ const { title, description = '熊少愆（Jerry）的個人網站 - Full-stack E
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet" />
+    <ClientRouter />
     <title>{title}</title>
   </head>
   <body class="min-h-screen">
@@ -29,5 +32,6 @@ const { title, description = '熊少愆（Jerry）的個人網站 - Full-stack E
       <slot />
     </main>
     <Footer />
+    <MotionSystem />
   </body>
 </html>
