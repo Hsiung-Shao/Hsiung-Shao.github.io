@@ -66,3 +66,4 @@ myweb/
 | 2026-08-05 | Replaced the editorial presentation with a persistent route-aware Three.js spatial portfolio, real project textures, and a responsive system-console interface across every route. |
 | 2026-08-05 | Replaced the perspective data tunnel with a generated signal terrain, moving survey bands, and pulsing field markers. |
 | 2026-08-05 | Reworked the spatial portfolio into a solid-form gallery with matte 3D volumes, restrained editorial surfaces, and minimal line-based decoration. |
+| 2026-08-05 | Added three isolated homepage concepts for selection: Swiss editorial motion, cinematic WebGL archive, and product-oriented Bento modules. |

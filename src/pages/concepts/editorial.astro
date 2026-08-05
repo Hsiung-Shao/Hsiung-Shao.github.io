@@ -1,0 +1,38 @@
+---
+import ConceptLayout from '../../layouts/ConceptLayout.astro';
+import ConceptScene from '../../components/react/ConceptScene';
+---
+
+<ConceptLayout variant="editorial" title="風格 A：Swiss Motion Index | 熊少愆" description="以瑞士編輯設計、偏移網格與大型字體呈現的個人首頁概念。">
+  <main class="editorial-home">
+    <ConceptScene variant="editorial" client:load />
+    <header class="editorial-nav">
+      <a href="/" class="editorial-mark">熊少愆</a>
+      <p>FULL-STACK ENGINEER<br />INDEPENDENT BUILDER</p>
+      <span>TAIWAN · 2026</span>
+    </header>
+
+    <section class="editorial-hero">
+      <div class="editorial-sequence" aria-hidden="true">A / 01</div>
+      <div class="editorial-title">
+        <p>Software, tools and the decisions behind them.</p>
+        <h1>BUILD<br /><span>WHAT</span><br />LASTS.</h1>
+      </div>
+      <div class="editorial-intro">
+        <strong>熊少愆</strong>
+        <p>全端工程師，也是長期維護工具的人。從資料模型、桌面程式到遊戲在地化，讓每個系統都能被理解、驗證並繼續維護。</p>
+        <div><a href="/projects">查看專案 ↗</a><a href="/blog">閱讀文章 ↗</a></div>
+      </div>
+      <div class="editorial-scroll">SCROLL TO INDEX ↓</div>
+    </section>
+
+    <section class="editorial-index">
+      <header><span>SELECTED WORK</span><h2>三個正在形成下一個版本的系統。</h2></header>
+      <div class="editorial-projects">
+        <a href="/blog/awakened-poe-trade-zh-tw-guide"><span>01</span><strong>Awakened PoE Trade-zh-TW</strong><small>Desktop · Localization</small></a>
+        <a href="/blog/poe-market-zh-guide"><span>02</span><strong>Poe Market zh</strong><small>Browser · Translation</small></a>
+        <a href="/blog/pobtools-installation-guide"><span>03</span><strong>PobTools</strong><small>Tooling · Path of Building</small></a>
+      </div>
+    </section>
+  </main>
+</ConceptLayout>

@@ -1,0 +1,43 @@
+---
+import ConceptLayout from '../../layouts/ConceptLayout.astro';
+import ConceptScene from '../../components/react/ConceptScene';
+---
+
+<ConceptLayout variant="bento" title="風格 C：Product Bento | 熊少愆" description="以模組化資訊架構、專案狀態與產品視角呈現的個人首頁概念。">
+  <main class="bento-home">
+    <ConceptScene variant="bento" client:load />
+    <header class="bento-nav">
+      <a href="/" class="bento-brand"><span>熊</span><strong>熊少愆</strong></a>
+      <nav><a href="/projects">專案</a><a href="/blog">文章</a><a href="/about">關於</a></nav>
+      <a href="/contact" class="bento-contact">聯絡我 ↗</a>
+    </header>
+
+    <section class="bento-grid">
+      <article class="bento-intro">
+        <span class="bento-status"><i></i> CURRENTLY BUILDING</span>
+        <h1>把複雜系統，做成可靠的日常工具。</h1>
+        <p>我是熊少愆，專注於全端系統、本地工具、遊戲資料與可驗證的繁體中文化工程。</p>
+        <div><a href="/projects">查看工作</a><a href="/now">目前進度</a></div>
+      </article>
+
+      <article class="bento-visual" aria-label="MultiStream Hub 專案 3D 預覽">
+        <span>FEATURED BUILD</span><strong>MultiStream Hub</strong><small>Live · React · Cloudflare</small>
+      </article>
+
+      <article class="bento-now">
+        <span>NOW / 03</span>
+        <ul><li>Awakened PoE Trade-zh-TW</li><li>Poe Market zh</li><li>PobTools</li></ul>
+      </article>
+
+      <article class="bento-principle"><span>WORKING PRINCIPLE</span><blockquote>「先確認，再敘述；先釐清邊界，再選擇技術。」</blockquote></article>
+
+      <a class="bento-writing" href="/blog/pobtools-installation-guide"><span>LATEST GUIDE</span><strong>PobTools：不修改原始 POB 的繁體中文化工具</strong><small>閱讀 12 分鐘 ↗</small></a>
+
+      <article class="bento-stack"><span>CORE STACK</span><div><strong>TS</strong><strong>RE</strong><strong>C++</strong><strong>PY</strong></div></article>
+    </section>
+
+    <section class="bento-next">
+      <span>12 PROJECTS · 13 ARTICLES</span><h2>每個成果都有來源、狀態與可以繼續閱讀的技術紀錄。</h2>
+    </section>
+  </main>
+</ConceptLayout>

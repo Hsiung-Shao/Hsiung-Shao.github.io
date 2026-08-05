@@ -1,0 +1,28 @@
+---
+import ConceptChooser from '../components/ConceptChooser.astro';
+import '../styles/concepts.css';
+
+interface Props {
+  title: string;
+  description: string;
+  variant: 'editorial' | 'cinematic' | 'bento';
+}
+
+const { title, description, variant } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class={`concept-page concept-${variant}`}>
+    <ConceptChooser />
+    <slot />
+  </body>
+</html>

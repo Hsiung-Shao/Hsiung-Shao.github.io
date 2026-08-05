@@ -1,0 +1,17 @@
+---
+const currentPath = Astro.url.pathname;
+const concepts = [
+  { href: '/concepts/editorial', code: 'A', label: '編輯動態' },
+  { href: '/concepts/cinematic', code: 'B', label: '沉浸展覽' },
+  { href: '/concepts/bento', code: 'C', label: '產品模組' },
+];
+---
+
+<nav class="concept-chooser" aria-label="首頁風格選擇">
+  <a class="chooser-home" href="/" aria-label="返回目前首頁">←</a>
+  {concepts.map(item => (
+    <a href={item.href} aria-current={currentPath === item.href ? 'page' : undefined}>
+      <span>{item.code}</span><small>{item.label}</small>
+    </a>
+  ))}
+</nav>
