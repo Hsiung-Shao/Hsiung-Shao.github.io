@@ -64,3 +64,4 @@ myweb/
 | 2026-08-05 | Reframed the site as an editorial engineering archive, redesigned all primary routes, added project and article indexes, and removed decorative 3D UI from active pages. |
 | 2026-08-05 | Added the animated editorial experiment: page wipes, view transitions, scroll reveals, hero parallax, project interactions, and a Git activity timeline. |
 | 2026-08-05 | Replaced the editorial presentation with a persistent route-aware Three.js spatial portfolio, real project textures, and a responsive system-console interface across every route. |
+| 2026-08-05 | Replaced the perspective data tunnel with a generated signal terrain, moving survey bands, and pulsing field markers. |

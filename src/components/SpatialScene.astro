@@ -1,7 +1,7 @@
 <div class="spatial-scene" data-spatial-scene transition:persist="spatial-scene" aria-hidden="true">
   <canvas></canvas>
-  <div class="scene-coordinate coordinate-x">X / 24.91</div>
-  <div class="scene-coordinate coordinate-y">Y / 08.05</div>
+  <div class="scene-coordinate coordinate-x">FIELD / SIGNAL MAP</div>
+  <div class="scene-coordinate coordinate-y">SCAN / LIVE</div>
   <div class="scene-corner corner-a"></div>
   <div class="scene-corner corner-b"></div>
 </div>
@@ -54,29 +54,72 @@
       let routeResources: Array<{ dispose: () => void }> = [];
       let routeObjects: Array<{ material?: { opacity?: number }; position: { z: number } }> = [];
 
-      const floor = new THREE.GridHelper(34, 34, 0x5cf2d6, 0x26312a);
-      floor.position.set(0, -3.25, -7);
-      floor.material.transparent = true;
-      floor.material.opacity = 0.34;
-      world.add(floor);
-      permanentResources.push(floor.geometry, floor.material);
+      const fieldHeight = (x: number, z: number) =>
+        -2.85 + Math.sin(x * 0.46 + z * 0.18) * 0.34 + Math.cos(z * 0.31 - x * 0.16) * 0.2;
 
-      const tunnelFrames: Array<{ position: { z: number }; rotation: { z: number } }> = [];
-      for (let index = 0; index < 10; index += 1) {
-        const box = new THREE.BoxGeometry(13 + index * 0.4, 7.4 + index * 0.22, 0.02);
+      const fieldPositions: number[] = [];
+      const fieldSize = 24;
+      const fieldSteps = 24;
+      const fieldStart = -fieldSize / 2;
+      for (let row = 0; row <= fieldSteps; row += 1) {
+        const z = fieldStart + (row / fieldSteps) * fieldSize - 5;
+        for (let column = 0; column < fieldSteps; column += 1) {
+          const xA = fieldStart + (column / fieldSteps) * fieldSize;
+          const xB = fieldStart + ((column + 1) / fieldSteps) * fieldSize;
+          fieldPositions.push(xA, fieldHeight(xA, z), z, xB, fieldHeight(xB, z), z);
+        }
+      }
+      for (let column = 0; column <= fieldSteps; column += 1) {
+        const x = fieldStart + (column / fieldSteps) * fieldSize;
+        for (let row = 0; row < fieldSteps; row += 1) {
+          const zA = fieldStart + (row / fieldSteps) * fieldSize - 5;
+          const zB = fieldStart + ((row + 1) / fieldSteps) * fieldSize - 5;
+          fieldPositions.push(x, fieldHeight(x, zA), zA, x, fieldHeight(x, zB), zB);
+        }
+      }
+
+      const fieldGeometry = new THREE.BufferGeometry();
+      fieldGeometry.setAttribute('position', new THREE.Float32BufferAttribute(fieldPositions, 3));
+      const fieldMaterial = new THREE.LineBasicMaterial({ color: 0x5cf2d6, transparent: true, opacity: 0.2 });
+      const signalField = new THREE.LineSegments(fieldGeometry, fieldMaterial);
+      world.add(signalField);
+      permanentResources.push(fieldGeometry, fieldMaterial);
+
+      const scanBands: Array<{ position: { z: number } }> = [];
+      for (let index = 0; index < 3; index += 1) {
+        const box = new THREE.BoxGeometry(22, 0.04, 2.2);
         const edges = new THREE.EdgesGeometry(box);
         const material = new THREE.LineBasicMaterial({
-          color: index % 2 === 0 ? 0xd8ff3e : 0x5cf2d6,
+          color: index === 1 ? 0xff6b52 : 0xd8ff3e,
           transparent: true,
-          opacity: index % 2 === 0 ? 0.12 : 0.08,
+          opacity: index === 1 ? 0.28 : 0.2,
         });
-        const frame = new THREE.LineSegments(edges, material);
-        frame.position.z = 2 - index * 2.2;
-        frame.rotation.z = index * 0.008;
-        world.add(frame);
-        tunnelFrames.push(frame);
+        const band = new THREE.LineSegments(edges, material);
+        band.position.set(0, -2.42, -18 + index * 8);
+        world.add(band);
+        scanBands.push(band);
         permanentResources.push(box, edges, material);
       }
+
+      const signalPillars: Array<{ material: { opacity: number }; scale: { y: number } }> = [];
+      const pillarLayout: Array<[number, number, number]> = [
+        [-8.8, -8.5, 2.2], [-6.4, -14, 1.1], [-3.1, -11, 1.7],
+        [4.6, -15.5, 1.4], [7.1, -9, 2.6], [9.2, -4.5, 1.3],
+      ];
+      pillarLayout.forEach(([x, z, height], index) => {
+        const box = new THREE.BoxGeometry(0.12, height, 0.12);
+        const edges = new THREE.EdgesGeometry(box);
+        const material = new THREE.LineBasicMaterial({
+          color: index % 3 === 0 ? 0xff6b52 : 0xd8ff3e,
+          transparent: true,
+          opacity: 0.28,
+        });
+        const pillar = new THREE.LineSegments(edges, material);
+        pillar.position.set(x, fieldHeight(x, z) + height / 2, z);
+        world.add(pillar);
+        signalPillars.push(pillar);
+        permanentResources.push(box, edges, material);
+      });
 
       const clearRouteLayer = () => {
         while (routeLayer.children.length) routeLayer.remove(routeLayer.children[0]);
@@ -220,9 +263,14 @@
         routeLayer.rotation.x += (scrollProgress * 0.13 - routeLayer.rotation.x) * 0.025;
 
         if (!reduceMotion) {
-          tunnelFrames.forEach((frame, index) => {
-            frame.position.z += delta * (0.28 + index * 0.006);
-            if (frame.position.z > 2.5) frame.position.z -= 22;
+          scanBands.forEach((band, index) => {
+            band.position.z += delta * (1.25 + index * 0.12);
+            if (band.position.z > 5) band.position.z = -19;
+          });
+          signalPillars.forEach((pillar, index) => {
+            const pulse = 0.72 + Math.sin(time * 0.0014 + index * 1.7) * 0.28;
+            pillar.scale.y = pulse;
+            pillar.material.opacity = 0.18 + pulse * 0.18;
           });
           routeObjects.forEach((object, index) => {
             object.position.z += Math.sin(time * 0.00035 + index) * 0.0008;
