@@ -1,14 +1,14 @@
 ---
 const links = [
-  { href: '/projects', label: '專案' },
-  { href: '/blog', label: '文章' },
-  { href: '/activity', label: '活動' },
-  { href: '/now', label: '現在' },
-  { href: '/about', label: '關於' },
+  { href: '/projects', label: 'Work' },
+  { href: '/blog', label: 'Notes' },
+  { href: '/activity', label: 'Log' },
+  { href: '/now', label: 'Now' },
+  { href: '/about', label: 'Profile' },
 ];
 const utility = [
-  { href: '/support', label: '支持' },
-  { href: '/contact', label: '聯絡' },
+  { href: '/support', label: 'Support' },
+  { href: '/contact', label: 'Contact' },
 ];
 const currentPath = Astro.url.pathname;
 const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
@@ -16,17 +16,11 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
 
 <header class="spatial-nav">
   <div class="spatial-nav-inner">
-    <a href="/" class="spatial-brand" aria-label="熊少愆首頁">
-      <span class="brand-signal" aria-hidden="true"></span>
-      <span><strong>熊少愆</strong><small>INDEPENDENT PRACTICE</small></span>
-    </a>
+    <a href="/" class="spatial-brand" aria-label="熊少愆首頁"><strong>HSIUNG<br />SHAO</strong></a>
+    <p class="nav-practice">Independent software practice<br />Taiwan</p>
 
     <nav class="spatial-links" aria-label="主要導覽">
-      {links.map(link => (
-        <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
-          <span>{link.label}</span>
-        </a>
-      ))}
+      {links.map(link => <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>{link.label}</a>)}
     </nav>
 
     <nav class="spatial-utility" aria-label="次要導覽">
@@ -39,9 +33,7 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
   </div>
 
   <nav id="mobile-menu" class="spatial-mobile-menu" aria-label="行動版導覽">
-    {[...links, ...utility].map(link => (
-      <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}><span>{link.label}</span></a>
-    ))}
+    {[...links, ...utility].map(link => <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>{link.label}</a>)}
   </nav>
 </header>
 
