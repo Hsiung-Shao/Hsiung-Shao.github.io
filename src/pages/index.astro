@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import ThreeHero from '../components/ThreeHero.astro';
 import { posts } from '../data/posts';
 import { projects } from '../data/projects';
 
@@ -16,6 +17,7 @@ const typeLabels = { engineering: '開發筆記', 'case-study': '技術案例', 
       <img src="/images/guides/minecraft/00-app-overview.png" alt="" />
     </div>
     <div class="hero-shade"></div>
+    <ThreeHero />
     <div class="site-shell hero-copy">
       <div>
         <span class="kicker !text-[#8fb2ff]">Independent software builder</span>

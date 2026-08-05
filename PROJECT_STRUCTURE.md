@@ -42,6 +42,7 @@ myweb/
 - `src/data/guides/` - Long-form public usage guides with verified screenshots and procedures.
 - `src/pages/blog/` - Static blog index and article routes.
 - `src/components/MotionSystem.astro` - Shared page transitions, scroll reveals, progress, parallax, tilt, and reduced-motion behavior.
+- `src/components/ThreeHero.astro` - Lazy-loaded full-bleed Three.js data tunnel with lifecycle cleanup and reduced-motion fallback.
 - `src/components/react/ProjectCard.tsx` - Interactive portfolio card with status and article actions.
 - `scripts/projects.config.json` - Source repositories and per-project content policy.
 - `scripts/update-site.mjs` - Generates a review digest from allowed Git histories.
@@ -62,3 +63,4 @@ myweb/
 | 2026-08-01 | Added five public project guides, Awakened PoE Trade-zh-TW, and a sponsorship disclosure page. |
 | 2026-08-05 | Reframed the site as an editorial engineering archive, redesigned all primary routes, added project and article indexes, and removed decorative 3D UI from active pages. |
 | 2026-08-05 | Added the animated editorial experiment: page wipes, view transitions, scroll reveals, hero parallax, project interactions, and a Git activity timeline. |
+| 2026-08-05 | Added a full-bleed Three.js wireframe data tunnel to the animated homepage, loaded only when the scene is present. |
