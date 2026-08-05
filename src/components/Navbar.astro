@@ -1,10 +1,10 @@
 ---
 const links = [
-  { href: '/projects', code: '01', label: '專案' },
-  { href: '/blog', code: '02', label: '文章' },
-  { href: '/activity', code: '03', label: '活動' },
-  { href: '/now', code: '04', label: '現在' },
-  { href: '/about', code: '05', label: '關於' },
+  { href: '/projects', label: '專案' },
+  { href: '/blog', label: '文章' },
+  { href: '/activity', label: '活動' },
+  { href: '/now', label: '現在' },
+  { href: '/about', label: '關於' },
 ];
 const utility = [
   { href: '/support', label: '支持' },
@@ -18,13 +18,13 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
   <div class="spatial-nav-inner">
     <a href="/" class="spatial-brand" aria-label="熊少愆首頁">
       <span class="brand-signal" aria-hidden="true"></span>
-      <span><strong>HSIUNG</strong><small>SHAO / 00</small></span>
+      <span><strong>熊少愆</strong><small>INDEPENDENT PRACTICE</small></span>
     </a>
 
     <nav class="spatial-links" aria-label="主要導覽">
       {links.map(link => (
         <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
-          <small>{link.code}</small><span>{link.label}</span>
+          <span>{link.label}</span>
         </a>
       ))}
     </nav>
@@ -39,8 +39,8 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
   </div>
 
   <nav id="mobile-menu" class="spatial-mobile-menu" aria-label="行動版導覽">
-    {[...links, ...utility.map((item, index) => ({ ...item, code: `0${index + 6}` }))].map(link => (
-      <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}><small>{link.code}</small><span>{link.label}</span></a>
+    {[...links, ...utility].map(link => (
+      <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}><span>{link.label}</span></a>
     ))}
   </nav>
 </header>

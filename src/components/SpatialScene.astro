@@ -1,9 +1,5 @@
 <div class="spatial-scene" data-spatial-scene transition:persist="spatial-scene" aria-hidden="true">
   <canvas></canvas>
-  <div class="scene-coordinate coordinate-x">FIELD / SIGNAL MAP</div>
-  <div class="scene-coordinate coordinate-y">SCAN / LIVE</div>
-  <div class="scene-corner corner-a"></div>
-  <div class="scene-corner corner-b"></div>
 </div>
 
 <script>
@@ -30,95 +26,77 @@
       const THREE = await import('three');
       if (!root.isConnected) return;
 
-      const renderer = new THREE.WebGLRenderer({
-        canvas,
-        alpha: true,
-        antialias: true,
-        powerPreference: 'high-performance',
-      });
-      renderer.setClearColor(0x080a09, 1);
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 0.9;
 
       const scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2(0x080a09, 0.055);
-      const camera = new THREE.PerspectiveCamera(47, 1, 0.1, 60);
-      camera.position.set(0, 1.1, 9);
+      scene.background = new THREE.Color(0x090a09);
+      scene.fog = new THREE.Fog(0x090a09, 9, 31);
+
+      const camera = new THREE.PerspectiveCamera(44, 1, 0.1, 70);
+      camera.position.set(0, 0.7, 10.5);
       camera.lookAt(0, 0, -5);
 
       const world = new THREE.Group();
+      const atmosphereLayer = new THREE.Group();
       const routeLayer = new THREE.Group();
       scene.add(world);
-      world.add(routeLayer);
+      world.add(atmosphereLayer, routeLayer);
+
+      scene.add(new THREE.HemisphereLight(0xf5f0df, 0x111511, 2.1));
+      const keyLight = new THREE.DirectionalLight(0xe8ff9f, 3.3);
+      keyLight.position.set(-6, 8, 9);
+      scene.add(keyLight);
+      const fillLight = new THREE.PointLight(0xff765f, 35, 30, 2);
+      fillLight.position.set(8, -2, 4);
+      scene.add(fillLight);
 
       const permanentResources: Array<{ dispose: () => void }> = [];
       let routeResources: Array<{ dispose: () => void }> = [];
-      let routeObjects: Array<{ material?: { opacity?: number }; position: { z: number } }> = [];
+      let routeObjects: Array<{
+        position: { x: number; y: number; z: number };
+        rotation: { x: number; y: number; z: number };
+        userData: { baseY?: number };
+      }> = [];
 
-      const fieldHeight = (x: number, z: number) =>
-        -2.85 + Math.sin(x * 0.46 + z * 0.18) * 0.34 + Math.cos(z * 0.31 - x * 0.16) * 0.2;
+      const atmosphereBlocks: Array<{
+        position: { x: number; y: number; z: number };
+        rotation: { x: number; y: number; z: number };
+        userData: { baseY?: number };
+      }> = [];
 
-      const fieldPositions: number[] = [];
-      const fieldSize = 24;
-      const fieldSteps = 24;
-      const fieldStart = -fieldSize / 2;
-      for (let row = 0; row <= fieldSteps; row += 1) {
-        const z = fieldStart + (row / fieldSteps) * fieldSize - 5;
-        for (let column = 0; column < fieldSteps; column += 1) {
-          const xA = fieldStart + (column / fieldSteps) * fieldSize;
-          const xB = fieldStart + ((column + 1) / fieldSteps) * fieldSize;
-          fieldPositions.push(xA, fieldHeight(xA, z), z, xB, fieldHeight(xB, z), z);
-        }
-      }
-      for (let column = 0; column <= fieldSteps; column += 1) {
-        const x = fieldStart + (column / fieldSteps) * fieldSize;
-        for (let row = 0; row < fieldSteps; row += 1) {
-          const zA = fieldStart + (row / fieldSteps) * fieldSize - 5;
-          const zB = fieldStart + ((row + 1) / fieldSteps) * fieldSize - 5;
-          fieldPositions.push(x, fieldHeight(x, zA), zA, x, fieldHeight(x, zB), zB);
-        }
-      }
-
-      const fieldGeometry = new THREE.BufferGeometry();
-      fieldGeometry.setAttribute('position', new THREE.Float32BufferAttribute(fieldPositions, 3));
-      const fieldMaterial = new THREE.LineBasicMaterial({ color: 0x5cf2d6, transparent: true, opacity: 0.2 });
-      const signalField = new THREE.LineSegments(fieldGeometry, fieldMaterial);
-      world.add(signalField);
-      permanentResources.push(fieldGeometry, fieldMaterial);
-
-      const scanBands: Array<{ position: { z: number } }> = [];
-      for (let index = 0; index < 3; index += 1) {
-        const box = new THREE.BoxGeometry(22, 0.04, 2.2);
-        const edges = new THREE.EdgesGeometry(box);
-        const material = new THREE.LineBasicMaterial({
-          color: index === 1 ? 0xff6b52 : 0xd8ff3e,
-          transparent: true,
-          opacity: index === 1 ? 0.28 : 0.2,
-        });
-        const band = new THREE.LineSegments(edges, material);
-        band.position.set(0, -2.42, -18 + index * 8);
-        world.add(band);
-        scanBands.push(band);
-        permanentResources.push(box, edges, material);
-      }
-
-      const signalPillars: Array<{ material: { opacity: number }; scale: { y: number } }> = [];
-      const pillarLayout: Array<[number, number, number]> = [
-        [-8.8, -8.5, 2.2], [-6.4, -14, 1.1], [-3.1, -11, 1.7],
-        [4.6, -15.5, 1.4], [7.1, -9, 2.6], [9.2, -4.5, 1.3],
+      const atmosphereLayout: Array<{
+        size: [number, number, number];
+        position: [number, number, number];
+        rotation: [number, number, number];
+        color: number;
+      }> = [
+        { size: [8.5, 5.8, 0.8], position: [-6.7, 2.2, -8], rotation: [0.08, 0.28, -0.06], color: 0x1b221c },
+        { size: [6.2, 8.4, 1.1], position: [7.2, -0.8, -11], rotation: [-0.1, -0.34, 0.1], color: 0x242b20 },
+        { size: [10.5, 2.1, 0.7], position: [0.6, -5.2, -9], rotation: [0.18, -0.12, -0.05], color: 0x30221f },
+        { size: [3.8, 7.2, 1.4], position: [1.4, 4.8, -16], rotation: [-0.12, 0.45, 0.2], color: 0x26302a },
+        { size: [5.8, 3.8, 0.9], position: [-8.5, -3.7, -15], rotation: [0.2, -0.4, -0.12], color: 0x343a24 },
       ];
-      pillarLayout.forEach(([x, z, height], index) => {
-        const box = new THREE.BoxGeometry(0.12, height, 0.12);
-        const edges = new THREE.EdgesGeometry(box);
-        const material = new THREE.LineBasicMaterial({
-          color: index % 3 === 0 ? 0xff6b52 : 0xd8ff3e,
+
+      atmosphereLayout.forEach(item => {
+        const geometry = new THREE.BoxGeometry(...item.size);
+        const material = new THREE.MeshStandardMaterial({
+          color: item.color,
+          roughness: 0.84,
+          metalness: 0.04,
           transparent: true,
-          opacity: 0.28,
+          opacity: 0.72,
         });
-        const pillar = new THREE.LineSegments(edges, material);
-        pillar.position.set(x, fieldHeight(x, z) + height / 2, z);
-        world.add(pillar);
-        signalPillars.push(pillar);
-        permanentResources.push(box, edges, material);
+        const block = new THREE.Mesh(geometry, material);
+        block.position.set(...item.position);
+        block.rotation.set(...item.rotation);
+        block.userData.baseY = item.position[1];
+        atmosphereLayer.add(block);
+        atmosphereBlocks.push(block);
+        permanentResources.push(geometry, material);
       });
 
       const clearRouteLayer = () => {
@@ -128,14 +106,25 @@
         routeObjects = [];
       };
 
-      const addWireBox = (width: number, height: number, depth: number, color: number, position: [number, number, number], opacity = 0.55) => {
-        const box = new THREE.BoxGeometry(width, height, depth);
-        const edges = new THREE.EdgesGeometry(box);
-        const material = new THREE.LineBasicMaterial({ color, transparent: true, opacity });
-        const object = new THREE.LineSegments(edges, material);
+      const addBlock = (
+        size: [number, number, number],
+        color: number,
+        position: [number, number, number],
+        opacity = 0.82,
+      ) => {
+        const geometry = new THREE.BoxGeometry(...size);
+        const material = new THREE.MeshStandardMaterial({
+          color,
+          roughness: 0.72,
+          metalness: 0.08,
+          transparent: opacity < 1,
+          opacity,
+        });
+        const object = new THREE.Mesh(geometry, material);
         object.position.set(...position);
+        object.userData.baseY = position[1];
         routeLayer.add(object);
-        routeResources.push(box, edges, material);
+        routeResources.push(geometry, material);
         routeObjects.push(object);
         return object;
       };
@@ -150,65 +139,73 @@
         ];
 
         assets.forEach((source, index) => {
+          const width = mobile ? 6.4 : 5.4;
+          const height = mobile ? 3.2 : 2.7;
+          const x = mobile ? 0.8 : 3.45 + index * 0.48;
+          const y = mobile ? 1.1 - index * 1.5 : 2.05 - index * 2.2;
+          const z = -1.8 - index * 1.6;
+          const backing = addBlock([width + 0.24, height + 0.24, 0.3], index === 1 ? 0x343b20 : 0x17241f, [x, y, z - 0.22], mobile ? 0.42 : 0.92);
+          backing.rotation.y = mobile ? -0.08 : -0.24;
+
           const texture = loader.load(source);
           texture.colorSpace = THREE.SRGBColorSpace;
-          const geometry = new THREE.PlaneGeometry(mobile ? 6.2 : 5.5, mobile ? 3.1 : 2.75);
-          const material = new THREE.MeshBasicMaterial({
-            map: texture,
-            transparent: true,
-            opacity: mobile ? 0.16 : 0.52,
-            side: THREE.DoubleSide,
-          });
+          const geometry = new THREE.PlaneGeometry(width, height);
+          const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: mobile ? 0.12 : 0.72 });
           const plane = new THREE.Mesh(geometry, material);
-          plane.position.set(mobile ? 0 : 3.35 + index * 0.42, 1.9 - index * 2.15, -1.5 - index * 1.4);
-          plane.rotation.set(-0.04 + index * 0.025, mobile ? 0 : -0.28, -0.018 * index);
+          plane.position.set(x, y, z);
+          plane.rotation.y = mobile ? -0.08 : -0.24;
+          plane.userData.baseY = y;
           routeLayer.add(plane);
           routeResources.push(texture, geometry, material);
           routeObjects.push(plane);
-          addWireBox(mobile ? 6.35 : 5.7, mobile ? 3.25 : 2.95, 0.08, index === 1 ? 0xd8ff3e : 0x5cf2d6, [plane.position.x, plane.position.y, plane.position.z - 0.06], 0.68);
         });
       };
 
       const buildProjects = () => {
+        const colors = [0x2e382a, 0x19302a, 0x392923, 0x242b25];
         for (let index = 0; index < 12; index += 1) {
           const column = index % 4;
           const row = Math.floor(index / 4);
-          const object = addWireBox(1.8, 0.8, 0.8, index % 3 === 0 ? 0xd8ff3e : 0x5cf2d6, [column * 2.35 - 3.5, 1.7 - row * 1.7, -1.8 - row * 1.15], 0.48);
-          object.rotation.y = column * 0.045 - 0.08;
+          const object = addBlock([1.95, 0.9, 0.5], colors[index % colors.length], [column * 2.35 - 3.55, 1.75 - row * 1.72, -2.2 - row * 1.1], 0.92);
+          object.rotation.set(-0.06, column * 0.035 - 0.06, (column - 1.5) * 0.012);
         }
       };
 
       const buildWriting = () => {
+        const colors = [0x28302a, 0x352c25, 0x25342f];
         for (let index = 0; index < 9; index += 1) {
-          const object = addWireBox(3.4, 4.5, 0.06, index % 3 === 0 ? 0xff6b52 : 0x5cf2d6, [index * 1.05 - 4.3, (index % 2) * 0.6 - 0.2, -2.5 - index * 0.7], 0.3);
-          object.rotation.y = -0.35 + index * 0.08;
+          const object = addBlock([2.75, 3.8, 0.22], colors[index % colors.length], [index * 1.02 - 4.1, (index % 2) * 0.55 - 0.3, -2.8 - index * 0.72], 0.86);
+          object.rotation.y = -0.32 + index * 0.07;
+          object.rotation.z = (index % 3 - 1) * 0.025;
         }
       };
 
       const buildActivity = () => {
-        const lineGeometry = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(0, 5, -3),
-          new THREE.Vector3(0, -8, -8),
-        ]);
-        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xd8ff3e, transparent: true, opacity: 0.72 });
-        routeLayer.add(new THREE.Line(lineGeometry, lineMaterial));
-        routeResources.push(lineGeometry, lineMaterial);
+        addBlock([0.28, 12, 0.34], 0x343b20, [0, -1.2, -7], 0.82);
         for (let index = 0; index < 15; index += 1) {
-          addWireBox(0.34, 0.34, 0.34, index % 4 === 0 ? 0xff6b52 : 0x5cf2d6, [Math.sin(index) * 0.9, 4.2 - index * 0.82, -3.2 - index * 0.32], 0.72);
+          const object = addBlock(
+            [0.52 + (index % 3) * 0.1, 0.36, 0.52],
+            index % 4 === 0 ? 0x793b2f : 0x245044,
+            [Math.sin(index * 1.4) * 1.25, 4.35 - index * 0.76, -4.1 - index * 0.28],
+            0.94,
+          );
+          object.rotation.y = index * 0.18;
         }
       };
 
       const buildProfile = () => {
-        for (let index = 0; index < 7; index += 1) {
-          const object = addWireBox(3 + index * 0.9, 3 + index * 0.55, 0.12, index % 2 === 0 ? 0xd8ff3e : 0x5cf2d6, [2.1, 0.1, -2 - index * 1.15], 0.28);
-          object.rotation.z = index * 0.11;
-          object.rotation.y = -0.18;
+        const colors = [0x303927, 0x1d332d, 0x3b2823, 0x252c27, 0x343a24];
+        for (let index = 0; index < 5; index += 1) {
+          const object = addBlock([4.4 - index * 0.32, 5.6 - index * 0.25, 0.38], colors[index], [2.35 + index * 0.24, 0.1 - index * 0.12, -2.5 - index * 1.15], 0.88);
+          object.rotation.set(-0.04, -0.22 + index * 0.08, -0.12 + index * 0.055);
         }
       };
 
       const buildUtility = () => {
-        for (let index = 0; index < 8; index += 1) {
-          addWireBox(1.25 + (index % 3) * 0.55, 1.25, 1.25, index % 2 === 0 ? 0x5cf2d6 : 0xff6b52, [(index % 4) * 2.1 - 3.2, Math.floor(index / 4) * -2 + 1, -3 - index * 0.65], 0.34);
+        const colors = [0x26352f, 0x3b2c25, 0x303726];
+        for (let index = 0; index < 7; index += 1) {
+          const object = addBlock([1.6 + (index % 2) * 0.7, 1.35, 0.65], colors[index % colors.length], [(index % 4) * 2.1 - 3.2, Math.floor(index / 4) * -2.2 + 1.2, -3.3 - index * 0.72], 0.82);
+          object.rotation.y = (index % 4 - 1.5) * 0.08;
         }
       };
 
@@ -217,8 +214,8 @@
         clearRouteLayer();
         const path = window.location.pathname;
         root.dataset.mode = path === '/' ? 'home' : path.split('/').filter(Boolean)[0] ?? 'home';
-        routeLayer.scale.setScalar(0.82);
-        routeLayer.rotation.set(0.08, -0.12, 0);
+        routeLayer.scale.setScalar(0.86);
+        routeLayer.rotation.set(0.035, -0.1, 0);
         if (path === '/') buildHome();
         else if (path === '/projects') buildProjects();
         else if (path.startsWith('/blog')) buildWriting();
@@ -252,28 +249,23 @@
         if (disposed || !running) return;
         const delta = Math.min((time - previousTime) / 1000, 0.05);
         previousTime = time;
-        pointer.lerp(pointerTarget, 0.04);
+        pointer.lerp(pointerTarget, 0.035);
 
-        world.rotation.y += (pointer.x * 0.075 - world.rotation.y) * 0.025;
-        world.rotation.x += (-pointer.y * 0.035 - world.rotation.x) * 0.025;
-        camera.position.x += (pointer.x * 0.32 - camera.position.x) * 0.025;
-        camera.position.y += (1.1 - scrollProgress * 1.6 - camera.position.y) * 0.025;
+        world.rotation.y += (pointer.x * 0.055 - world.rotation.y) * 0.02;
+        world.rotation.x += (-pointer.y * 0.025 - world.rotation.x) * 0.02;
+        camera.position.x += (pointer.x * 0.25 - camera.position.x) * 0.02;
+        camera.position.y += (0.7 - scrollProgress * 1.2 - camera.position.y) * 0.02;
         routeLayer.scale.lerp(routeScaleTarget, 0.035);
-        routeLayer.rotation.y += (-0.02 - routeLayer.rotation.y) * 0.025;
-        routeLayer.rotation.x += (scrollProgress * 0.13 - routeLayer.rotation.x) * 0.025;
+        routeLayer.rotation.y += (-0.015 - routeLayer.rotation.y) * 0.02;
+        routeLayer.rotation.x += (scrollProgress * 0.08 - routeLayer.rotation.x) * 0.02;
 
         if (!reduceMotion) {
-          scanBands.forEach((band, index) => {
-            band.position.z += delta * (1.25 + index * 0.12);
-            if (band.position.z > 5) band.position.z = -19;
-          });
-          signalPillars.forEach((pillar, index) => {
-            const pulse = 0.72 + Math.sin(time * 0.0014 + index * 1.7) * 0.28;
-            pillar.scale.y = pulse;
-            pillar.material.opacity = 0.18 + pulse * 0.18;
+          atmosphereBlocks.forEach((block, index) => {
+            block.rotation.y += delta * (index % 2 === 0 ? 0.009 : -0.007);
+            block.position.y = (block.userData.baseY ?? 0) + Math.sin(time * 0.00022 + index * 1.7) * 0.18;
           });
           routeObjects.forEach((object, index) => {
-            object.position.z += Math.sin(time * 0.00035 + index) * 0.0008;
+            object.position.y = (object.userData.baseY ?? object.position.y) + Math.sin(time * 0.0003 + index * 1.35) * 0.025;
           });
         }
 
