@@ -524,6 +524,23 @@ details[open] .project-summary .toggle { transform: rotate(45deg); }
 .cinematic-system main > section.text-white p,
 .cinematic-system main > section.text-white li { color: rgb(17 18 15 / 74%) !important; }
 
+.cinematic-system main > section.protected-work .project-index article {
+  background: #171a17;
+  color: #f2f0e8;
+}
+.cinematic-system main > section.protected-work .project-summary h2 { color: #f2f0e8; }
+.cinematic-system main > section.protected-work .project-summary:hover h2 { color: var(--acid); }
+.cinematic-system main > section.protected-work .project-summary p,
+.cinematic-system main > section.protected-work .project-detail p,
+.cinematic-system main > section.protected-work .project-detail li {
+  color: #c9c9c1 !important;
+}
+.cinematic-system main > section.protected-work .project-summary .meta-label,
+.cinematic-system main > section.protected-work .project-summary .toggle {
+  color: #a9c1ff !important;
+}
+.cinematic-system main > section.protected-work .project-detail { background: #111411; }
+
 .cinematic-system .command-link { background: var(--acid); }
 .cinematic-system .command-link.secondary { background: #20241f; }
 .cinematic-system .tag { background: #202420; color: #bfc1ba; }

@@ -1,5 +1,69 @@
 [
   {
+    "date": "2026-08-20",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "首頁換上真實產品畫面並加入快速貼網址入口，同步補齊多語 SEO、正確 404、舊路徑轉址與支持頁。",
+    "tags": ["SEO", "UX", "i18n"],
+    "commits": ["babca7c", "5a8553e", "036bcc1", "75d3290"]
+  },
+  {
+    "date": "2026-08-18",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "發佈 v0.22.0 與 v0.23.0，擴充 PoE 1 技能詞條與 PoE 2 詞典，並讓選定字型一致套用英數字元。",
+    "tags": ["Path of Building", "PoE 2", "i18n"],
+    "commits": ["ca3fbfc", "ccb06c0"]
+  },
+  {
+    "date": "2026-08-14",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "將篩選器、翻譯編輯器、永恆珠寶與輿圖規劃器整合為分頁面板，並修正拖曳、最小化與關閉流程。",
+    "tags": ["C++", "Windows", "UI"],
+    "commits": ["b15c40e", "b921d2b", "c4c93fe"]
+  },
+  {
+    "date": "2026-08-13",
+    "project": "Discord Bot",
+    "tier": "personal",
+    "summary": "強化 Minecraft 伺服器的關閉判定、倒數、主控台與啟動時段限制，並避免 Windows PID 重用造成狀態誤判。",
+    "tags": ["Discord", "Minecraft", "Windows"],
+    "commits": ["c277ee7", "a872115"]
+  },
+  {
+    "date": "2026-08-13",
+    "project": "Minecraft MOD 翻譯工具",
+    "tier": "personal",
+    "summary": "翻譯來源改為自動探索並支援更多資源格式，修正既有翻譯被覆寫問題，新增 CLI、回歸測試與可安裝輸出包。",
+    "tags": ["Minecraft", "LLM", "i18n"],
+    "commits": ["ef791e5", "08ba567"]
+  },
+  {
+    "date": "2026-08-06",
+    "project": "品牌網站技術案例",
+    "tier": "protected",
+    "summary": "完成權限與資料存取面稽核，收斂管理角色、檔案存取與公開查詢邊界，並建立變更前備份及回復流程。",
+    "tags": ["Supabase", "RLS", "security"],
+    "commits": ["18e5966"]
+  },
+  {
+    "date": "2026-08-05",
+    "project": "個人網站",
+    "tier": "personal",
+    "summary": "完成 Cinematic Archive 全站改版，以路由感知的 Three.js 場景串接專案、文章、活動與個人資訊頁面。",
+    "tags": ["Astro", "Three.js", "UI/UX"],
+    "commits": ["77b1761", "2feb559", "7846293"]
+  },
+  {
+    "date": "2026-08-05",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "多視窗排版加入推擠讓位與自動填滿，修復 Twitch 聊天互動與手機音量控制，並補上版面不變式測試。",
+    "tags": ["Twitch", "layout", "testing"],
+    "commits": ["d81f546"]
+  },
+  {
     "date": "2026-08-05",
     "project": "PobTools",
     "tier": "personal",

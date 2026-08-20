@@ -4,10 +4,11 @@ const channels = [
   { label: 'Email', value: 'jerry29221979@gmail.com', href: 'mailto:jerry29221979@gmail.com', note: '合作、工作機會與需要完整說明的問題' },
   { label: 'GitHub', value: 'github.com/Hsiung-Shao', href: 'https://github.com/Hsiung-Shao', note: '公開專案、原始碼與 Issue' },
   { label: 'X', value: 'x.com/Hsiungshao', href: 'https://x.com/Hsiungshao', note: '近況與簡短交流' },
+  { label: 'Discord', value: 'discord.gg/4HRneTBvmb', href: 'https://discord.gg/4HRneTBvmb', note: '社群與即時交流' },
 ];
 ---
 <Layout title="聯絡熊少愆">
   <header class="page-intro site-shell"><span class="kicker">Contact</span><h1>把問題說清楚，我會直接回應。</h1><p>合作邀請、工程問題或公開專案回饋，都可以透過以下管道聯絡。Email 適合帶有背景與需求的完整訊息。</p></header>
-  <section class="site-shell py-20"><div class="contact-list">{channels.map((channel, index) => <a href={channel.href} target={channel.href.startsWith('http') ? '_blank' : undefined} rel={channel.href.startsWith('http') ? 'noopener noreferrer' : undefined}><span class="meta-label text-[var(--quiet)]">0{index + 1}</span><div><span class="meta-label text-[var(--blue)]">{channel.label}</span><strong>{channel.value}</strong><p>{channel.note}</p></div><span aria-hidden="true">↗</span></a>)}<div class="contact-static"><span class="meta-label text-[var(--quiet)]">04</span><div><span class="meta-label text-[var(--blue)]">Discord</span><strong>hsiung0108</strong><p>社群與即時交流</p></div></div></div></section>
+  <section class="site-shell py-20"><div class="contact-list">{channels.map((channel, index) => <a href={channel.href} target={channel.href.startsWith('http') ? '_blank' : undefined} rel={channel.href.startsWith('http') ? 'noopener noreferrer' : undefined}><span class="meta-label text-[var(--quiet)]">0{index + 1}</span><div><span class="meta-label text-[var(--blue)]">{channel.label}</span><strong>{channel.value}</strong><p>{channel.note}</p></div><span aria-hidden="true">↗</span></a>)}</div></section>
   <section class="border-t border-[var(--line-strong)] bg-[var(--surface)]"><div class="site-shell profile-close py-16"><div><span class="kicker">Good context helps</span><h2 class="display-type mt-3 text-3xl">來信時，請附上目標、現況與限制。</h2></div><p>若是技術問題，錯誤訊息、重現步驟與環境資訊會比單一句「不能用」更容易開始處理。客戶或私人資料請先移除。</p></div></section>
 </Layout>
