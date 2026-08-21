@@ -25,7 +25,7 @@
 | `/blog` | 開發部落格 — 開發筆記、技術案例與專案回顧 |
 | `/activity` | 開發活動 — 從各專案整理的代表性進度 |
 | `/now` | 目前動態 — 當前開發焦點與專案狀態 |
-| `/support` | 贊助支持 — Buy Me a Coffee 與揭露過的聯盟連結 |
+| `/support` | 贊助支持 — Buy Me a Coffee、Patreon 與揭露過的聯盟連結 |
 | `/contact` | 聯絡方式 — Email、GitHub、Discord、X (Twitter)、留言表單 |
 
 ## Project Structure
