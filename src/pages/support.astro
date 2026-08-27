@@ -1,13 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
 const options = [
-  { index: '01', label: 'Direct support', title: '請我喝杯咖啡', description: '透過 Buy Me a Coffee 單次支持網站維護、文件整理與公開工具開發。', note: '這是直接贊助連結。', href: 'https://buymeacoffee.com/hsiung', action: '前往 Buy Me a Coffee', rel: 'noopener noreferrer' },
-  { index: '02', label: 'Ongoing support', title: '透過 Patreon 持續支持', description: '在 Patreon 定期支持網站內容、公開工具與繁體中文化專案的長期維護。', note: '這是直接贊助連結，可隨時依 Patreon 提供的方式調整或取消支持。', href: 'https://patreon.com/HsiungShao?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink', action: '前往 Patreon', rel: 'noopener noreferrer' },
-  { index: '03', label: 'Affiliate', title: '使用 ExitLag 聯盟連結', description: '有跨區連線需求時，可透過推薦連結查看 ExitLag 提供的方案。', note: '這是聯盟行銷連結；完成符合條件的註冊或購買後，我可能獲得分潤。價格與服務內容以官方頁面為準。', href: 'https://www.exitlag.com/refer/10318098', action: '查看 ExitLag', rel: 'sponsored nofollow noopener noreferrer' },
+  { index: '01', label: 'Direct support', title: '請我喝杯咖啡', description: '透過 Buy Me a Coffee 單次支持網站維護、文件整理與公開工具開發。', note: '這是直接贊助連結。', href: 'https://buymeacoffee.com/hsiung', action: '前往 Buy Me a Coffee', analyticsId: 'buy_me_a_coffee', analyticsType: 'direct', rel: 'noopener noreferrer' },
+  { index: '02', label: 'Ongoing support', title: '透過 Patreon 持續支持', description: '在 Patreon 定期支持網站內容、公開工具與繁體中文化專案的長期維護。', note: '這是直接贊助連結，可隨時依 Patreon 提供的方式調整或取消支持。', href: 'https://patreon.com/HsiungShao?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink', action: '前往 Patreon', analyticsId: 'patreon', analyticsType: 'recurring', rel: 'noopener noreferrer' },
+  { index: '03', label: 'Affiliate', title: '使用 ExitLag 聯盟連結', description: '有跨區連線需求時，可透過推薦連結查看 ExitLag 提供的方案。', note: '這是聯盟行銷連結；完成符合條件的註冊或購買後，我可能獲得分潤。價格與服務內容以官方頁面為準。', href: 'https://www.exitlag.com/refer/10318098', action: '查看 ExitLag', analyticsId: 'exitlag', analyticsType: 'affiliate', rel: 'sponsored nofollow noopener noreferrer' },
 ];
 ---
 <Layout title="支持本站 | 熊少愆" description="支持技術文章、公開工具與網站維護。">
   <header class="page-intro site-shell"><span class="kicker">Support & disclosure</span><h1>讓公開工具與紀錄繼續累積。</h1><p>若文章或工具確實幫上忙，可以選擇單次或持續支持維護；若剛好有連線服務需求，也可以使用明確標示的聯盟連結。</p></header>
-  <section class="site-shell py-20"><div class="support-list">{options.map(option => <article><span class="support-number">{option.index}</span><div><span class="meta-label text-[var(--red)]">{option.label}</span><h2>{option.title}</h2><p>{option.description}</p><small>{option.note}</small></div><a class="command-link" href={option.href} target="_blank" rel={option.rel}>{option.action} ↗</a></article>)}</div></section>
+  <section class="site-shell py-20"><div class="support-list">{options.map(option => <article><span class="support-number">{option.index}</span><div><span class="meta-label text-[var(--red)]">{option.label}</span><h2>{option.title}</h2><p>{option.description}</p><small>{option.note}</small></div><a class="command-link" href={option.href} target="_blank" rel={option.rel} data-ga-event="support_click" data-ga-support-method={option.analyticsId} data-ga-support-type={option.analyticsType}>{option.action} ↗</a></article>)}</div></section>
   <section class="border-y border-[var(--line-strong)] bg-[var(--surface)]"><div class="content-shell py-12"><span class="kicker">Transparency</span><h2 class="display-type mt-4 text-3xl">揭露要比轉換率更重要。</h2><p class="mt-4 leading-8 text-[var(--muted)]">贊助與聯盟合作不影響文章結論或專案技術選擇。聯盟連結只會出現在明確標示的區域，不會偽裝成一般下載連結。</p></div></section>
 </Layout>

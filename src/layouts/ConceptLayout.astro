@@ -1,5 +1,6 @@
 ---
 import ConceptChooser from '../components/ConceptChooser.astro';
+import Analytics from '../components/Analytics.astro';
 import '../styles/concepts.css';
 
 interface Props {
@@ -21,6 +22,7 @@ const { title, description, variant, showChooser = true } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
+    <Analytics />
   </head>
   <body class={`concept-page concept-${variant}`}>
     {showChooser && <ConceptChooser />}

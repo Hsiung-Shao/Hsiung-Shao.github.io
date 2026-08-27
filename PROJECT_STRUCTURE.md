@@ -41,6 +41,7 @@ myweb/
 - `src/data/posts.json` - Published and draft blog articles.
 - `src/data/guides/` - Long-form public usage guides with verified screenshots and procedures.
 - `src/pages/blog/` - Static blog index and article routes.
+- `src/components/Analytics.astro` - Site-wide GA4 page views and delegated support-link conversion events.
 - `src/components/MotionSystem.astro` - Shared page transitions, scroll reveals, progress, parallax, tilt, and reduced-motion behavior.
 - `src/components/SpatialScene.astro` - Persistent route-aware Three.js environment with project textures, spatial route artifacts, lifecycle cleanup, and reduced-motion fallback.
 - `src/components/react/ProjectCard.tsx` - Interactive portfolio card with status and article actions.
@@ -59,6 +60,7 @@ myweb/
 
 | Date | Changes |
 |---|---|
+| 2026-08-27 | Added site-wide GA4 page tracking and distinct click events for all three support methods. |
 | 2026-07-22 | Added project lifecycle states, technical case studies, blog links, content validation, and protected-client content rules. |
 | 2026-08-01 | Added five public project guides, Awakened PoE Trade-zh-TW, and a sponsorship disclosure page. |
 | 2026-08-05 | Reframed the site as an editorial engineering archive, redesigned all primary routes, added project and article indexes, and removed decorative 3D UI from active pages. |
