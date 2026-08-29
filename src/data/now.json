@@ -1,7 +1,12 @@
 {
-  "updated": "2026-08-05T00:00:00+08:00",
-  "focus": "目前集中維護 Path of Exile 相關繁體中文工具，處理上游版本同步、交易資料翻譯與 Path of Building 的在地化流程。",
+  "updated": "2026-08-29T18:30:00+08:00",
+  "focus": "目前同步推進 Kumori Music 原創音樂發布、Path of Exile 繁體中文工具，以及 MultiStream Hub 的分享與內容體驗。",
   "projects": [
+    {
+      "name": "AI Music / Kumori Music",
+      "tier": "personal",
+      "status": "持續製作動畫靈感原創歌曲，整合本地生成、人工編排、品牌視覺與 YouTube 發布流程"
+    },
     {
       "name": "Awakened PoE Trade-zh-TW",
       "tier": "personal",
@@ -15,7 +20,12 @@
     {
       "name": "PobTools",
       "tier": "personal",
-      "status": "維護 Path of Building 外部注入式繁中翻譯、資料更新與輔助編輯工具"
+      "status": "完成 v1.0.0 發布準備，持續處理 POB beta、字型與多行翻譯相容性"
+    },
+    {
+      "name": "MultiStream Hub",
+      "tier": "personal",
+      "status": "維護分享畫布、跨平台直播操作、比較頁與公開內容索引"
     }
   ]
 }

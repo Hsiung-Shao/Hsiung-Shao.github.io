@@ -7,6 +7,8 @@ const readJson = (path) => JSON.parse(readFileSync(resolve(root, path), 'utf8'))
 
 const projects = readJson('src/data/projects.json');
 const posts = readJson('src/data/posts.json');
+const activity = readJson('src/data/activity.json');
+const now = readJson('src/data/now.json');
 const config = readJson('scripts/projects.config.json');
 const errors = [];
 
@@ -25,6 +27,9 @@ const requiredGuideSections = [
   '## 使用方式',
   '## 常見問題',
 ];
+const aiMusicArticleSlug = 'kumori-music-first-release';
+const kumoriChannelUrl = 'https://www.youtube.com/@KumoriMusic08';
+const firstReleaseUrl = 'https://youtu.be/FPolv4K_yv4';
 
 for (const project of projects) {
   if (projectIds.has(project.id)) errors.push(`重複的 project id: ${project.id}`);
@@ -62,6 +67,40 @@ for (const project of config.projects) {
   if (!['full', 'technical-only', 'disabled'].includes(project.contentPolicy)) {
     errors.push(`${project.name}: 無效或缺少 contentPolicy`);
   }
+}
+
+for (const [index, entry] of activity.entries()) {
+  const label = `activity[${index}]`;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date ?? '')) errors.push(`${label}: 日期格式必須是 YYYY-MM-DD`);
+  if (!entry.project || !entry.summary) errors.push(`${label}: 缺少 project 或 summary`);
+  if (!['personal', 'protected'].includes(entry.tier)) errors.push(`${label}: 無效或缺少 tier`);
+  for (const commit of entry.commits ?? []) {
+    if (!/^[0-9a-f]{7}$/.test(commit)) errors.push(`${label}: commit 必須是 7 碼十六進位短 SHA`);
+  }
+}
+
+if (!Array.isArray(now.projects) || now.projects.length > 6) {
+  errors.push('now.json: projects 必須是最多 6 個項目的陣列');
+}
+
+const aiMusicProject = projects.find(project => project.id === 'ai-music');
+if (!aiMusicProject || aiMusicProject.status !== 'active') {
+  errors.push('ai-music: 專案狀態必須是 active');
+} else {
+  if (aiMusicProject.link !== kumoriChannelUrl) errors.push('ai-music: 缺少 Kumori Music 頻道連結');
+  if (!aiMusicProject.articles.includes(aiMusicArticleSlug)) errors.push(`ai-music: 找不到文章 ${aiMusicArticleSlug}`);
+}
+
+const aiMusicConfig = config.projects.find(project => project.name === 'ai-Music');
+if (!aiMusicConfig || aiMusicConfig.status !== 'active' || aiMusicConfig.contentPolicy !== 'full') {
+  errors.push('ai-Music: 自動更新設定必須是 active / full');
+}
+
+const aiMusicArticle = posts.find(post => post.slug === aiMusicArticleSlug);
+if (!aiMusicArticle || aiMusicArticle.draft) {
+  errors.push(`${aiMusicArticleSlug}: 首發文章必須存在且公開`);
+} else if (!aiMusicArticle.body.includes(kumoriChannelUrl) || !aiMusicArticle.body.includes(firstReleaseUrl)) {
+  errors.push(`${aiMusicArticleSlug}: 文章缺少頻道或首支作品連結`);
 }
 
 for (const slug of requiredGuideSlugs) {

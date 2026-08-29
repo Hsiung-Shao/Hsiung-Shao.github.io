@@ -140,18 +140,19 @@
     "id": "ai-music",
     "title": "AI Music Workflow",
     "description": "從企劃、歌詞、生成到封面與影片輸出的 AI 音樂製作流程。",
-    "longDescription": "以 Python 工具與本地生成模型串接音訊分析、歌詞時間軸、封面和影片輸出，並用網頁控制台整理各首歌曲的素材與階段。專案目前暫停開發，保留既有流程與實驗紀錄。",
+    "longDescription": "以 Python 工具與本地生成模型串接歌曲企劃、音訊分析、歌詞、品牌視覺與影片輸出，並用可追蹤的工作流程管理各首歌曲的素材與發布階段。目前以 Kumori Music 名義持續製作動畫靈感原創音樂。",
     "tech": ["Python", "FastAPI", "React", "ComfyUI", "FFmpeg", "librosa"],
     "category": "tool",
-    "status": "paused",
+    "status": "active",
     "visibility": "public",
     "featured": false,
     "highlights": [
-      "生成流程 — 音訊、LRC、封面與影片產物分階段管理",
-      "引擎隔離 — 不同音樂模型和大型權重與專案程式碼分離",
-      "製作控制台 — 集中檢視歌曲素材、分析結果與輸出工作"
+      "完整製作鏈 — 從歌曲企劃、生成與品質檢查一路銜接品牌視覺及正式影片",
+      "引擎隔離 — 不同音樂模型和大型權重與作品資料分離",
+      "發布流程 — 以 Remotion 與 FFmpeg 輸出橫式正式影片及直式 Shorts"
     ],
-    "articles": ["what-i-learned-building-an-ai-music-pipeline"]
+    "articles": ["kumori-music-first-release", "what-i-learned-building-an-ai-music-pipeline"],
+    "link": "https://www.youtube.com/@KumoriMusic08"
   },
   {
     "id": "poe-build",

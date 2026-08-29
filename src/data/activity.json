@@ -1,5 +1,45 @@
 [
   {
+    "date": "2026-08-29",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "Kumori Music 頻道正式上線，發布第一首原創歌曲《声が灯した炎》，完成從本地生成、人工編排到正式影片的完整發布流程。",
+    "tags": ["AI Music", "YouTube", "release"],
+    "link": "https://youtu.be/FPolv4K_yv4"
+  },
+  {
+    "date": "2026-08-28",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "完成 v1.0.0 發布準備，補上 POB beta 語法相容、字型缺字互補，以及色碼分段與多行翻譯處理。",
+    "tags": ["Path of Building", "LuaJIT", "i18n", "release"],
+    "commits": ["073348b", "fcd5994", "86d4e7f", "a032798"]
+  },
+  {
+    "date": "2026-08-28",
+    "project": "AI Music",
+    "tier": "personal",
+    "summary": "完成 R&B、J-Pop 與 J-Rock 三組原創歌曲生成批次，建立品質檢查、人工試聽與後續發布所需的可追蹤資料。",
+    "tags": ["HeartMuLa", "workflow", "quality assurance"],
+    "commits": ["b5d2569", "d174f68", "ae5a0f3"]
+  },
+  {
+    "date": "2026-08-27",
+    "project": "個人網站",
+    "tier": "personal",
+    "summary": "全站加入 GA4 頁面與贊助轉換追蹤，補上 Patreon 支持方式，並更新個人資料與專案內容。",
+    "tags": ["Astro", "GA4", "content"],
+    "commits": ["88a1821", "fc0bf74", "f5d6e21"]
+  },
+  {
+    "date": "2026-08-21",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "加入可分享的多直播畫布網址、同類工具比較頁與開發者資料頁，並同步補強導覽、SEO 和內容索引。",
+    "tags": ["sharing", "SEO", "React"],
+    "commits": ["944ed1f", "f378333", "0c37538", "a0e3d87"]
+  },
+  {
     "date": "2026-08-20",
     "project": "MultiStream Hub",
     "tier": "personal",
@@ -134,6 +174,14 @@
     "summary": "完成專案導向工作區、任意分割面板與 plan.md 同步，並修復介面重新載入後的終端工作階段還原與輸出重播競態。",
     "tags": ["Electron", "PTY", "workspace"],
     "commits": ["87a381d", "25d68c0"]
+  },
+  {
+    "date": "2026-06-11",
+    "project": "Local Task Manager",
+    "tier": "personal",
+    "summary": "依實際工作流移除終端機圖片貼上，保留將檔案拖入終端機後安全貼入完整路徑的操作。",
+    "tags": ["Electron", "terminal", "UX"],
+    "commits": ["d358752"]
   },
   {
     "date": "2026-02-23",

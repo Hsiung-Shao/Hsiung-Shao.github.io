@@ -60,6 +60,7 @@ myweb/
 
 | Date | Changes |
 |---|---|
+| 2026-08-29 | Reactivated AI Music as Kumori Music, documented the first release, and synchronized representative Git activity across maintained projects. |
 | 2026-08-27 | Added site-wide GA4 page tracking and distinct click events for all three support methods. |
 | 2026-07-22 | Added project lifecycle states, technical case studies, blog links, content validation, and protected-client content rules. |
 | 2026-08-01 | Added five public project guides, Awakened PoE Trade-zh-TW, and a sponsorship disclosure page. |

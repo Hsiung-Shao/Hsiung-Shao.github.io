@@ -7,7 +7,7 @@
     { "name": "Awakened PoE Trade-zh-TW", "path": "D:/codeproject/apt-patched", "tier": "personal", "status": "active", "contentPolicy": "full" },
     { "name": "DiscordBot", "path": "D:/codeproject/python/DiscordBot", "tier": "personal", "status": "maintained", "contentPolicy": "full" },
     { "name": "minecraftTranslate", "path": "D:/codeproject/python/minecraftTranslate", "tier": "personal", "status": "maintained", "contentPolicy": "full" },
-    { "name": "ai-Music", "path": "D:/codeproject/ai-Music", "tier": "personal", "status": "paused", "contentPolicy": "disabled" },
+    { "name": "ai-Music", "path": "D:/codeproject/ai-Music", "tier": "personal", "status": "active", "contentPolicy": "full" },
     { "name": "poe-build", "path": "D:/codeproject/web/poe-build", "tier": "personal", "status": "archived", "contentPolicy": "disabled" },
     { "name": "protected-commerce-site", "path": "D:/codeproject/web/protected-commerce-site", "tier": "protected", "status": "client", "contentPolicy": "technical-only" },
     { "name": "protected-management-platform", "path": "D:/codeproject/web/protected-management-platform", "tier": "protected", "status": "client", "contentPolicy": "technical-only" },

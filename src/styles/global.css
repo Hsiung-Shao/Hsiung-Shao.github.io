@@ -292,6 +292,8 @@ details[open] .project-summary .toggle { transform: rotate(45deg); }
 .article-body code { padding: .12rem .35rem; border: 0; border-radius: 3px; background: #252925; color: #91d6c5; font-family: var(--mono); font-size: .88em; }
 .article-body pre code { padding: 0; background: transparent; color: inherit; }
 .article-body blockquote { margin: 1.5rem 0; padding: 1rem 1.3rem; border: 0; border-radius: 5px; background: #27201d; color: #d1c7bf; }
+.article-body .video-embed { width: 100%; margin: 2rem 0; overflow: hidden; aspect-ratio: 16 / 9; background: #111; }
+.article-body .video-embed iframe { width: 100%; height: 100%; border: 0; }
 
 /* About, now, activity, support, contact */
 .profile-grid, .profile-close { display: grid; grid-template-columns: minmax(260px,.72fr) minmax(0,1.28fr); gap: 5rem; align-items: start; }
@@ -644,6 +646,8 @@ details[open] .project-summary .toggle { transform: rotate(45deg); }
   .cinematic-system .project-summary,
   .cinematic-system .post-row { padding: 1.25rem; }
   .cinematic-system .article-head h1 { font-size: 2.5rem; }
+  .cinematic-system .article-shell { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .cinematic-system .article-toc { position: static; }
   .cinematic-system .footer-console { grid-template-columns: 1fr; }
   .cinematic-system .footer-identity strong { font-size: 1.8rem; }
   .cinematic-system .footer-status { margin-top: 3rem; }

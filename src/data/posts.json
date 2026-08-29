@@ -45,15 +45,27 @@
   },
   {
     "slug": "what-i-learned-building-an-ai-music-pipeline",
-    "title": "暫停 AI 音樂專案後，留下的生成流程設計",
+    "title": "AI 音樂工作流如何從實驗走向正式發布",
     "date": "2026-07-22",
     "tags": ["Generative AI", "Python", "FFmpeg", "Workflow"],
     "draft": false,
     "type": "retrospective",
     "visibility": "public",
-    "excerpt": "這個專案暫時擱置，但從音訊、歌詞時間軸到封面與影片的多階段產物管理，留下了仍可重用的工程經驗。",
-    "body": "## 生成只是其中一步\n\n完整歌曲會經過企劃、歌詞、音訊生成、分析、LRC、封面和影片輸出。模型常被當成核心，但實際花最多時間的是版本、素材和階段狀態。如果所有輸出都堆在同一個資料夾，幾次實驗後就無法確認哪個成品來自哪組設定。\n\n## 將引擎與作品分開\n\n大型模型權重與執行環境不適合跟每首歌一起保存，因此我把引擎、工具和歌曲工作目錄拆開。每首歌保留提示、音訊、分析結果與發布素材，控制台只負責協調，不把特定模型寫死在作品資料裡。\n\n## 為什麼暫停\n\n目前投入成本主要落在模型環境、生成品質與後製整合，繼續擴功能的回報不夠明確，因此先停止開發。暫停不等於刪除；保留清楚的產物結構和已知限制，未來更換模型時才有低成本重啟的可能。",
+    "excerpt": "AI 音樂專案曾因生成品質與後製成本暫停；保留下來的產物結構，後來成為 Kumori Music 正式發布流程的基礎。",
+    "body": "## 生成只是其中一步\n\n完整歌曲會經過企劃、歌詞、音訊生成、分析、封面和影片輸出。模型常被當成核心，但實際花最多時間的是版本、素材和階段狀態。如果所有輸出都堆在同一個資料夾，幾次實驗後就無法確認哪個成品來自哪組設定。\n\n## 將引擎與作品分開\n\n大型模型權重與執行環境不適合跟每首歌一起保存，因此我把引擎、工具和歌曲工作目錄拆開。每首歌保留企劃、歌詞、音訊、分析結果與發布素材，控制流程負責協調，但不把特定模型寫死在作品資料裡。\n\n## 一次暫停留下的價值\n\n專案早期曾因模型環境、生成品質與後製整合的投入過高而暫停。這段時間沒有把實驗目錄直接丟棄，而是保留產物結構、品質紀錄與已知限制，讓後續更換模型與影片工具時不必重新整理所有素材。\n\n## 從工程實驗走向頻道發布\n\n2026 年 8 月，這套流程重新啟動並進入 Kumori Music 的正式製作：歌詞與歌曲生成後會經過人工選曲、結構確認與品質檢查，再由一致的角色和品牌規格產生視覺，最後以 Remotion 與 FFmpeg 輸出完整影片及 Shorts。專案的目標也從擴充控制台，轉為建立可以穩定完成一首作品的端到端發布流程。",
     "project": "ai-Music"
+  },
+  {
+    "slug": "kumori-music-first-release",
+    "title": "Kumori Music：從本地 AI 音樂工作流到第一首《声が灯した炎》",
+    "date": "2026-08-29",
+    "tags": ["Kumori Music", "AI 音樂", "YouTube", "Remotion"],
+    "draft": false,
+    "type": "engineering",
+    "visibility": "public",
+    "excerpt": "Kumori Music 正式上線，第一首《声が灯した炎》把本地 AI 生成、人工編排、角色視覺與影片後製串成一條完整發布流程。",
+    "body": "## Kumori Music 是什麼\n\n[Kumori Music](https://www.youtube.com/@KumoriMusic08) 是以動畫音樂為靈感的原創音樂頻道，作品範圍從具有疾走感的 J-Rock、動畫主題曲式編排，到適合夜晚聆聽的情緒型歌曲。製作過程會使用本地 AI 音樂環境，但選曲、結構、視覺方向、剪輯與發布仍由人工逐步確認。頻道發表的是原創作品，不是翻唱，也不以模仿特定歌手聲音為目標。\n\n## 第一首作品《声が灯した炎》\n\n<div class=\"video-embed\"><iframe src=\"https://www.youtube-nocookie.com/embed/FPolv4K_yv4\" title=\"声が灯した炎｜Official Music\" loading=\"lazy\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe></div>\n\n[《声が灯した炎｜Official Music》](https://youtu.be/FPolv4K_yv4) 是頻道在 2026 年 8 月 29 日發布的第一首作品。歌名可譯為「被聲音點燃的火焰」，核心意象是夥伴的聲音匯聚成守護的力量；歌曲以女性主唱、J-Rock 與動畫主題曲式的推進感為主。正式影片長約 3 分 9 秒。\n\n## 從歌曲到影片的製作流程\n\n這次發布不是把生成音訊直接配上一張圖，而是將作品拆成可驗證的階段：\n\n1. 先確立歌曲主題、情緒走向與歌詞結構，再交由本地音樂模型生成候選版本。\n2. 人工試聽並確認版本，保留對應的歌詞、參數、品質結果與發布 metadata。\n3. 依 Kumori 的角色設定製作 16:9 主視覺，讓朋友的聲音以光流匯入胸前火焰，對應歌曲主題。\n4. 使用 Remotion 組合片頭、品牌字標與環形音訊頻譜，再由 FFmpeg 完成 H.264／AAC 輸出。\n5. 依音訊有效尾段修整成片，並另外擷取高潮製作 9:16 Shorts，讓短版與完整版共用同一套品牌規格。\n\n## 為什麼專案重新成為現在進行式\n\nAI Music 早期更像工具與模型實驗，曾因環境維護和後製成本而暫停。Kumori Music 讓專案有了更清楚的完成條件：每次迭代都必須落到可以公開觀看的歌曲、視覺與影片，而不只停在模型輸出。接下來會持續整理不同曲風與歌詞模式，同時以人工試聽決定哪些作品進入頻道。\n\n## 追蹤後續作品\n\n後續原創歌曲、正式影片與 Shorts 會發布在 [Kumori Music YouTube 頻道](https://www.youtube.com/@KumoriMusic08)。網站則會繼續記錄製作流程、工具調整與實際發布後的工程經驗。",
+    "project": "AI Music Workflow"
   },
   {
     "slug": "closing-the-poe-build-viewer-experiment",

@@ -6,8 +6,8 @@ const grouped = new Map<string, typeof sorted>();
 for (const entry of sorted) { const month = entry.date.slice(0, 7); if (!grouped.has(month)) grouped.set(month, []); grouped.get(month)!.push(entry); }
 ---
 <Layout title="活動日誌 | 熊少愆">
-  <header class="page-intro site-shell"><span class="kicker">Activity log / {sorted.length} entries</span><h1>跨專案的變更紀錄。</h1><p>從各專案 Git 紀錄整理實際完成的工作。公開專案保留具體內容，受保護工作只留下不涉及客戶資訊的技術摘要。</p></header>
+  <header class="page-intro site-shell"><span class="kicker">Activity log / {sorted.length} entries</span><h1>跨專案的變更紀錄。</h1><p>從各專案 Git 與公開發布紀錄整理實際完成的工作。公開專案保留具體內容，受保護工作只留下不涉及客戶資訊的技術摘要。</p></header>
   <section class="site-shell py-20">
-    {sorted.length === 0 ? <p class="text-[var(--muted)]">尚未有活動紀錄。</p> : Array.from(grouped.entries()).map(([month, entries]) => <section class="activity-month"><h2>{month}</h2><div>{entries.map(entry => <article><time>{entry.date}</time><div><span class="meta-label text-[var(--blue)]">{entry.project} / {entry.tier === 'protected' ? 'Protected' : 'Public'}</span><p>{entry.summary}</p><div class="flex flex-wrap gap-1">{entry.tags?.map(tag => <span class="tag">{tag}</span>)}</div>{entry.commits && entry.commits.length > 0 && <div class="activity-commits"><span>git</span>{entry.commits.map(commit => <code>{commit}</code>)}</div>}</div></article>)}</div></section>)}
+    {sorted.length === 0 ? <p class="text-[var(--muted)]">尚未有活動紀錄。</p> : Array.from(grouped.entries()).map(([month, entries]) => <section class="activity-month"><h2>{month}</h2><div>{entries.map(entry => <article><time>{entry.date}</time><div><span class="meta-label text-[var(--blue)]">{entry.project} / {entry.tier === 'protected' ? 'Protected' : 'Public'}</span><p>{entry.summary}</p><div class="flex flex-wrap gap-1">{entry.tags?.map(tag => <span class="tag">{tag}</span>)}</div>{entry.commits && entry.commits.length > 0 && <div class="activity-commits"><span>git</span>{entry.commits.map(commit => <code>{commit}</code>)}</div>}{entry.link && <a class="text-link mt-4 inline-block" href={entry.link} target="_blank" rel="noopener noreferrer">查看發布內容 ↗</a>}</div></article>)}</div></section>)}
   </section>
 </Layout>
