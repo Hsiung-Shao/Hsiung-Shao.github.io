@@ -29,7 +29,7 @@
     "tier": "personal",
     "summary": "全站加入 GA4 頁面與贊助轉換追蹤，補上 Patreon 支持方式，並更新個人資料與專案內容。",
     "tags": ["Astro", "GA4", "content"],
-    "commits": ["88a1821", "fc0bf74", "f5d6e21"]
+    "commits": ["6c71be7", "be524ae", "e654d6a"]
   },
   {
     "date": "2026-08-21",
@@ -93,7 +93,7 @@
     "tier": "personal",
     "summary": "完成 Cinematic Archive 全站改版，以路由感知的 Three.js 場景串接專案、文章、活動與個人資訊頁面。",
     "tags": ["Astro", "Three.js", "UI/UX"],
-    "commits": ["77b1761", "2feb559", "7846293"]
+    "commits": ["81f97c1", "c5dc3f3", "bcf6f6c"]
   },
   {
     "date": "2026-08-05",
