@@ -163,12 +163,25 @@ describe('嚴格模式', () => {
   // 「真的缺來源時會失敗」那一半沒有進 CI——validate-content.mjs 的 root 是寫死的,
   // 要造出「沒有本機檔」的情境只能動檔案系統,代價高於價值。該行為以手動實測確認。
   it('識別詞來源存在時,嚴格模式不會誤擋', () => {
+    // 識別詞由測試自己用 PROTECTED_TERMS 提供,**不能**依賴 process.env 或本機檔:
+    // CI 的 npm test 步驟沒有注入 secret,checkout 也不會有 gitignore 掉的
+    // protected-terms.local.json,靠環境的話這條會在 CI 上因為嚴格模式而紅,
+    // 而且紅的理由跟它想驗的東西無關。本機能過只是因為本機剛好有那個檔。
+    //
+    // 用一個不會出現在 src/ 與 public/ 的假詞,讓「有來源」與「無洩漏」兩件事都成立。
     const result = spawnSync(
       process.execPath,
       [resolve(root, 'scripts/validate-content.mjs')],
-      { env: { ...process.env, REQUIRE_PROTECTED_TERMS: '1' }, encoding: 'utf8' },
+      {
+        env: {
+          ...process.env,
+          REQUIRE_PROTECTED_TERMS: '1',
+          PROTECTED_TERMS: 'acme-placeholder-not-in-content',
+        },
+        encoding: 'utf8',
+      },
     );
 
-    expect(result.status, result.stderr).toBe(0);
+    expect(result.status, result.stdout + result.stderr).toBe(0);
   });
 });
