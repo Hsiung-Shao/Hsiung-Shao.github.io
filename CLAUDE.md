@@ -29,7 +29,14 @@
 | 環境變數 `PROTECTED_TERMS`(逗號分隔) | CI | 由 GitHub secret 注入,已接在 `ci.yml` 與 `deploy.yml` |
 | `scripts/protected-terms.local.json`(字串陣列) | 本機 | 在 `.gitignore` 裡,**絕對不要 commit** |
 
-兩個都沒有時掃描不會失敗,但會印明顯警告並降級成只檢查本機路徑樣式。
+兩個來源都沒有時的行為,依路徑而不同:
+
+- **部署(`deploy.yml`)**:設了 `REQUIRE_PROTECTED_TERMS=1`,**直接讓建置失敗**。
+  這條路徑無人值守,secret 若被誤刪只印警告的話沒人會看到,護欄會靜默退化成
+  只檢查本機路徑而網站照常上線。寧可紅燈也不要假的綠燈。
+- **PR 檢查(`ci.yml`)與本機**:只印警告、掃描降級,不失敗。
+  GitHub 不會把 secret 傳給 fork 送出的 PR,硬失敗會讓外部 PR 永遠是紅的。
+
 看到那行警告就表示客戶名沒有被實際比對過——不要當成通過。
 
 ### 護欄實作

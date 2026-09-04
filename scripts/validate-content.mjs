@@ -144,13 +144,22 @@ if (!existsSync(supportPath)) {
 const protectedTerms = loadProtectedTerms(root, config);
 
 // 客戶真名不在這個 repo 裡(它是公開的),要靠本機檔或 CI secret 提供。
-// 兩者都沒有時掃描仍會跑,但只剩本機路徑樣式那一層——這件事必須講出來,
-// 否則護欄會靜默降級成半套,而輸出看起來跟全套一樣。
+// 兩者都沒有時掃描仍會跑,但只剩本機路徑樣式那一層。
+//
+// 這件事在兩種情境下的嚴重性不同:
+//   - 部署(deploy.yml)無人值守。secret 哪天被誤刪或改名,只留一行沒人看的警告,
+//     等於護欄靜默退化成半套而站照上——所以那條路徑設 REQUIRE_PROTECTED_TERMS=1 直接擋下。
+//   - PR 檢查(ci.yml)不設。GitHub 不會把 secret 傳給 fork 送出的 PR,
+//     硬失敗會讓外部貢獻者的 PR 永遠是紅的。
 if (protectedTerms.length === 0) {
-  console.warn(
-    '⚠ 未載入任何受保護識別詞:缺少環境變數 PROTECTED_TERMS 或 scripts/protected-terms.local.json。\n' +
-      '  隱私掃描目前只檢查本機路徑樣式,無法偵測客戶名洩漏。',
-  );
+  const message =
+    '未載入任何受保護識別詞:缺少環境變數 PROTECTED_TERMS 或 scripts/protected-terms.local.json。';
+
+  if (process.env.REQUIRE_PROTECTED_TERMS === '1') {
+    errors.push(`${message} 此路徑要求必須有識別詞來源,不接受降級掃描。`);
+  } else {
+    console.warn(`⚠ ${message}\n  隱私掃描目前只檢查本機路徑樣式,無法偵測客戶名洩漏。`);
+  }
 }
 
 const leaks = scanProjectContent(root, protectedTerms);

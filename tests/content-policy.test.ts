@@ -1,3 +1,4 @@
+import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -133,6 +134,10 @@ describe('洩漏偵測', () => {
 });
 
 describe('實際網站內容', () => {
+  // ⚠ 這條在 CI 上的檢測力比看起來弱:`npm test` 步驟刻意不注入 PROTECTED_TERMS
+  // (測試不該依賴真名),所以 CI 跑這條時識別詞多半是空的,實際只驗到
+  // 「掃描邏輯沒壞、本機路徑樣式沒中」。真名比對的把關在有注入 secret 的
+  // build 步驟,而 deploy.yml 更設了 REQUIRE_PROTECTED_TERMS=1 讓缺來源直接失敗。
   it('src 與 public 不含任何受保護識別詞或本機路徑', () => {
     const leaks = scanProjectContent(root, loadProtectedTerms(root, config));
 
@@ -148,5 +153,22 @@ describe('實際網站內容', () => {
     const leaks = scanProjectContent(root, ['astro']);
 
     expect(leaks.length).toBeGreaterThan(0);
+  });
+});
+
+describe('嚴格模式', () => {
+  // deploy.yml 設 REQUIRE_PROTECTED_TERMS=1,讓「拿不到識別詞」直接使建置失敗。
+  // 這條守的是反方向的風險:開關本身寫錯,把識別詞正常存在的部署也一起擋掉。
+  //
+  // 「真的缺來源時會失敗」那一半沒有進 CI——validate-content.mjs 的 root 是寫死的,
+  // 要造出「沒有本機檔」的情境只能動檔案系統,代價高於價值。該行為以手動實測確認。
+  it('識別詞來源存在時,嚴格模式不會誤擋', () => {
+    const result = spawnSync(
+      process.execPath,
+      [resolve(root, 'scripts/validate-content.mjs')],
+      { env: { ...process.env, REQUIRE_PROTECTED_TERMS: '1' }, encoding: 'utf8' },
+    );
+
+    expect(result.status, result.stderr).toBe(0);
   });
 });

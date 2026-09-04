@@ -30,12 +30,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # build 會先跑 validate-content。客戶真名不在這個公開 repo 裡,
-      # 靠 secret 注入;沒設就只剩本機路徑那層檢查,輸出會印警告。
+      # build 會先跑 validate-content。客戶真名不在這個公開 repo 裡,靠 secret 注入。
+      #
+      # REQUIRE_PROTECTED_TERMS=1 讓「拿不到識別詞」直接使建置失敗,不接受降級掃描。
+      # 這條路徑是無人值守的上線路徑:secret 若被誤刪或改名,只印警告的話沒有人會看到,
+      # 護欄會靜默退化成只檢查本機路徑,而網站照常部署。寧可紅燈也不要假的綠燈。
+      # (ci.yml 刻意不設這個變數——fork 送來的 PR 拿不到 secret,硬失敗會讓外部 PR 永遠紅。)
       - name: Build Astro
         run: npm run build
         env:
           PROTECTED_TERMS: ${{ secrets.PROTECTED_TERMS }}
+          REQUIRE_PROTECTED_TERMS: '1'
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
