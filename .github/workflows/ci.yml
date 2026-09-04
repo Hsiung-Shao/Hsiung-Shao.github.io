@@ -1,0 +1,71 @@
+name: CI
+
+# deploy.yml 只在推上 main 之後才建置,那時內容已經要上線了。
+# 這條 workflow 把同樣的檢查提前到合併之前跑。
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  quality:
+    name: 測試與建置
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # 隱私鐵律與資料結構護欄。單獨跑一次,讓失敗訊息直接指向內容問題,
+      # 而不是被埋在 build 的輸出裡。
+      #
+      # 客戶真名不在這個 repo 裡(repo 是公開的),靠 secret 注入。
+      # 沒設 secret 時掃描會降級成只檢查本機路徑樣式,並在輸出印警告。
+      - name: Validate content
+        run: npm run validate-content
+        env:
+          PROTECTED_TERMS: ${{ secrets.PROTECTED_TERMS }}
+
+      - name: Run tests
+        run: npm test
+
+      # build 會再跑一次 validate-content,這是刻意的:
+      # 部署路徑(deploy.yml)靠的就是 build 內建的那道檢查。
+      - name: Build
+        run: npm run build
+        env:
+          PROTECTED_TERMS: ${{ secrets.PROTECTED_TERMS }}
+
+  typecheck:
+    name: 型別檢查(advisory)
+    runs-on: ubuntu-latest
+    # 目前 astro check 有 2 個既有錯誤,都在未被任何頁面引用的死碼裡
+    # (src/components/HeroSection.astro → src/components/three/HeroScene.tsx,
+    #  以及同樣無人引用的 src/components/three/SkillSphere.tsx)。
+    # 掛成硬性 gate 會讓 CI 第一天就是紅的,紅的 gate 大家會習慣性忽略。
+    # 回收條件:清掉那些死碼、或補上 bufferAttribute 的 args 之後,
+    # 刪掉下面這行 continue-on-error,轉成硬性 gate。
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Astro check
+        run: npm run typecheck

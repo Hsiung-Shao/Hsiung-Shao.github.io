@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import {
+  formatLeaks,
+  loadProtectedTerms,
+  scanProjectContent,
+} from './lib/content-policy.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const readJson = (path) => JSON.parse(readFileSync(resolve(root, path), 'utf8'));
@@ -134,10 +139,30 @@ if (!existsSync(supportPath)) {
   }
 }
 
+// 隱私鐵律:受保護專案的識別資訊不得出現在任何會被建置進網站的內容中。
+// 這條放在最後,因為它掃的是 src/ 與 public/ 全部檔案,而非單一資料結構。
+const protectedTerms = loadProtectedTerms(root, config);
+
+// 客戶真名不在這個 repo 裡(它是公開的),要靠本機檔或 CI secret 提供。
+// 兩者都沒有時掃描仍會跑,但只剩本機路徑樣式那一層——這件事必須講出來,
+// 否則護欄會靜默降級成半套,而輸出看起來跟全套一樣。
+if (protectedTerms.length === 0) {
+  console.warn(
+    '⚠ 未載入任何受保護識別詞:缺少環境變數 PROTECTED_TERMS 或 scripts/protected-terms.local.json。\n' +
+      '  隱私掃描目前只檢查本機路徑樣式,無法偵測客戶名洩漏。',
+  );
+}
+
+const leaks = scanProjectContent(root, protectedTerms);
+errors.push(...formatLeaks(leaks));
+
 if (errors.length > 0) {
   console.error(`內容驗證失敗 (${errors.length}):`);
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
 
-console.log(`內容驗證通過: ${projects.length} 個專案，${posts.length} 篇文章。`);
+console.log(
+  `內容驗證通過: ${projects.length} 個專案，${posts.length} 篇文章，` +
+    `隱私掃描 ${protectedTerms.length} 個受保護識別詞無洩漏。`,
+);

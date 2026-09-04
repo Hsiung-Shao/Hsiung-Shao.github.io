@@ -10,3 +10,6 @@ dist/
 docs/
 scripts/.lastrun.json
 scripts/pending-digest.md
+
+# 客戶真名只存在本機,絕不進版控(這個 repo 是公開的)
+scripts/protected-terms.local.json

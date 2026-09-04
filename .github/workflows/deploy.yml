@@ -30,8 +30,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # build 會先跑 validate-content。客戶真名不在這個公開 repo 裡,
+      # 靠 secret 注入;沒設就只剩本機路徑那層檢查,輸出會印警告。
       - name: Build Astro
         run: npm run build
+        env:
+          PROTECTED_TERMS: ${{ secrets.PROTECTED_TERMS }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
