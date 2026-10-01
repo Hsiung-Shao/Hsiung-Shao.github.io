@@ -1,6 +1,6 @@
 {
-  "updated": "2026-08-29T18:30:00+08:00",
-  "focus": "目前同步推進 Kumori Music 原創音樂發布、Path of Exile 繁體中文工具，以及 MultiStream Hub 的分享與內容體驗。",
+  "updated": "2026-09-08T10:15:00+08:00",
+  "focus": "目前集中處理 Path of Exile 工具的新版本相容、交易資料解析，以及個人網站的內容隱私與發布驗證。",
   "projects": [
     {
       "name": "AI Music / Kumori Music",
@@ -10,22 +10,27 @@
     {
       "name": "Awakened PoE Trade-zh-TW",
       "tier": "personal",
-      "status": "持續同步上游，修正國際服繁中客戶端的物品解析、交易搜尋與更新流程"
+      "status": "同步新版交易資料，修正傭兵契約否定條件與特殊物品解析"
     },
     {
       "name": "Poe Market zh",
       "tier": "personal",
-      "status": "維護國際服交易站的繁中搜尋、結果翻譯與賽季資料更新"
+      "status": "發布 329.5.2，修復新版交易站資料攔截與舊書籤自動升級"
     },
     {
       "name": "PobTools",
       "tier": "personal",
-      "status": "完成 v1.0.0 發布準備，持續處理 POB beta、字型與多行翻譯相容性"
+      "status": "發布 v1.3.0，改善搜尋字串、啟動器縮放與 CrossOver 相容性"
     },
     {
       "name": "MultiStream Hub",
       "tier": "personal",
       "status": "維護分享畫布、跨平台直播操作、比較頁與公開內容索引"
+    },
+    {
+      "name": "個人網站",
+      "tier": "personal",
+      "status": "以內容掃描、測試與部署阻擋機制保護客戶識別資訊"
     }
   ]
 }

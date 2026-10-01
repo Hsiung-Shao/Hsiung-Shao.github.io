@@ -1,5 +1,69 @@
 [
   {
+    "date": "2026-09-05",
+    "project": "Awakened PoE Trade-zh-TW",
+    "tier": "personal",
+    "summary": "修正傭兵契約的否定與「一個都沒有」條件，只送出實際勾選項目，並加入遊戲內真實樣本做解析驗證。",
+    "tags": ["Path of Exile", "trade", "parser"],
+    "commits": ["34fdc8b", "a20c40b", "2d63d95"]
+  },
+  {
+    "date": "2026-09-05",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "發布 329.5.2，改用 fetch 攔截新版交易站資料，並修復舊書籤轉換至 3.29.3b 格式的升級流程。",
+    "tags": ["Chrome Extension", "PoE Trade", "migration"],
+    "commits": ["b1a4137", "398d78f", "8177c75", "0d3b45c"]
+  },
+  {
+    "date": "2026-09-04",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "發布 v1.3.0，搜尋字串產生器避開物品隱藏文字誤判，啟動器並加入字體縮放與視窗尺寸記憶。",
+    "tags": ["Path of Building", "regex", "accessibility"],
+    "commits": ["df5c92c", "c9e6089", "6af3a3a"]
+  },
+  {
+    "date": "2026-09-04",
+    "project": "個人網站",
+    "tier": "personal",
+    "summary": "建立客戶識別資訊的內容掃描護欄與測試基準，部署缺少受保護詞來源時會直接失敗，避免隱私檢查靜默降級。",
+    "tags": ["privacy", "CI", "testing"],
+    "commits": ["c0b69fa", "23f6920", "0bded42"]
+  },
+  {
+    "date": "2026-09-03",
+    "project": "Awakened PoE Trade-zh-TW",
+    "tier": "personal",
+    "summary": "改善異界勢力與未鑑定傳奇物品解析，改以唯一基底資料處理少數抗性與詞綴辨識例外。",
+    "tags": ["Path of Exile", "item parser", "bugfix"],
+    "commits": ["0f9787e", "4868a5a", "4062f1c"]
+  },
+  {
+    "date": "2026-09-02",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "發布 v1.2.0，將實測相容的 D3D 編譯元件納入固定發行來源，修復新版 CrossOver 無法啟動 POB。",
+    "tags": ["CrossOver", "Windows", "release"],
+    "commits": ["40ecf95", "f5c05a7"]
+  },
+  {
+    "date": "2026-08-31",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "交易結果卡加入詞綴篩選按鈕與群組名稱中文化，同時減少開啟結果頁時的處理成本。",
+    "tags": ["Path of Exile", "i18n", "performance"],
+    "commits": ["2ec0331"]
+  },
+  {
+    "date": "2026-08-30",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "發布 v1.1.0，支援系統與手動 HTTP 代理，並重整安裝、工具清單、防毒與簽章相關文件。",
+    "tags": ["WinHTTP", "proxy", "documentation"],
+    "commits": ["baf07d4", "a371520", "e92dce7"]
+  },
+  {
     "date": "2026-08-29",
     "project": "AI Music / Kumori Music",
     "tier": "personal",
