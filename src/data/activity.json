@@ -11,7 +11,7 @@
     "date": "2026-10-01",
     "project": "PobTools",
     "tier": "personal",
-    "summary": "搜尋字串產生器的詞綴資料升級到新版結構，涵蓋隱藏與環境文字的來源分離，並隨 v1.7.7 發布。",
+    "summary": "搜尋字串產生器的詞綴資料改為與查價工具共用的新結構，本體讀取維持相容並通過自檢，外部查價連結同步改用共用資料。",
     "tags": ["Path of Exile", "regex", "release"],
     "commits": ["14e1d02", "291c5ed"]
   },
@@ -107,7 +107,7 @@
     "date": "2026-09-24",
     "project": "Poe Market zh",
     "tier": "personal",
-    "summary": "書籤與資料夾改成按住即可拖曳，拖曳時以讓位預覽顯示落點，並支援以目前搜尋取代書籤、依遊戲版本過濾資料夾。",
+    "summary": "書籤與資料夾改成按住即可拖曳，拖曳時以讓位預覽顯示落點，並支援以目前搜尋取代書籤、面板狀態換頁後保留。",
     "tags": ["drag and drop", "UX", "bookmarks"],
     "commits": ["c0ad3f0", "85da8d4", "a6d5946", "21509c9"]
   },
@@ -123,7 +123,7 @@
     "date": "2026-09-09",
     "project": "Poe Market zh",
     "tier": "personal",
-    "summary": "移除社群字典做資料瘦身並支援書籤匯入，物價授權改成點下時立即詢問，同時上架 Firefox 版本。",
+    "summary": "移除社群字典做資料瘦身並支援書籤匯入，物價授權改成點下時立即詢問，並加入 Firefox 支援。",
     "tags": ["bundle size", "permissions", "Firefox"],
     "commits": ["b9d64df", "486905c", "1a51e42"]
   },
