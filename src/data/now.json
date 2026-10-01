@@ -1,6 +1,6 @@
 {
-  "updated": "2026-09-08T10:15:00+08:00",
-  "focus": "目前集中處理 Path of Exile 工具的新版本相容、交易資料解析，以及個人網站的內容隱私與發布驗證。",
+  "updated": "2026-10-02T18:00:00+08:00",
+  "focus": "目前主線是 PobTools 的無頭引擎與新前端重寫，以及交易工具在官網改版後的資料解析維護。",
   "projects": [
     {
       "name": "AI Music / Kumori Music",
@@ -10,17 +10,17 @@
     {
       "name": "Awakened PoE Trade-zh-TW",
       "tier": "personal",
-      "status": "同步新版交易資料，修正傭兵契約否定條件與特殊物品解析"
+      "status": "跟進上游版本，修正凋落地圖基底解析並以遊戲內實際樣本回歸驗證"
     },
     {
       "name": "Poe Market zh",
       "tier": "personal",
-      "status": "發布 329.5.2，修復新版交易站資料攔截與舊書籤自動升級"
+      "status": "詞綴階級徽章與選單上線，中文化擴到社群站點，並加入首次安裝導覽"
     },
     {
       "name": "PobTools",
       "tier": "personal",
-      "status": "發布 v1.3.0，改善搜尋字串、啟動器縮放與 CrossOver 相容性"
+      "status": "無頭引擎與新前端已進入正式版，持續對齊經典介面功能與跨平台渲染路徑"
     },
     {
       "name": "MultiStream Hub",

@@ -16,7 +16,14 @@
 
 ```text
 myweb/
+|-- .github/
+|   `-- workflows/
+|       |-- ci.yml
+|       `-- deploy.yml
 |-- scripts/
+|   |-- lib/
+|   |   |-- content-policy.mjs
+|   |   `-- git-history.mjs
 |   |-- projects.config.json
 |   |-- update-site.mjs
 |   `-- validate-content.mjs
@@ -30,9 +37,12 @@ myweb/
 |   |-- pages/
 |   |   `-- blog/
 |   `-- styles/
+|-- tests/
 |-- public/
+|-- CLAUDE.md
 |-- astro.config.mjs
-`-- package.json
+|-- package.json
+`-- vitest.config.ts
 ```
 
 ## Module Descriptions
@@ -45,10 +55,15 @@ myweb/
 - `src/components/MotionSystem.astro` - Shared page transitions, scroll reveals, progress, parallax, tilt, and reduced-motion behavior.
 - `src/components/SpatialScene.astro` - Persistent route-aware Three.js environment with project textures, spatial route artifacts, lifecycle cleanup, and reduced-motion fallback.
 - `src/components/react/ProjectCard.tsx` - Interactive portfolio card with status and article actions.
-- `scripts/projects.config.json` - Source repositories and per-project content policy.
+- `scripts/projects.config.json` - Source repositories and per-project content policy. Protected entries carry de-identified aliases only.
 - `scripts/update-site.mjs` - Generates a review digest from allowed Git histories.
 - `scripts/lib/git-history.mjs` - Selects bounded Git log ranges and recovers from rewritten history baselines.
+- `scripts/lib/content-policy.mjs` - Shared privacy guardrail: loads protected terms from a CI secret or a gitignored local file, then scans `src/` and `public/` for leaks. Used by both the build validator and the test suite.
 - `scripts/validate-content.mjs` - Validates content schema and privacy invariants before builds.
+- `tests/` - Vitest suite covering the privacy guardrail, data-layer invariants, Git log range selection, and React component smoke tests.
+- `CLAUDE.md` - Working rules for agents: the privacy invariant, the Git log sync handoff, commands, and known pitfalls.
+- `.github/workflows/ci.yml` - Pull-request gate: validate, test, build, plus an advisory type check.
+- `.github/workflows/deploy.yml` - Builds and deploys to GitHub Pages on pushes to `main`; requires protected terms to be present.
 
 ## Content Boundaries
 
@@ -61,6 +76,7 @@ myweb/
 
 | Date | Changes |
 |---|---|
+| 2026-10-02 | Logged a month of cross-project activity (headless engine rewrite, browser fallback path, extension data-source recovery), drafted three engineering retrospectives, and completed the directory and module inventory. |
 | 2026-09-18 | Documented the full Git Log synchronization handoff, including baselines, deduplication, content rules, privacy boundaries, and verification. |
 | 2026-09-08 | Made Git activity sync recover safely from rewritten history and refreshed recent project activity. |
 | 2026-08-29 | Reactivated AI Music as Kumori Music, documented the first release, and synchronized representative Git activity across maintained projects. |

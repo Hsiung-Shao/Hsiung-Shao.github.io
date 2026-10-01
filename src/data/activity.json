@@ -1,5 +1,149 @@
 [
   {
+    "date": "2026-10-02",
+    "project": "個人網站",
+    "tier": "personal",
+    "summary": "活動同步的基準 SHA 失效時不再偽裝成「無新 commit」，改為有限回溯並發出警告，選範圍的邏輯也抽成可單元測試的純函式。",
+    "tags": ["Node.js", "git", "testing"],
+    "commits": ["f99a40e"]
+  },
+  {
+    "date": "2026-10-01",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "搜尋字串產生器的詞綴資料升級到新版結構，涵蓋隱藏與環境文字的來源分離，並隨 v1.7.7 發布。",
+    "tags": ["Path of Exile", "regex", "release"],
+    "commits": ["14e1d02", "291c5ed"]
+  },
+  {
+    "date": "2026-09-28",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "修掉自動更新的四種失敗模式：舊檔被佔用、動態連結庫替換失敗、自我更新後卡在啟動中，以及匯入匯出固定等滿逾時。",
+    "tags": ["self-update", "Win32", "reliability"],
+    "commits": ["a1fe18c", "4424182", "f708d82", "d2a08e1"]
+  },
+  {
+    "date": "2026-09-25",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "新增韓文語系包，翻譯引擎改為按色碼分段處理混合詞綴與正負號，並讓中文輸入法把選定字直接交給本體。",
+    "tags": ["i18n", "IME", "translation"],
+    "commits": ["a33f015", "0907529", "baca531"]
+  },
+  {
+    "date": "2026-09-18",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "新介面分批對齊經典介面的功能：建置清單、天賦樹管理、軍團珠寶搜尋、交易面板與搜尋權重。",
+    "tags": ["Svelte", "feature parity", "trade API"],
+    "commits": ["5cb239a", "46587c4", "2cdd224", "2d28526"]
+  },
+  {
+    "date": "2026-09-18",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "WebView2 在 Wine 與 CrossOver 無法使用，改以系統瀏覽器作為第二條渲染路徑，並補上開不了瀏覽器仍能取得網址的後路與診斷記錄。",
+    "tags": ["Wine", "cross-platform", "fallback"],
+    "commits": ["920c809", "197d0a4", "187e993", "028148a"]
+  },
+  {
+    "date": "2026-09-17",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "讓卡住與當掉留下原因：新增看門狗與 GPU 計時，畫面沒變就不送出，閒置與最小化時不再空轉。",
+    "tags": ["watchdog", "frame pacing", "diagnostics"],
+    "commits": ["413b0c5", "6602a27", "ea74aa9", "b2716fa"]
+  },
+  {
+    "date": "2026-09-16",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "把引擎改成不開視窗、以標準輸入輸出交換 JSON，在上面建立新前端，天賦樹沿用引擎算好的幾何自畫 Canvas。",
+    "tags": ["headless", "IPC", "Svelte"],
+    "commits": ["bfadbb4", "cd99278", "588423f", "ddca5c2"]
+  },
+  {
+    "date": "2026-09-12",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "倉庫收益追蹤接上輿圖策略的每張圖成本，收支拆成數量與市價兩軸，並補上授權失效與官方錯誤原因的判讀。",
+    "tags": ["Path of Exile", "pricing", "snapshot"],
+    "commits": ["9321084", "ea9df73"]
+  },
+  {
+    "date": "2026-09-19",
+    "project": "Awakened PoE Trade-zh-TW",
+    "tier": "personal",
+    "summary": "修正凋落地圖永遠解析不到基底類型的問題，補上三種稀有度的實際樣本與四語系資料，並發布 3.29.911。",
+    "tags": ["item parser", "fixture", "release"],
+    "commits": ["772156c", "a73fe3b"]
+  },
+  {
+    "date": "2026-10-02",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "新增首次安裝的逐步導覽，導覽本身會實際示範篩選與搜尋操作並還原現場，可從進階設定重播。",
+    "tags": ["onboarding", "UX", "i18n"],
+    "commits": ["253f9a5", "a36378c", "84d87fe"]
+  },
+  {
+    "date": "2026-10-01",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "結果列的每條詞綴標出官方階級與擲值高低，篩選列再補上階級下拉自動填值，並調整排版避免與官方欄位衝突。",
+    "tags": ["mod tier", "CSS layout", "Chrome Extension"],
+    "commits": ["c790feb", "f9918f0", "6868712"]
+  },
+  {
+    "date": "2026-09-29",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "中文化擴到交易站以外的兩個社群站點，改用選用權限動態註冊，天賦名以交易站資料優先、遊戲檔墊底。",
+    "tags": ["optional permissions", "MutationObserver", "i18n"],
+    "commits": ["1718611", "81d8254", "ab16aae", "65289a7"]
+  },
+  {
+    "date": "2026-09-24",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "書籤與資料夾改成按住即可拖曳，拖曳時以讓位預覽顯示落點，並支援以目前搜尋取代書籤、依遊戲版本過濾資料夾。",
+    "tags": ["drag and drop", "UX", "bookmarks"],
+    "commits": ["c0ad3f0", "85da8d4", "a6d5946", "21509c9"]
+  },
+  {
+    "date": "2026-09-21",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "官網改版後物品名解析失效，改為辨識新版的物品浮窗結構，恢復第一代遊戲的物品名稱翻譯。",
+    "tags": ["DOM parsing", "regression", "PoE Trade"],
+    "commits": ["78392b2"]
+  },
+  {
+    "date": "2026-09-09",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "移除社群字典做資料瘦身並支援書籤匯入，物價授權改成點下時立即詢問，同時上架 Firefox 版本。",
+    "tags": ["bundle size", "permissions", "Firefox"],
+    "commits": ["b9d64df", "486905c", "1a51e42"]
+  },
+  {
+    "date": "2026-09-18",
+    "project": "Discord Bot",
+    "tier": "personal",
+    "summary": "讓 7 Days to Die 的客戶端執行檔也能當專用伺服器使用，解禁控制面板按鈕，並新增 YouTube 影片更新通知。",
+    "tags": ["discord.py", "game server", "YouTube API"],
+    "commits": ["cb94e43", "4cba930", "0076d36"]
+  },
+  {
+    "date": "2026-09-18",
+    "project": "Discord Bot",
+    "tier": "personal",
+    "summary": "調低十餘個排程模組的執行頻率並收斂記錄輸出，移除未啟用的音樂猜歌功能，本機環境備份也納入忽略清單。",
+    "tags": ["scheduling", "logging", "dead code"],
+    "commits": ["6ec4a0b", "f321c97", "5990107"]
+  },
+  {
     "date": "2026-09-05",
     "project": "Awakened PoE Trade-zh-TW",
     "tier": "personal",
