@@ -47,6 +47,7 @@ myweb/
 - `src/components/react/ProjectCard.tsx` - Interactive portfolio card with status and article actions.
 - `scripts/projects.config.json` - Source repositories and per-project content policy.
 - `scripts/update-site.mjs` - Generates a review digest from allowed Git histories.
+- `scripts/lib/git-history.mjs` - Selects bounded Git log ranges and recovers from rewritten history baselines.
 - `scripts/validate-content.mjs` - Validates content schema and privacy invariants before builds.
 
 ## Content Boundaries
@@ -60,6 +61,8 @@ myweb/
 
 | Date | Changes |
 |---|---|
+| 2026-09-18 | Documented the full Git Log synchronization handoff, including baselines, deduplication, content rules, privacy boundaries, and verification. |
+| 2026-09-08 | Made Git activity sync recover safely from rewritten history and refreshed recent project activity. |
 | 2026-08-29 | Reactivated AI Music as Kumori Music, documented the first release, and synchronized representative Git activity across maintained projects. |
 | 2026-08-27 | Added site-wide GA4 page tracking and distinct click events for all three support methods. |
 | 2026-07-22 | Added project lifecycle states, technical case studies, blog links, content validation, and protected-client content rules. |

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { execSync } from 'node:child_process';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { selectLogRange } from './lib/git-history.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = resolve(__dirname, '..');
 const CONFIG_PATH = join(__dirname, 'projects.config.json');
 const LASTRUN_PATH = join(__dirname, '.lastrun.json');
 const DIGEST_PATH = join(__dirname, 'pending-digest.md');
@@ -25,18 +25,32 @@ function gitCmd(repo, args) {
   return execSync(`git -c safe.directory="${repo}" -C "${repo}" ${args}`, { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 }
 
+function isBaselineUsable(repo, sha) {
+  try {
+    gitCmd(repo, `merge-base --is-ancestor ${sha} HEAD`);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function getNewCommits(repo, sinceSha, maxCount) {
-  const range = sinceSha ? `${sinceSha}..HEAD` : `-n ${maxCount}`;
+  const { range, resetBaseline } = selectLogRange(
+    sinceSha,
+    maxCount,
+    sha => isBaselineUsable(repo, sha),
+  );
   const format = '%H%x09%aI%x09%s';
   try {
     const out = gitCmd(repo, `log ${range} --format=${format} --no-merges`);
-    if (!out) return [];
-    return out.split('\n').map(line => {
+    if (!out) return { commits: [], resetBaseline };
+    const commits = out.split('\n').map(line => {
       const [sha, date, ...rest] = line.split('\t');
       return { sha, date, subject: rest.join('\t') };
     }).slice(0, maxCount);
+    return { commits, resetBaseline };
   } catch {
-    return [];
+    return { commits: [], resetBaseline };
   }
 }
 
@@ -63,7 +77,8 @@ function main() {
     if (project.contentPolicy === 'disabled') { log(`略過(內容更新已停用):${project.name}`); continue; }
     if (!isGitRepo(project.path)) { log(`略過(非 git repo):${project.name}`); continue; }
     const lastSha = lastrun.projects[project.name];
-    const commits = getNewCommits(project.path, lastSha, config.maxCommitsPerRun ?? 40);
+    const { commits, resetBaseline } = getNewCommits(project.path, lastSha, config.maxCommitsPerRun ?? 40);
+    if (resetBaseline) log(`  ${project.name}: 同步基準失效，有限回溯最新 commit`);
     if (commits.length === 0) { log(`  ${project.name}: 無新 commit`); continue; }
     totalCommits += commits.length;
     log(`${project.name}: ${commits.length} 個新 commit`);
