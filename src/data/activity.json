@@ -1,5 +1,33 @@
 [
   {
+    "date": "2026-10-01",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "〈暁を担ぐ者〉的 MV 經四版迭代定稿：從 2.5D 運鏡改回 2D，並修正手部與表情的歌詞對應，正式單曲與短影片完成。",
+    "tags": ["AI Music", "MV", "動畫"]
+  },
+  {
+    "date": "2026-09-29",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "以三首 J-Rock 方向確認曲完成參考研究、詞作與生成，目前待試聽；同時重建完整的製作流程知識庫。",
+    "tags": ["AI Music", "J-Rock", "詞作"]
+  },
+  {
+    "date": "2026-09-22",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "以同一首歌測試兩種 MV 製作路線：插畫式分鏡與本地動態生成模型，各自完成短片段測試。",
+    "tags": ["AI Music", "MV", "生成模型"]
+  },
+  {
+    "date": "2026-09-21",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "完成〈泣いた空に虹を〉的單曲與短影片版本，走完企劃、詞作、生成、母帶到封面與字幕的流程後歸檔為已上架。",
+    "tags": ["AI Music", "ACE-Step", "release"]
+  },
+  {
     "date": "2026-10-02",
     "project": "個人網站",
     "tier": "personal",
