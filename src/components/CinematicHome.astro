@@ -1,5 +1,31 @@
 ---
 import ConceptScene from './react/ConceptScene';
+import { featuredProjects, projects } from '../data/projects';
+import { posts } from '../data/posts';
+
+// 首頁的 hero 與下排 reel 都由 projects.json 的 featured 決定,不要在這裡寫死專案名。
+// 改精選就改資料:把要上首頁的專案設成 "featured": true,排在最前面的那個當 hero。
+const showcase = featuredProjects.length > 0 ? featuredProjects : projects.filter(project => project.visibility === 'public');
+const hero = showcase[0];
+
+// 首頁沒有可展示的專案等於整頁壞掉,讓建置直接失敗比產出半空的首頁好
+if (!hero) throw new Error('CinematicHome:沒有任何可公開展示的專案,請至少將一個 public 專案設為 featured');
+
+// 草稿不產生路由,連過去會是 404,所以只接受已發布的文章
+const publishedSlugs = new Set(posts.filter(post => !post.draft).map(post => post.slug));
+const heroArticle = hero.articles.find(slug => publishedSlugs.has(slug));
+const heroHref = heroArticle ? `/blog/${heroArticle}` : '/projects';
+
+// 88px 的大標靠斷行控制視覺:在最後一個空白處折成兩行,沒有空白的維持單行
+const heroTitleHtml = hero.title.replace(/\s+(\S+)$/, '<br />$1');
+
+const statusLabels: Record<string, string> = {
+  active: 'LIVE',
+  maintained: 'MAINTAINED',
+  paused: 'PAUSED',
+  archived: 'ARCHIVED',
+  client: 'CLIENT',
+};
 ---
 
 <main class="cinematic-home">
@@ -11,15 +37,15 @@ import ConceptScene from './react/ConceptScene';
   </header>
 
   <section class="cinematic-hero" aria-labelledby="cinematic-title">
-    <div class="cinematic-count"><span>01</span><small>/ 03</small></div>
+    <div class="cinematic-count"><span>01</span><small>/ {String(showcase.length).padStart(2, '0')}</small></div>
     <div class="cinematic-copy">
-      <p>SELECTED SYSTEM · LIVE</p>
-      <h1 id="cinematic-title">MultiStream<br />Hub</h1>
-      <div class="cinematic-meta"><span>React / Streaming / Interface</span><a href="/blog/multistream-hub-guide">進入專案 ↗</a></div>
+      <p>SELECTED SYSTEM · {statusLabels[hero.status] ?? hero.status.toUpperCase()}</p>
+      <h1 id="cinematic-title" set:html={heroTitleHtml} />
+      <div class="cinematic-meta"><span>{hero.tech.slice(0, 3).join(' / ')}</span><a href={heroHref}>進入專案 ↗</a></div>
     </div>
-    <aside class="cinematic-statement">把多個直播、聊天室與收藏整合成一個真正可以操作的觀看空間。</aside>
+    <aside class="cinematic-statement">{hero.description}</aside>
     <div class="cinematic-reel" aria-label="其他精選專案">
-      <span class="active">MULTISTREAM HUB</span><span>POBTOOLS</span><span>MINECRAFT MOD</span>
+      {showcase.map((project, index) => <span class={index === 0 ? 'active' : undefined}>{project.title.toUpperCase()}</span>)}
     </div>
   </section>
 
