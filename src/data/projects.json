@@ -8,7 +8,7 @@
     "category": "fullstack",
     "status": "paused",
     "visibility": "public",
-    "featured": true,
+    "featured": false,
     "highlights": [
       "程序生命週期 — 集中管理啟動、停止、異常退出與 Windows 終止備援",
       "即時互動 — WebSocket 串接遊戲主控台與遠端指令",
@@ -25,7 +25,7 @@
     "category": "tool",
     "status": "paused",
     "visibility": "public",
-    "featured": true,
+    "featured": false,
     "highlights": [
       "單一 IPC 合約 — 集中管理主程序與前端之間的通訊邊界",
       "本地工作區 — Kanban、Git diff、檔案樹、編輯器與服務控制整合",
@@ -42,7 +42,7 @@
     "category": "frontend",
     "status": "maintained",
     "visibility": "public",
-    "featured": true,
+    "featured": false,
     "link": "https://multistreaming.org",
     "highlights": [
       "多平台畫布 — Twitch 與 YouTube 多視窗觀看及聊天室整合",
@@ -60,7 +60,7 @@
     "category": "tool",
     "status": "maintained",
     "visibility": "public",
-    "featured": false,
+    "featured": true,
     "highlights": [
       "低侵入整合 — 不修改上游核心，以執行期注入繁中功能",
       "CJK 相容 — 補足搜尋、字型與文字貼上的語系需求",
@@ -111,7 +111,7 @@
     "category": "tool",
     "status": "maintained",
     "visibility": "public",
-    "featured": false,
+    "featured": true,
     "highlights": [
       "動態頁面翻譯 — 監看交易結果更新並增量處理",
       "字典同步 — 整合官方資料與本地翻譯字典",
@@ -145,7 +145,7 @@
     "category": "tool",
     "status": "active",
     "visibility": "public",
-    "featured": false,
+    "featured": true,
     "highlights": [
       "完整製作鏈 — 從歌曲企劃、生成與品質檢查一路銜接品牌視覺及正式影片",
       "引擎隔離 — 不同音樂模型和大型權重與作品資料分離",
