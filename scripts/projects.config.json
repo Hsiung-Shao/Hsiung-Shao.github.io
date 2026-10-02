@@ -1,7 +1,7 @@
 {
   "projects": [
-    { "name": "gameservercontroll", "path": "D:/codeproject/gameservercontroll", "tier": "personal", "status": "active", "contentPolicy": "full" },
-    { "name": "local-task-manager", "path": "D:/codeproject/local-task-manager", "tier": "personal", "status": "active", "contentPolicy": "full" },
+    { "name": "gameservercontroll", "path": "D:/codeproject/gameservercontroll", "tier": "personal", "status": "paused", "contentPolicy": "disabled" },
+    { "name": "local-task-manager", "path": "D:/codeproject/local-task-manager", "tier": "personal", "status": "paused", "contentPolicy": "disabled" },
     { "name": "multi-stream", "path": "D:/codeproject/web/multi-stream", "tier": "personal", "status": "maintained", "contentPolicy": "full" },
     { "name": "Pob2", "path": "D:/codeproject/Pob2", "tier": "personal", "status": "maintained", "contentPolicy": "full" },
     { "name": "Awakened PoE Trade-zh-TW", "path": "D:/codeproject/Pob2/apt-patched", "tier": "personal", "status": "active", "contentPolicy": "full" },

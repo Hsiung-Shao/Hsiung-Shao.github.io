@@ -6,7 +6,7 @@
     "longDescription": "以 TypeScript monorepo 開發的本地優先管理工具。後端代理程式負責遊戲行程、安裝工作與狀態持久化，前端則提供伺服器建立精靈、即時主控台和工作進度。現階段正從可用的第一階段往自動安裝與更新流程推進。",
     "tech": ["TypeScript", "Fastify", "React 19", "WebSocket", "SQLite", "Zustand", "xterm.js"],
     "category": "fullstack",
-    "status": "active",
+    "status": "paused",
     "visibility": "public",
     "featured": true,
     "highlights": [
@@ -23,7 +23,7 @@
     "longDescription": "把分散在終端機、Git 工具與筆記裡的日常開發流程收進同一個桌面工作區。應用透過明確的 IPC 合約隔離主程序與渲染程序，並用 SQLite 保存專案、任務和工作階段狀態；目前持續改善終端機與專案工作區體驗。",
     "tech": ["Electron", "React", "TypeScript", "SQLite", "node-pty", "TanStack Query", "Zustand"],
     "category": "tool",
-    "status": "active",
+    "status": "paused",
     "visibility": "public",
     "featured": true,
     "highlights": [
