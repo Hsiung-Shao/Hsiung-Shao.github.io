@@ -2,9 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 
 const capabilities = [
-  { label: 'Systems', items: ['資料模型與 API', '權限與資料邊界', '本地工具與自動化', '部署與維護流程'] },
-  { label: 'Languages', items: ['TypeScript / JavaScript', 'Python', 'C++', 'PHP', 'SQL'] },
-  { label: 'Platforms', items: ['React / Astro', 'Supabase / PostgreSQL', 'Cloudflare', 'Electron', 'Windows'] },
+  { label: 'Systems', items: ['資料模型與 API', '權限與資料邊界', '跨平台相容與降級路徑', '本地模型與生成流程', '部署與維護流程'] },
+  { label: 'Languages', items: ['TypeScript / JavaScript', 'Python', 'C++', 'Lua', 'PHP', 'SQL'] },
+  { label: 'Platforms', items: ['React / Astro / Svelte', '瀏覽器擴充 (MV3)', 'Supabase / PostgreSQL', 'Electron', 'Cloudflare', 'Windows / Wine'] },
 ];
 ---
 
@@ -19,7 +19,8 @@ const capabilities = [
     <div class="profile-grid">
       <div><span class="kicker">Working identity</span><h2 class="display-type mt-4 text-4xl">從問題出發，跨過必要的邊界。</h2></div>
       <div class="profile-copy">
-        <p>我有三年以上的開發經驗，曾從零建構中型管理系統，也持續製作多平台直播、遊戲資料翻譯、本地任務管理與伺服器控制工具。這些專案橫跨瀏覽器、桌面程式、資料庫和遊戲生態，但核心方法一致：先把資料流與風險說清楚，再選擇足以解決問題的技術。</p>
+        <p>我有三年以上的開發經驗，曾從零建構中型管理系統，目前的重心放在遊戲工具的在地化與長期維護：桌面程式的引擎改寫、瀏覽器擴充，以及把 AI 生成納入實際可交付的製作流程。這些專案橫跨瀏覽器、桌面程式、資料庫和遊戲生態，但核心方法一致：先把資料流與風險說清楚，再選擇足以解決問題的技術。</p>
+        <p>這類工具有個共同處境：它們依附在別人的產品上。遊戲會更新、網站會改版、執行環境可能根本不存在，所以我花在相容與降級路徑上的時間，常常比功能本身還多。</p>
         <p>我喜歡研究新技術，但不把新穎當成目的。真正值得留下來的成果，應該有可驗證的輸出、清楚的使用方式，並能和既有系統共存。</p>
       </div>
     </div>
@@ -35,7 +36,7 @@ const capabilities = [
   <section class="site-shell py-20">
     <div class="section-heading mb-10"><div><span class="kicker">Experience</span><h2>工作與持續實作</h2></div><p>正式工作建立系統尺度，個人專案則讓我持續測試新的工具、架構與維護方式。</p></div>
     <div class="work-row"><span class="index">2022—</span><div><h3>全端工程師（偏後端）</h3><p>中型管理系統的開發、重構與長期維護。</p></div><div class="work-meta"><p>資料庫架構、權限策略、第三方 API 正規化、前端流程與報表輸出。</p></div></div>
-    <div class="work-row"><span class="index">ONGOING</span><div><h3>獨立工具與公開紀錄</h3><p>從自身使用情境出發，完成可下載、可操作、可持續更新的工具。</p></div><div class="work-meta !border-[var(--green)]"><p>直播聚合、Path of Exile 工具、Minecraft 翻譯、任務管理與遊戲伺服器控制。</p></div></div>
+    <div class="work-row"><span class="index">ONGOING</span><div><h3>獨立工具與公開紀錄</h3><p>從自身使用情境出發，完成可下載、可操作、可持續更新的工具。</p></div><div class="work-meta !border-[var(--green)]"><p>Path of Exile 工具生態、瀏覽器擴充、直播聚合、Minecraft 翻譯與 AI 音樂製作流程。</p></div></div>
   </section>
 
   <section class="border-t border-[var(--line-strong)] bg-[var(--night)] text-white"><div class="site-shell py-16 profile-close"><div><span class="kicker !text-[#8fb2ff]">Outside the editor</span><h2 class="display-type mt-3 text-3xl">遊戲、動畫，以及看到新技術就動手試。</h2></div><p>平常喜歡 Path of Exile、Minecraft、Valorant 與其他線上遊戲。很多工具都從真實遊玩中的不便開始，最後成為一個需要處理資料、相容性與使用體驗的完整工程問題。</p></div></section>
