@@ -7,12 +7,14 @@
       "primaryLabel": "下載最新版",
       "assets": {
         "full": "^PobTools-(Translations-)?\\d+(\\.\\d+)*\\.zip$",
-        "update": "^PobTools-update-.+\\.zip$"
+        "update": "^PobTools-update-.+\\.zip$",
+        "data": "^PobTools-Data-\\d+\\.zip$"
       },
       "manual": {},
       "stats": [
-        { "source": "downloads", "key": "full", "label": "完整下載", "note": "新安裝或手動重裝的完整包" },
-        { "source": "downloads", "key": "update", "label": "更新下載", "note": "程式內自動更新抓的更新包" }
+        { "source": "downloads", "key": "full", "label": "完整下載", "note": "新安裝或手動重裝的完整包，含 beta 版" },
+        { "source": "downloads", "key": "update", "label": "程式更新", "note": "程式內自動更新抓的更新包" },
+        { "source": "downloads", "key": "data", "label": "翻譯資料更新", "note": "data-N 翻譯資料包，多數由程式自動下載" }
       ]
     },
     {

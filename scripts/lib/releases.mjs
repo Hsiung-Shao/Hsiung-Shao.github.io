@@ -38,15 +38,17 @@ export function trimReleaseBody(body) {
 
 /**
  * 把 GitHub API 回傳的 release 陣列彙總成頁面需要的資料。
- * draft 與 prerelease 不列入(PobTools 的 data-N 翻譯資料包是 prerelease)。
+ * 下載數算所有非 draft 的 release,只靠檔名分類:PobTools 的 data-N 翻譯資料包與 beta 版
+ * 都標成 prerelease,但它們的下載是真的,不能整則略過。版本清單才只列正式版。
  */
 export function summarizeReleases(releases, assetRules) {
   const downloads = Object.fromEntries(Object.keys(assetRules).map(bucket => [bucket, 0]));
-  const published = releases
-    .filter(release => !release.draft && !release.prerelease)
+  const nonDraft = releases.filter(release => !release.draft);
+  const published = nonDraft
+    .filter(release => !release.prerelease)
     .sort((a, b) => (a.published_at < b.published_at ? 1 : -1));
 
-  for (const release of published) {
+  for (const release of nonDraft) {
     for (const asset of release.assets ?? []) {
       const bucket = classifyAsset(asset.name, assetRules);
       if (bucket) downloads[bucket] += asset.download_count;

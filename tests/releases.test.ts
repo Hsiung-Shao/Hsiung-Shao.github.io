@@ -36,7 +36,8 @@ describe('下載數的資產分類', () => {
     expect(classifyAsset('PobTools-manifest-v1.7.8.json', rules)).toBeNull();
     expect(classifyAsset('PobTools-manifest-v1.7.8.json.sig', rules)).toBeNull();
     expect(classifyAsset('SHA256SUMS-1.7.8.txt', rules)).toBeNull();
-    expect(classifyAsset('PobTools-Data-16.zip', rules)).toBeNull();
+    expect(classifyAsset('PobTools-Data-16.zip', rules)).toBe('data');
+    expect(classifyAsset('PobTools-manifest-data-16.json', rules)).toBeNull();
   });
 
   it('ExileAppraiser 安裝版與免安裝版合計,更新檢查檔不計', () => {
@@ -55,10 +56,13 @@ describe('下載數的資產分類', () => {
 });
 
 describe('Release 彙總', () => {
-  it('排除 draft 與 prerelease,版本由新到舊', () => {
+  it('prerelease 的下載照算但不列進版本清單,draft 完全排除,版本由新到舊', () => {
     const summary = summarizeReleases([
       release({ tag_name: 'v1.0.0', published_at: '2026-09-01T00:00:00Z', assets: [{ name: 'PobTools-1.0.0.zip', download_count: 10 }] }),
-      release({ tag_name: 'data-16', prerelease: true, assets: [{ name: 'PobTools-1.0.0.zip', download_count: 999 }] }),
+      release({ tag_name: 'data-16', prerelease: true, assets: [
+        { name: 'PobTools-Data-16.zip', download_count: 40 },
+        { name: 'PobTools-manifest-data-16.json', download_count: 999 },
+      ] }),
       release({ tag_name: 'v2.0.0-draft', draft: true, assets: [{ name: 'PobTools-2.0.0.zip', download_count: 999 }] }),
       release({ tag_name: 'v1.1.0', published_at: '2026-09-10T00:00:00Z', assets: [
         { name: 'PobTools-1.1.0.zip', download_count: 5 },
@@ -66,13 +70,13 @@ describe('Release 彙總', () => {
       ] }),
     ], rulesFor('pobtools'));
 
-    expect(summary.downloads).toEqual({ full: 15, update: 7 });
+    expect(summary.downloads).toEqual({ full: 15, update: 7, data: 40 });
     expect(summary.releaseCount).toBe(2);
     expect(summary.recent.map(entry => entry.tag)).toEqual(['v1.1.0', 'v1.0.0']);
   });
 
   it('沒有任何符合的資產時,計數是 0 而不是缺欄位', () => {
-    expect(summarizeReleases([], rulesFor('pobtools')).downloads).toEqual({ full: 0, update: 0 });
+    expect(summarizeReleases([], rulesFor('pobtools')).downloads).toEqual({ full: 0, update: 0, data: 0 });
   });
 });
 
