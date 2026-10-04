@@ -3,16 +3,15 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
 import AllProjects from '../src/components/react/AllProjects';
-import FeaturedProjects from '../src/components/react/FeaturedProjects';
 import ProjectCard from '../src/components/react/ProjectCard';
 import TypeWriter from '../src/components/react/TypeWriter';
-import { featuredProjects, projects, type Project } from '../src/data/projects';
+import { projects, type Project } from '../src/data/projects';
 
 /**
  * 元件層只做 smoke:import 鏈通、用真實資料 render 不炸、關鍵互動有反應。
  * 視覺與動畫效果測不出來也不該在這裡測——那要靠瀏覽器實際看。
  *
- * three/ 底下的元件不在此列:jsdom 沒有 WebGL context,render 必然失敗。
+ * Three.js 場景(ConceptScene、SpatialScene)不在此列:jsdom 沒有 WebGL context,render 必然失敗。
  */
 const protectedProject = projects.find((project) => project.visibility === 'protected');
 const publicProject = projects.find((project) => project.visibility === 'public')!;
@@ -64,19 +63,6 @@ describe('專案列表', () => {
 
     for (const project of projects) {
       expect(screen.getByText(project.title)).toBeInTheDocument();
-    }
-  });
-
-  it('FeaturedProjects 只 render 精選專案', () => {
-    render(<FeaturedProjects />);
-
-    for (const project of featuredProjects) {
-      expect(screen.getByText(project.title)).toBeInTheDocument();
-    }
-
-    const notFeatured = projects.filter((project) => !project.featured);
-    for (const project of notFeatured) {
-      expect(screen.queryByText(project.title)).not.toBeInTheDocument();
     }
   });
 });

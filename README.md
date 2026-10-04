@@ -35,17 +35,14 @@ src/
 ├── components/
 │   ├── react/           # React 互動元件
 │   │   ├── AllProjects.tsx
-│   │   ├── FeaturedProjects.tsx
+│   │   ├── ConceptScene.tsx
 │   │   ├── ProjectCard.tsx
 │   │   └── TypeWriter.tsx
-│   ├── three/           # Three.js 3D 元件
-│   │   ├── HeroScene.tsx
-│   │   └── SkillSphere.tsx
-│   ├── AboutSection.astro
+│   ├── CinematicHome.astro
 │   ├── ContactForm.astro
 │   ├── Footer.astro
-│   ├── HeroSection.astro
-│   └── Navbar.astro
+│   ├── Navbar.astro
+│   └── SpatialScene.astro
 ├── data/                # 專案、文章、活動與 Now 資料
 ├── layouts/
 │   └── Layout.astro     # 共用版面

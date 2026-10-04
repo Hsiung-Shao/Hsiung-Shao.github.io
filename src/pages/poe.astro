@@ -1,0 +1,158 @@
+---
+import { marked } from 'marked';
+import Layout from '../layouts/Layout.astro';
+import { projects } from '../data/projects';
+import poeTools from '../data/poe-tools.json';
+import releaseSnapshot from '../data/releases.json';
+import type { ToolReleaseSummary } from '../../scripts/lib/releases.mjs';
+
+type Snapshot = ToolReleaseSummary & { fetchedAt: string };
+const snapshots = releaseSnapshot.tools as Record<string, Snapshot>;
+
+const statusLabels: Record<string, string> = {
+  active: '開發中',
+  maintained: '持續維護',
+  paused: '暫時擱置',
+  archived: '已封存',
+};
+
+const formatDate = (iso: string) => new Date(iso).toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' });
+const formatCount = (value: number | null | undefined) => (typeof value === 'number' ? value.toLocaleString('zh-TW') : null);
+
+const tools = await Promise.all(poeTools.tools.map(async tool => {
+  const project = projects.find(candidate => candidate.id === tool.projectId);
+  if (!project) throw new Error(`poe-tools.json: 找不到專案 ${tool.projectId}`);
+  const snapshot = snapshots[tool.projectId];
+  const manual = tool.manual as Record<string, { value: number | null; asOf: string | null }>;
+
+  const stats = tool.stats.map(stat => {
+    if (stat.source === 'manual') {
+      const entry = manual[stat.key];
+      return { ...stat, value: formatCount(entry?.value), asOf: entry?.asOf ?? null };
+    }
+    return { ...stat, value: formatCount(snapshot?.downloads[stat.key]), asOf: null };
+  });
+
+  const releases = await Promise.all((snapshot?.recent ?? []).map(async release => ({
+    ...release,
+    date: formatDate(release.publishedAt),
+    html: await marked.parse(release.body),
+  })));
+
+  return { ...tool, project, stats, releases, releaseCount: snapshot?.releaseCount ?? 0 };
+}));
+
+const fetchedTimes = Object.values(snapshots).map(snapshot => snapshot.fetchedAt).sort();
+const oldestFetch = fetchedTimes[0] ? formatDate(fetchedTimes[0]) : null;
+---
+
+<Layout title="PoE Tools | 熊少愆" description="PobTools、Poe Market zh、ExileAppraiser 三個 Path of Exile 繁中工具的狀態、下載數與版本更新內容。">
+  <header class="page-intro site-shell">
+    <span class="kicker">PoE tools / {tools.length} projects</span>
+    <h1>Path of Exile 繁中工具。</h1>
+    <p>三個替繁中玩家補上缺口的工具：Path of Building 中文化、交易站中文搜尋、遊戲內查價。下面是各自的狀態、下載數和最近幾版改了什麼。</p>
+  </header>
+
+  <section class="site-shell pb-20">
+    <div class="poe-tools">
+      {tools.map((tool, index) => {
+        const latest = tool.releases[0];
+        return (
+          <article class="poe-tool" id={tool.projectId}>
+            <div class="poe-tool-head">
+              <span class="meta-label text-[var(--quiet)]">{String(index + 1).padStart(2, '0')}</span>
+              <div>
+                <h2>{tool.project.title}</h2>
+                <span class="meta-label poe-status">{statusLabels[tool.project.status] ?? tool.project.status}</span>
+              </div>
+              <p>{tool.project.description}</p>
+            </div>
+
+            <dl class="poe-stats">
+              {tool.stats.map(stat => (
+                <div>
+                  <dt>{stat.label}</dt>
+                  <dd class:list={{ pending: !stat.value }}>{stat.value ?? '待更新'}</dd>
+                  <span>{stat.note}{stat.asOf && `，${stat.asOf}`}</span>
+                </div>
+              ))}
+              <div>
+                <dt>最新版本</dt>
+                <dd class:list={{ pending: !latest }}>{latest?.tag ?? '待更新'}</dd>
+                <span>{latest ? `${latest.date} 發布，共 ${tool.releaseCount} 版` : 'GitHub Releases'}</span>
+              </div>
+            </dl>
+
+            <div class="poe-actions">
+              <a class="poe-primary" href={tool.primaryUrl} target="_blank" rel="noopener noreferrer">{tool.primaryLabel} ↗</a>
+              {tool.project.articles.map(slug => <a class="text-link" href={`/blog/${slug}`}>安裝與使用教學 ↗</a>)}
+              <a class="text-link" href={`https://github.com/${tool.repo}/releases`} target="_blank" rel="noopener noreferrer">所有版本 ↗</a>
+              <div class="poe-tech">{tool.project.tech.slice(0, 4).map(item => <span class="tag">{item}</span>)}</div>
+            </div>
+
+            {tool.releases.length > 0 && (
+              <div class="poe-releases">
+                <span class="meta-label">Release notes</span>
+                {tool.releases.map((release, releaseIndex) => (
+                  <details open={releaseIndex === 0}>
+                    <summary><strong>{release.tag}</strong><time datetime={release.publishedAt}>{release.date}</time></summary>
+                    <div class="article-body poe-release-body" set:html={release.html}></div>
+                    <a class="text-link" href={release.url} target="_blank" rel="noopener noreferrer">在 GitHub 查看這一版 ↗</a>
+                  </details>
+                ))}
+              </div>
+            )}
+          </article>
+        );
+      })}
+    </div>
+
+    <p class="poe-footnote">
+      下載數取自 GitHub Releases 的檔案下載次數，不等於使用人數：同一個人重裝、換電腦或自動更新都會再算一次。
+      已排除更新檢查用的設定檔與雜湊檔。{oldestFetch && `資料時間 ${oldestFetch}。`}
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .poe-tools { display: grid; gap: 1rem; }
+  .poe-tool { scroll-margin-top: 100px; display: grid; gap: 1.6rem; padding: 2rem; border-radius: 6px; background: rgb(23 26 23 / 93%); }
+  .poe-tool-head { display: grid; grid-template-columns: 3rem minmax(200px, .7fr) minmax(0, 1.3fr); gap: 1.25rem; align-items: center; }
+  .poe-tool-head h2 { margin: 0 0 .4rem; font-size: 1.6rem; }
+  .poe-status { color: var(--acid); }
+  .poe-tool-head p { margin: 0; color: var(--muted); font-size: .88rem; line-height: 1.7; }
+
+  .poe-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .75rem; margin: 0; }
+  .poe-stats > div { display: grid; gap: .35rem; align-content: start; padding: 1.1rem 1.2rem; border-radius: 5px; background: #202420; }
+  .poe-stats dt { color: var(--muted); font-size: .75rem; }
+  .poe-stats dd { margin: 0; color: var(--ink); font-family: var(--mono); font-size: 1.9rem; font-variant-numeric: tabular-nums; line-height: 1.15; }
+  .poe-stats dd.pending { color: var(--quiet); font-family: var(--display); font-size: 1.2rem; }
+  .poe-stats span { color: var(--quiet); font-size: .7rem; line-height: 1.5; }
+
+  .poe-actions { display: flex; flex-wrap: wrap; gap: .9rem 1.4rem; align-items: center; }
+  .poe-primary { display: inline-flex; min-height: 40px; padding: .55rem 1rem; align-items: center; border-radius: 5px; background: var(--acid); color: #111; font-size: .8rem; font-weight: 700; text-decoration: none; }
+  .poe-primary:hover { background: var(--ink); }
+  .poe-tech { display: flex; flex-wrap: wrap; gap: .25rem; margin-left: auto; }
+
+  .poe-releases { display: grid; gap: .5rem; padding-top: 1.4rem; border-top: 1px solid var(--line); }
+  .poe-releases details { border-radius: 5px; background: #1c201c; }
+  .poe-releases summary { display: flex; gap: 1rem; padding: .85rem 1.1rem; align-items: baseline; cursor: pointer; }
+  .poe-releases summary strong { color: var(--ink); font-family: var(--mono); font-size: .9rem; }
+  .poe-releases summary time { color: var(--quiet); font-family: var(--mono); font-size: .72rem; }
+  .poe-releases details > .text-link { margin: 0 1.1rem 1.1rem; }
+  .poe-release-body { padding: 0 1.1rem; font-size: .86rem; line-height: 1.8; }
+  .poe-release-body :global(h2) { margin: 1.2rem 0 .4rem; font-size: 1rem; }
+  .poe-release-body :global(h2::before) { display: none; }
+  .poe-release-body :global(ul) { margin: .4rem 0 .8rem; list-style: square; }
+  .poe-release-body :global(li) { margin: .3rem 0; }
+
+  .poe-footnote { max-width: 760px; margin: 2rem 0 0; color: var(--quiet); font-size: .78rem; line-height: 1.8; }
+
+  @media (max-width: 760px) {
+    .poe-tool { padding: 1.3rem; }
+    .poe-tool-head { grid-template-columns: 2.2rem minmax(0, 1fr); }
+    .poe-tool-head p { grid-column: 1 / -1; }
+    .poe-stats dd { font-size: 1.5rem; }
+    .poe-tech { margin-left: 0; }
+  }
+</style>

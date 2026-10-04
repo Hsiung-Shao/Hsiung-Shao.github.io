@@ -15,6 +15,8 @@ const posts = readJson('src/data/posts.json');
 const activity = readJson('src/data/activity.json');
 const now = readJson('src/data/now.json');
 const config = readJson('scripts/projects.config.json');
+const poeTools = readJson('src/data/poe-tools.json');
+const releaseSnapshot = readJson('src/data/releases.json');
 const errors = [];
 
 const projectIds = new Set();
@@ -126,6 +128,39 @@ for (const slug of requiredGuideSlugs) {
     if (!guide.includes('## 使用方式')) {
       errors.push(`${slug}: 至少一個章節標題需以「使用方式」開頭`);
     }
+  }
+}
+
+// PoE 工具頁:設定要指得到公開專案,手動數字必須是數字或明確的 null(頁面顯示「待更新」),
+// 快照結構要完整——缺欄位時頁面不會報錯,只會默默顯示「待更新」,所以在這裡擋。
+for (const tool of poeTools.tools ?? []) {
+  const label = `poe-tools.json(${tool.projectId})`;
+  const project = projects.find(candidate => candidate.id === tool.projectId);
+  if (!project) errors.push(`${label}: 找不到對應專案`);
+  else if (project.visibility !== 'public') errors.push(`${label}: 只能列公開專案`);
+  if (!/^https:\/\//.test(tool.primaryUrl ?? '')) errors.push(`${label}: primaryUrl 必須是 https 連結`);
+  if (!/^[\w.-]+\/[\w.-]+$/.test(tool.repo ?? '')) errors.push(`${label}: repo 格式必須是 owner/name`);
+  for (const [bucket, pattern] of Object.entries(tool.assets ?? {})) {
+    try { new RegExp(pattern); } catch { errors.push(`${label}: assets.${bucket} 不是合法的正規表示式`); }
+  }
+  for (const stat of tool.stats ?? []) {
+    if (stat.source === 'downloads' && !(stat.key in (tool.assets ?? {}))) {
+      errors.push(`${label}: 統計 ${stat.key} 沒有對應的 assets 規則`);
+    }
+    if (stat.source === 'manual') {
+      const entry = tool.manual?.[stat.key];
+      if (!entry || !(entry.value === null || Number.isInteger(entry.value))) {
+        errors.push(`${label}: manual.${stat.key}.value 必須是整數或 null`);
+      } else if (entry.value !== null && !/^\d{4}-\d{2}-\d{2}$/.test(entry.asOf ?? '')) {
+        errors.push(`${label}: 有填 manual.${stat.key}.value 時必須附 asOf(YYYY-MM-DD)`);
+      }
+    }
+  }
+  const snapshot = releaseSnapshot.tools?.[tool.projectId];
+  if (!snapshot) {
+    errors.push(`releases.json: 缺少 ${tool.projectId} 的快照,請執行 npm run fetch-releases`);
+  } else if (!snapshot.downloads || !Array.isArray(snapshot.recent) || !snapshot.fetchedAt) {
+    errors.push(`releases.json(${tool.projectId}): 快照結構不完整`);
   }
 }
 
