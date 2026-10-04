@@ -4,6 +4,7 @@ import pobToolsGuide from './guides/pobtools-installation-guide.md?raw';
 import poeMarketGuide from './guides/poe-market-zh-guide.md?raw';
 import awakenedGuide from './guides/awakened-poe-trade-zh-tw-guide.md?raw';
 import minecraftGuide from './guides/minecraft-mod-translation-guide.md?raw';
+import exileAppraiserGuide from './guides/exile-appraiser-guide.md?raw';
 
 export interface BlogPost {
   slug: string;
@@ -24,6 +25,7 @@ const guideBodies: Record<string, string> = {
   'poe-market-zh-guide': poeMarketGuide,
   'awakened-poe-trade-zh-tw-guide': awakenedGuide,
   'minecraft-mod-translation-guide': minecraftGuide,
+  'exile-appraiser-guide': exileAppraiserGuide,
 };
 
 export const posts = (raw as BlogPost[]).map(post => ({

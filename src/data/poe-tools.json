@@ -1,0 +1,48 @@
+{
+  "tools": [
+    {
+      "projectId": "pobtools",
+      "repo": "Hsiung-Shao/PobTools-zh",
+      "primaryUrl": "https://github.com/Hsiung-Shao/PobTools-zh/releases/latest",
+      "primaryLabel": "下載最新版",
+      "assets": {
+        "full": "^PobTools-(Translations-)?\\d+(\\.\\d+)*\\.zip$",
+        "update": "^PobTools-update-.+\\.zip$"
+      },
+      "manual": {},
+      "stats": [
+        { "source": "downloads", "key": "full", "label": "完整下載", "note": "新安裝或手動重裝的完整包" },
+        { "source": "downloads", "key": "update", "label": "更新下載", "note": "程式內自動更新抓的更新包" }
+      ]
+    },
+    {
+      "projectId": "poe-market-translate",
+      "repo": "Hsiung-Shao/poe-market-zh",
+      "primaryUrl": "https://chromewebstore.google.com/detail/poe-market-zh/ipnmbepaghlkapopikbpcchblhfkieed",
+      "primaryLabel": "Chrome 線上應用程式商店",
+      "assets": {
+        "manual": "^poe-market-zh-.+\\.zip$"
+      },
+      "manual": {
+        "users": { "value": 7193, "asOf": "2026-10-01" }
+      },
+      "stats": [
+        { "source": "manual", "key": "users", "label": "每週使用者", "note": "Chrome 線上應用程式商店後台" },
+        { "source": "downloads", "key": "manual", "label": "手動安裝包下載", "note": "GitHub Releases 的 Chrome 與 Firefox 壓縮檔" }
+      ]
+    },
+    {
+      "projectId": "exile-appraiser",
+      "repo": "Hsiung-Shao/exile-appraiser",
+      "primaryUrl": "https://github.com/Hsiung-Shao/exile-appraiser/releases/latest",
+      "primaryLabel": "下載最新版",
+      "assets": {
+        "combined": "^ExileAppraiser-(Setup-.+\\.exe|.+-portable\\.exe)$"
+      },
+      "manual": {},
+      "stats": [
+        { "source": "downloads", "key": "combined", "label": "累計下載", "note": "安裝版與免安裝版，含自動更新下載" }
+      ]
+    }
+  ]
+}

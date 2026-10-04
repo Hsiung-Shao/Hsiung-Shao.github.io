@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # 每天重建一次,讓 /poe 的下載數與版本跟上 GitHub Releases(UTC 20:00 = 台灣 04:00)。
+  # 注意:repo 連續 60 天沒有活動時 GitHub 會停用排程,需到 Actions 頁手動重新啟用。
+  schedule:
+    - cron: '0 20 * * *'
 
 permissions:
   contents: read
@@ -29,6 +33,14 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      # 更新 src/data/releases.json 只用於這次建置,不回寫 repo。
+      # 抓取失敗時腳本會保留已提交的快照;continue-on-error 是最後一道保險,下載數晚一天不該擋部署。
+      - name: Fetch release stats
+        run: npm run fetch-releases
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # build 會先跑 validate-content。客戶真名不在這個公開 repo 裡,靠 secret 注入。
       #

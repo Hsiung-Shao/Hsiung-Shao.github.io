@@ -54,17 +54,17 @@
   {
     "id": "pobtools",
     "title": "PobTools",
-    "description": "Path of Building 台服繁中在地化工具，以外部注入方式維持與上游共存。",
-    "longDescription": "透過 C++ 主程式、Lua runtime patch 與翻譯資料管線，在不直接修改上游程式碼的前提下加入繁中介面、CJK 搜尋與貼上支援。現已完成首次公開版本，後續以相容性和翻譯資料維護為主。",
+    "description": "Path of Building 繁體中文化啟動器，PoE1 / PoE2 都支援，原本的 POB 不動、照常更新。",
+    "longDescription": "C++ 啟動器在執行時把翻譯與字型注入 POB，Lua 修補只存在記憶體，不寫回 POB 檔案。翻譯資料以官方遊戲客戶端為準，約 10 萬組英中對照，與程式分成兩條發佈線各自更新，更新內容都會先驗證簽章。啟動器另附翻譯編輯器、物品過濾器編輯器、輿圖策略、軍團珠寶計算器與搜尋字串產生器。",
     "tech": ["C++17", "CMake", "Lua", "ImGui", "Python", "vcpkg"],
     "category": "tool",
     "status": "maintained",
     "visibility": "public",
     "featured": true,
     "highlights": [
-      "低侵入整合 — 不修改上游核心，以執行期注入繁中功能",
-      "CJK 相容 — 補足搜尋、字型與文字貼上的語系需求",
-      "資料管線 — 將翻譯資料產製與原生執行環境分離"
+      "零污染注入 — POB 檔案不動，POB 自己更新也不會把中文化弄壞",
+      "CJK 相容 — 中文物品搜尋、繁中客戶端物品貼上與字型切換",
+      "雙發佈線 — 翻譯資料與程式分開更新，安裝前驗證 ECDSA 簽章"
     ],
     "articles": ["pobtools-installation-guide"]
   },
@@ -105,19 +105,43 @@
   {
     "id": "poe-market-translate",
     "title": "Poe Market zh",
-    "description": "讓 Path of Exile 國際交易站支援中文搜尋與結果翻譯的瀏覽器擴充。",
-    "longDescription": "以瀏覽器擴充注入頁面環境，處理動態內容與多來源字典更新，在保留英文原文的同時提供中文對照。此專案目前以手動資料維護和版本相容為主。",
-    "tech": ["Chrome Extension", "Manifest V3", "JavaScript", "MutationObserver"],
+    "description": "Path of Exile 交易站的瀏覽器擴充：國際服 PoE1 / PoE2 中文化、書籤側邊欄，以及 poe.ninja / pobb.in 中文化。",
+    "longDescription": "Chrome 與 Firefox 共用同一份 Manifest V3 程式碼，零建置。翻譯資料依官方 id 對接美服與台服交易 API，再以遊戲檔補缺，字典可線上更新，不必重裝擴充。側邊欄提供兩層資料夾書籤、搜尋歷史、PoB 匯入與其他擴充的書籤匯入，國際服與台服都能用。所有資料只存在使用者的瀏覽器。",
+    "tech": ["Chrome Extension", "Firefox", "Manifest V3", "JavaScript"],
     "category": "tool",
     "status": "maintained",
     "visibility": "public",
     "featured": true,
     "highlights": [
-      "動態頁面翻譯 — 監看交易結果更新並增量處理",
-      "字典同步 — 整合官方資料與本地翻譯字典",
-      "原文保留 — 中文搜尋和對照不破壞既有交易資訊"
+      "雙站雙代 — 依網址判斷 PoE1 / PoE2 與國際服 / 台服，資料各自獨立",
+      "可驗證的譯名 — 依官方 id 對接美服與台服 API，無法印證的條目保留英文",
+      "權限分層 — poe.ninja / pobb.in 走選用權限，新增功能不會讓既有使用者被停用"
     ],
     "articles": ["poe-market-zh-guide"]
+  },
+  {
+    "id": "exile-appraiser",
+    "title": "ExileAppraiser",
+    "description": "Path of Exile 1 / 2 遊戲內查價工具，滑鼠指著物品按熱鍵，交易站結果直接出現在游標旁。",
+    "longDescription": "以 Electron overlay 疊在遊戲上，依前景視窗自動切換 PoE1 / PoE2，國際服與台服、繁中與英文客戶端都能解析。PoE2 另外用 OCR 辨識靈魂之井三選一與符文塑形面板，直接標出詞綴 Tier 與參考價。安裝版會在背景差分更新。",
+    "tech": [
+      "Electron",
+      "Vue 3",
+      "TypeScript",
+      "Vite",
+      "Windows OCR",
+      "PoE Trade API"
+    ],
+    "category": "tool",
+    "status": "active",
+    "visibility": "public",
+    "featured": false,
+    "highlights": [
+      "雙版本雙區服 — 依遊戲視窗自動切換 PoE1 / PoE2，國際服與台服都能查",
+      "畫面辨識 — OCR 讀取靈魂之井與符文塑形面板，旁邊直接標註 Tier 與價格",
+      "可回報的錯誤 — 查價失敗時整理成 issue 草稿，由使用者確認後才送出"
+    ],
+    "articles": []
   },
   {
     "id": "awakened-poe-trade-zh-tw",

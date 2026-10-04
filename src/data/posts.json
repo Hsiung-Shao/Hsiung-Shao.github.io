@@ -117,27 +117,39 @@
   },
   {
     "slug": "pobtools-installation-guide",
-    "title": "PobTools：不修改原始 POB 的繁體中文化工具",
+    "title": "PobTools：不改動原本 POB 的繁體中文化啟動器",
     "date": "2026-08-05",
     "tags": ["Path of Building", "Path of Exile", "C++", "繁體中文"],
     "draft": false,
     "type": "guide",
     "visibility": "public",
-    "excerpt": "PobTools 在啟動時注入翻譯，原始 Path of Building 保持不變；本文整理安裝、啟動與翻譯更新流程。",
-    "body": "## 專案介紹\n\nPobTools 是 Path of Building Community 的繁體中文化啟動器，支援 PoE 1 與 PoE 2。翻譯與介面調整只在執行期間載入，不會把修改寫回原始 POB，因此 POB 自行更新後通常不需要重新安裝中文化版本。\n\n除了介面翻譯，工具也包含翻譯字典編輯、字型切換、物品過濾器編輯與輿圖策略規劃等功能。\n\n## 使用方式\n\n1. 先從 [Path of Building Community](https://github.com/PathOfBuildingCommunity/PathOfBuilding/releases/latest) 安裝 POB 本體。\n2. 到 [PobTools Releases](https://github.com/Hsiung-Shao/PobTools-zh/releases/latest) 下載 `PobTools-<版本>.zip`。\n3. 解壓縮後，把 POB 本體資料夾放在 `pob-zh.exe` 同一層；該資料夾內需包含 `Launch.lua`。\n4. 執行 `pob-zh.exe`，選擇 PoE 1 或 PoE 2，再從啟動器開啟 POB。\n5. 新賽季只要下載 `PobTools-Translations-<版本>.zip`，用其中的 `Data` 覆蓋安裝目錄即可更新翻譯。\n\n## 防毒誤判與檔案驗證\n\nPobTools 具有動態載入、執行期修改與自動更新行為，又未使用商業程式碼簽章，可能觸發防毒軟體的啟發式警告。Release 會提供 SHA-256 清單，可以使用 PowerShell 核對下載檔案：\n\n```powershell\nGet-FileHash .\\PobTools-<版本>.zip -Algorithm SHA256\n```\n\n相同雜湊代表檔案與發布版本一致，但不等同第三方安全認證。工具只與 POB 計算器互動，不注入 Path of Exile 遊戲行程。",
+    "excerpt": "PobTools 在啟動時把繁中翻譯注入 Path of Building，原本的 POB 檔案不動、照常更新。本文整理安裝、翻譯資料更新與附帶工具的用法。",
+    "body": "",
     "project": "PobTools"
   },
   {
     "slug": "poe-market-zh-guide",
-    "title": "Poe Market Zh：用中文搜尋國際服 PoE Trade",
+    "title": "Poe Market zh：交易站中文化、書籤側邊欄與 poe.ninja 中文化",
     "date": "2026-08-05",
-    "tags": ["Path of Exile", "Chrome Extension", "Manifest V3", "交易站"],
+    "tags": ["Path of Exile", "Chrome Extension", "Firefox", "交易站"],
     "draft": false,
     "type": "guide",
     "visibility": "public",
-    "excerpt": "Poe Market Zh 是瀏覽器擴充功能，讓國際服交易站支援中文裝備與詞綴搜尋，同時保留英文對照。",
-    "body": "## 專案介紹\n\nPoe Market Zh（擴充功能名稱為 POE Trade zh）針對 Path of Exile 國際服交易站加入繁中搜尋與結果翻譯。它保留原始英文資訊，讓使用者可以用熟悉的中文詞彙尋找裝備、詞綴與相關條件。\n\n擴充功能以 Manifest V3 製作，會監看交易站動態更新的內容，並從內建與遠端字典補上翻譯。\n\n## 使用方式\n\n1. 前往 [Chrome 線上應用程式商店](https://chromewebstore.google.com/detail/poe-trade-zh/gohimadohmhdicbffkbpoegodammgghi) 安裝 POE Trade zh。\n2. Microsoft Edge 使用者可在擴充功能設定中允許來自其他商店的擴充功能，再開啟相同商店頁安裝。\n3. 開啟 [Path of Exile 國際服交易站](https://www.pathofexile.com/trade/)。\n4. 在搜尋欄輸入中文裝備名或詞綴；擴充功能會轉換為交易站可使用的條件。\n5. 搜尋結果會顯示中文對照，必要時仍可查看原始英文。\n6. 點擊瀏覽器工具列上的擴充功能圖示，可進入設定與資料更新功能。\n\n## 注意事項\n\n交易站改版或新賽季資料更新時，部分新詞條可能暫時沒有翻譯。若頁面沒有生效，先重新整理交易站並確認擴充功能已獲准在 `pathofexile.com` 執行。",
-    "project": "Poe Market Zh"
+    "excerpt": "Poe Market zh 是 Chrome 與 Firefox 擴充，讓國際服 PoE1 / PoE2 交易站用中文搜尋，附書籤側邊欄、PoB 匯入，也能把 poe.ninja 與 pobb.in 顯示成中文。",
+    "body": "",
+    "project": "Poe Market zh"
+  },
+  {
+    "slug": "exile-appraiser-guide",
+    "title": "ExileAppraiser：PoE1 / PoE2 遊戲內查價工具",
+    "date": "2026-10-04",
+    "tags": ["Path of Exile", "Electron", "OCR", "交易站"],
+    "draft": true,
+    "type": "guide",
+    "visibility": "public",
+    "excerpt": "ExileAppraiser 在遊戲裡按熱鍵就能查價，國際服與台服、繁中與英文客戶端都能用；PoE2 另外用 OCR 標出靈魂之井與符文塑形的詞綴 Tier 和參考價。",
+    "body": "",
+    "project": "ExileAppraiser"
   },
   {
     "slug": "awakened-poe-trade-zh-tw-guide",

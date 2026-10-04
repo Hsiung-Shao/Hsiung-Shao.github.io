@@ -11,7 +11,8 @@
     "typecheck": "astro check",
     "preview": "astro preview",
     "astro": "astro",
-    "update-site": "node scripts/update-site.mjs"
+    "update-site": "node scripts/update-site.mjs",
+    "fetch-releases": "node scripts/fetch-releases.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",

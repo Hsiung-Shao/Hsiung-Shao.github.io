@@ -55,11 +55,12 @@
 
 ```bash
 npm run dev              # 開發伺服器
-npm test                 # vitest,43 個測試
+npm test                 # vitest,52 個測試
 npm run validate-content # 內容護欄(隱私掃描 + 資料結構),build 會自動先跑
 npm run build            # validate-content + astro build
 npm run typecheck        # astro check —— 目前有 2 個既有錯誤,見 §5
 npm run update-site      # 掃描允許的專案 Git 紀錄,產生待審 digest(不自動發布)
+npm run fetch-releases   # 抓 /poe 頁的 GitHub Release 下載數與版本,更新 src/data/releases.json 快照
 ```
 
 沒有 lint。
@@ -74,6 +75,11 @@ npm run update-site      # 掃描允許的專案 Git 紀錄,產生待審 digest(
   改教學內容要改 markdown 檔,不是改 posts.json 的 body
 - `src/data/activity.json` — 跨專案活動;`activity.astro` 自己排序,JSON 順序無所謂
 - `src/data/now.json` — 目前動態,版面上限 6 個專案
+- `src/data/poe-tools.json` — `/poe` 頁列哪些工具、各自的下載數口徑(資產檔名 regex)與手動數字。
+  Chrome 每週使用者數沒有 API,由人工填 `manual.users.value` + `asOf`;`null` 時頁面顯示「待更新」
+- `src/data/releases.json` — `fetch-releases` 產生的快照,**提交進 repo**。本機 build 不抓網路;
+  `deploy.yml` 每天排程重建時會先抓最新值(只用於該次建置、不回寫),抓失敗就沿用提交的快照。
+  下載數是檔案下載次數,不是使用人數——頁面文案要維持這個區分
 
 **新內容一律先以 `draft: true` 加入,人工確認後才發佈。**
 `update-site.mjs` 只產生待審 digest,不會自己改內容。
