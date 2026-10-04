@@ -1,5 +1,29 @@
 [
   {
+    "date": "2026-10-04",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "直播偵測撞上 Workers 免費方案的 CPU 上限與 YouTube API 配額，改成邊緣快取加全站共享查詢結果、串流讀取 YouTube 頁面只解析需要的兩段，並限制每人每輪的查詢量，CPU 與配額用量都大幅下降。",
+    "tags": ["performance", "infrastructure", "YouTube"],
+    "commits": ["c7fcf26", "ad58b68", "9651e31", "5f992d5", "6ab659f"]
+  },
+  {
+    "date": "2026-10-02",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "上線開台週表：台灣 VTuber 正在直播、接下來 7 天的待機室與剛結束的直播一頁看完，可依地區、所屬公司、平台與收藏篩選，勾選幾位就能一鍵到畫布同時觀看；每位 VTuber 也有自己的週表頁。",
+    "tags": ["release", "feature", "VTuber"],
+    "commits": ["55f0c47", "4b16299", "75f6b79", "ceb62d6"]
+  },
+  {
+    "date": "2026-09-27",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "畫布 v3.5：新增多路直播共用一個聊天室的版型，所有版型依螢幕比例填滿畫布；工具列加入放大與設為主畫面，第一次進畫布有完整導覽，首頁與空畫布也能直接搜尋頻道。",
+    "tags": ["release", "UX"],
+    "commits": ["c9fb816", "dbcb84d", "6f12ea1", "5ff7e11"]
+  },
+  {
     "date": "2026-10-01",
     "project": "AI Music / Kumori Music",
     "tier": "personal",

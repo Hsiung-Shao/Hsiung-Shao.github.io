@@ -1,8 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { posts } from '../../data/posts';
+import { visiblePosts } from '../../data/posts';
 
-const published = posts.filter(post => !post.draft).sort((a, b) => b.date.localeCompare(a.date));
+const published = [...visiblePosts].sort((a, b) => b.date.localeCompare(a.date));
 const guides = published.filter(post => post.type === 'guide');
 const records = published.filter(post => post.type !== 'guide');
 const typeLabels = { engineering: '開發筆記', 'case-study': '技術案例', retrospective: '回顧', guide: '使用指南' };
@@ -40,7 +40,7 @@ const guideImages: Record<string, string> = {
       <div class="post-index">
         {[...guides.slice(3), ...records].sort((a, b) => b.date.localeCompare(a.date)).map(post => (
           <article><a class="post-row" href={`/blog/${post.slug}`}>
-            <div class="font-mono text-xs text-[var(--quiet)]"><time>{post.date}</time><div class="mt-2 text-[var(--red)]">{post.type ? typeLabels[post.type] : '文章'}</div></div>
+            <div class="font-mono text-xs text-[var(--quiet)]"><time>{post.date}</time><div class="mt-2 text-[var(--red)]">{post.type ? typeLabels[post.type] : '文章'}</div>{post.draft && <div class="mt-2">草稿</div>}</div>
             <div><h2>{post.title}</h2><p>{post.excerpt}</p></div>
             <div class="post-tags">{post.tags.slice(0, 4).map(tag => <span class="tag">{tag}</span>)}</div>
           </a></article>

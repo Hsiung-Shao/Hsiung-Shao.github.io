@@ -1,10 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { posts } from '../../data/posts';
+import { visiblePosts } from '../../data/posts';
 import { marked } from 'marked';
 
 export async function getStaticPaths() {
-  return posts.filter(post => !post.draft).map(post => ({ params: { slug: post.slug }, props: { post } }));
+  return visiblePosts.map(post => ({ params: { slug: post.slug }, props: { post } }));
 }
 
 const { post } = Astro.props;
@@ -17,7 +17,7 @@ const html = (await marked.parse(post.body)).replace(/<h2>(.*?)<\/h2>/g, (_match
   <header class="article-head border-b border-[var(--line-strong)]">
     <div class="content-shell py-16">
       <a class="meta-label text-[var(--blue)] no-underline" href="/blog">← 文章索引</a>
-      <div class="mt-8 flex flex-wrap gap-3 text-xs text-[var(--quiet)]"><time>{post.date}</time>{post.project && <><span>/</span><span>{post.project}</span></>}</div>
+      <div class="mt-8 flex flex-wrap gap-3 text-xs text-[var(--quiet)]"><time>{post.date}</time>{post.project && <><span>/</span><span>{post.project}</span></>}{post.draft && <span class="tag">草稿（只在開發伺服器顯示）</span>}</div>
       <h1>{post.title}</h1>
       <p>{post.excerpt}</p>
       <div class="mt-6 flex flex-wrap gap-1">{post.tags.map(tag => <span class="tag">{tag}</span>)}</div>
