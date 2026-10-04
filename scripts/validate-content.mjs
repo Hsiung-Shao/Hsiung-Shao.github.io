@@ -17,6 +17,7 @@ const now = readJson('src/data/now.json');
 const config = readJson('scripts/projects.config.json');
 const poeTools = readJson('src/data/poe-tools.json');
 const releaseSnapshot = readJson('src/data/releases.json');
+const downloadHistory = readJson('src/data/download-history.json');
 const errors = [];
 
 const projectIds = new Set();
@@ -161,6 +162,23 @@ for (const tool of poeTools.tools ?? []) {
     errors.push(`releases.json: 缺少 ${tool.projectId} 的快照,請執行 npm run fetch-releases`);
   } else if (!snapshot.downloads || !Array.isArray(snapshot.recent) || !snapshot.fetchedAt) {
     errors.push(`releases.json(${tool.projectId}): 快照結構不完整`);
+  }
+}
+
+// 下載數歷史由每日排程自動寫入,這裡擋住格式壞掉的資料,免得趨勢圖靜默畫錯。
+const poeToolIds = new Set((poeTools.tools ?? []).map(tool => tool.projectId));
+for (const [projectId, entries] of Object.entries(downloadHistory)) {
+  const label = `download-history.json(${projectId})`;
+  if (!poeToolIds.has(projectId)) errors.push(`${label}: 不在 poe-tools.json 裡`);
+  if (!Array.isArray(entries)) { errors.push(`${label}: 必須是陣列`); continue; }
+  let previous = '';
+  for (const entry of entries) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date ?? '')) errors.push(`${label}: 日期格式必須是 YYYY-MM-DD`);
+    else if (entry.date <= previous) errors.push(`${label}: ${entry.date} 重複或未依日期排序`);
+    previous = entry.date ?? previous;
+    for (const [key, value] of Object.entries(entry)) {
+      if (key !== 'date' && !(Number.isInteger(value) && value >= 0)) errors.push(`${label}: ${entry.date} 的 ${key} 必須是非負整數`);
+    }
   }
 }
 

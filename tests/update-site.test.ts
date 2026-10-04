@@ -30,4 +30,13 @@ describe('網站 Git 日誌同步範圍', () => {
     });
     expect(commitExists).not.toHaveBeenCalled();
   });
+
+  it('指定 origin 預設分支時讀到遠端 ref,本機停在舊分支也不會漏', () => {
+    const commitExists = vi.fn(() => true);
+
+    expect(selectLogRange('c'.repeat(40), 40, commitExists, 'origin/main')).toEqual({
+      range: `${'c'.repeat(40)}..origin/main`,
+      resetBaseline: false,
+    });
+  });
 });

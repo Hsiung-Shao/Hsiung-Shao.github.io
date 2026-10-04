@@ -55,12 +55,13 @@
 
 ```bash
 npm run dev              # 開發伺服器
-npm test                 # vitest,51 個測試
+npm test                 # vitest,58 個測試
 npm run validate-content # 內容護欄(隱私掃描 + 資料結構),build 會自動先跑
 npm run build            # validate-content + astro build
 npm run typecheck        # astro check,必須 0 錯誤(CI 硬性 gate)
-npm run update-site      # 掃描允許的專案 Git 紀錄,產生待審 digest(不自動發布)
+npm run update-site      # 掃描允許的專案 Git 紀錄,產生 digest(本身不改內容)
 npm run fetch-releases   # 抓 /poe 頁的 GitHub Release 下載數與版本,更新 src/data/releases.json 快照
+npm run record-history   # 把今天的下載數寫進 src/data/download-history.json(同一天重跑會覆蓋)
 ```
 
 沒有 lint。
@@ -80,9 +81,16 @@ npm run fetch-releases   # 抓 /poe 頁的 GitHub Release 下載數與版本,更
 - `src/data/releases.json` — `fetch-releases` 產生的快照,**提交進 repo**。本機 build 不抓網路;
   `deploy.yml` 每天排程重建時會先抓最新值(只用於該次建置、不回寫),抓失敗就沿用提交的快照。
   下載數是檔案下載次數,不是使用人數——頁面文案要維持這個區分
+- `src/data/download-history.json` — 每天一筆的下載數累計值(`record-history` 寫入),`/poe` 的
+  迷你趨勢線與「近 7 天新增」由它算出。GitHub 不提供歷史,所以只能從 2026-10-04 開始累積;
+  Chrome 每週使用者用匯出的 CSV 回填(`npm run record-history -- --import-chrome-csv <檔> <projectId>`)
+- `src/data/articles/<slug>.md` — 一般文章的內文,檔名就是 slug,`posts.ts` 會蓋進 posts.json 的 `body`
 
-**新內容一律先以 `draft: true` 加入,人工確認後才發佈。**
-`update-site.mjs` 只產生待審 digest,不會自己改內容。
+**新文章一律先以 `draft: true` 加入,人工確認後才發佈。** 開發伺服器上草稿也會顯示並標「草稿」,
+方便預覽;正式建置不輸出草稿。
+
+**活動日誌、`now.json` 與下載數由每日排程自動更新並推上線**(見 §4.6),這是 2026-10-04
+使用者明確選擇的,不需要逐次人工確認。文章不在自動範圍內。
 
 `validate-content.mjs` 裡有一批寫死的內容契約(必備教學文、Kumori Music 的頻道與首發連結、
 贊助頁的指定連結)。這些是刻意的——它們是對外承諾過的東西,改動前先確認不是誤刪。
@@ -108,7 +116,10 @@ npm run fetch-releases   # 抓 /poe 頁的 GitHub Release 下載數與版本,更
 1. 先跑 `git status --short --branch`,保留使用者現有變更,不可用 reset 或 checkout 清掉。
 2. 檢查 `scripts/projects.config.json`。公開專案的 `path` 必須指向實際 repo；
    `contentPolicy: disabled` 的專案不會掃描；protected 代號的不存在路徑是刻意的隱私設計。
-3. 跑 `npm run update-site`。它只讀 Git 並生成 `scripts/pending-digest.md`,不會自動發布內容。
+3. 跑 `npm run update-site`。它只讀 Git 並生成 `scripts/pending-digest.md`,本身不改內容。
+   每個 repo 會先 `git fetch origin`,再從 origin 預設分支與本機 HEAD 中挑「包含游標、且游標之後
+   commit 最多」的那個來讀(multi-stream 本機停在舊分支、DiscordBot 的 origin/main 停在 4 月,
+   兩種都遇過)。digest 每段會寫出實際讀取範圍,例如 `d62d8f4..origin/HEAD`。
 4. 閱讀 digest,先用專案名、功能關鍵字與短 SHA 搜尋 `src/data/activity.json`,排除已發布內容。
 5. 每個專案挑 1-3 則具有代表性的進度。把同一功能的一組 commit 合併為一則活動,
    不要把每個 commit 逐筆倒進頁面；保留實際相關的 7 字元短 SHA。
@@ -117,12 +128,14 @@ npm run fetch-releases   # 抓 /poe 頁的 GitHub Release 下載數與版本,更
 7. 完成內容審核後,才把 digest 最下方的 `nextLastrun` **原樣**寫入 `scripts/.lastrun.json`。
 8. 再跑一次 `npm run update-site`。所有可讀 repo 應顯示「無新 commit」；若仍有新紀錄,
    重新檢查游標是否完整複製,不要直接手改 SHA 猜測。
-9. 依序跑 `npm test`、`npm run validate-content`、`npm run build`。`npm run typecheck`
-   目前另有 §5 記錄的 2 個既有死碼錯誤,不可把它誤報成這次 Git Log 更新造成。
+9. 依序跑 `npm test`、`npm run validate-content`、`npm run typecheck`、`npm run build`,全部要過。
 
 ### 4.3 指令輸出的判讀
 
-- `無新 commit`:該 repo 的本機基準已追上目前 HEAD。
+- `無新 commit`:該 repo 的基準已追上讀取的 ref(origin 預設分支或本機 HEAD)。
+- `游標不在 origin/HEAD 上,讀本機 HEAD`:該 repo 的開發在本機分支上(例如 DiscordBot),屬預期。
+- `fetch origin 失敗,只用本機資料`:離線或沒有權限,這次只看得到本機已有的 commit。
+- digest 出現「已達 maxCommitsPerRun 上限」:這段可能不完整,照提示的 `git log` 讀完整範圍再寫活動。
 - `略過(內容更新已停用)`:預期行為,例如已封存的 `poe-build`。
 - `略過(非 git repo)`:protected 代號屬預期行為；若是公開專案,代表路徑不存在、不是 repo，
   或 repo 已搬動,要先查出正確路徑再更新 config,不可直接宣稱已同步。
@@ -170,6 +183,22 @@ npm run fetch-releases   # 抓 /poe 頁的 GitHub Release 下載數與版本,更
   必須先去識別化,只整理可複用的技術決策,再以 `tier: protected` 寫入活動。
 - Git Log 只能證明程式變更,不能單獨證明功能已部署、公開發布或使用者已可取得；
   這類措辭需要 release、部署紀錄或使用者明確資訊佐證。
+
+### 4.6 每日排程(Claude 桌面版)
+
+排程任務 `myweb-daily-site-update`,每天 08:00(本機時間)在主 checkout `D:\codeproject\web\myweb`
+執行,完整指令存在 `C:\Users\jerry\.claude\scheduled-tasks\myweb-daily-site-update\SKILL.md`。流程:
+
+1. 只在 `main`、工作區乾淨時才動手,先 `git pull --ff-only`;不符合就中止回報。
+2. `fetch-releases` → `record-history`。
+3. 照 §4.2 跑 Git Log 同步,寫 `activity.json`(必要時 `now.json`),推進游標;AI Music 從
+   Obsidian 的 `Change Log.md` 取新條目。不建立或修改文章。
+4. `npm test`、`validate-content`、`typecheck`、`build` 任一失敗就不 commit。
+5. 有變更才 commit(`chore: daily site update YYYY-MM-DD`)並 `git push origin main`,
+   被拒就中止,不 force push、不 rebase。push 會觸發 `deploy.yml` 部署。
+
+排程只在 Claude 桌面版開著時執行,關著時會在下次開啟補跑。`deploy.yml` 的 04:00 排程保留當備援:
+電腦沒開時快照數字仍會更新,但不會寫歷史、也不會更新活動日誌。
 
 ## 5. 已知狀況
 

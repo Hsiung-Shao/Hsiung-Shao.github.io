@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "update-site": "node scripts/update-site.mjs",
-    "fetch-releases": "node scripts/fetch-releases.mjs"
+    "fetch-releases": "node scripts/fetch-releases.mjs",
+    "record-history": "node scripts/record-download-history.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",

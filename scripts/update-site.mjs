@@ -21,24 +21,80 @@ function isGitRepo(path) {
   return existsSync(join(path, '.git'));
 }
 
-function gitCmd(repo, args) {
-  return execSync(`git -c safe.directory="${repo}" -C "${repo}" ${args}`, { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+function gitCmd(repo, args, timeout = 30_000) {
+  return execSync(`git -c safe.directory="${repo}" -C "${repo}" ${args}`, {
+    encoding: 'utf-8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+    timeout,
+    // 無人值守的排程不能卡在帳密提示上。
+    env: { ...process.env, GIT_TERMINAL_PROMPT: '0' },
+  }).trim();
 }
 
-function isBaselineUsable(repo, sha) {
+function refExists(repo, ref) {
   try {
-    gitCmd(repo, `merge-base --is-ancestor ${sha} HEAD`);
+    // 不用 `${ref}^{commit}`:Windows 的 execSync 走 cmd.exe,`^` 會被當成跳脫字元吃掉。
+    gitCmd(repo, `rev-parse --verify --quiet ${ref}`);
     return true;
   } catch {
     return false;
   }
 }
 
-function getNewCommits(repo, sinceSha, maxCount) {
+function countSince(repo, sha, ref) {
+  try {
+    return Number(gitCmd(repo, `rev-list --count ${sha}..${ref}`));
+  } catch {
+    return -1;
+  }
+}
+
+/**
+ * 決定要讀到哪個 ref。兩種情況都真的發生過,所以不能固定讀某一個:
+ * - multi-stream:本機 checkout 停在舊分支,新進度只在 origin/main(2026-10-04 因此漏了 134 個 commit)。
+ * - DiscordBot:origin/main 停在 4 月,實際開發在本機的功能分支。
+ * 做法:先 fetch origin,候選是 origin 預設分支與本機 HEAD,只留「包含目前游標」的,
+ * 再挑游標之後 commit 最多的那個。沒有游標時優先 origin。只更新遠端追蹤 ref,不動本機分支。
+ */
+function resolveHead(repo, lastSha) {
+  let fetchNote = null;
+  try {
+    gitCmd(repo, 'fetch --quiet origin', 60_000);
+  } catch {
+    fetchNote = 'fetch origin 失敗,只用本機資料';
+  }
+  const originRef = ['origin/HEAD', 'origin/main', 'origin/master'].find(ref => refExists(repo, ref));
+  const candidates = [originRef, 'HEAD'].filter(Boolean);
+
+  if (!lastSha) return { head: candidates[0], note: fetchNote };
+
+  const usable = candidates
+    .filter(ref => isBaselineUsable(repo, lastSha, ref))
+    .map(ref => ({ ref, ahead: countSince(repo, lastSha, ref) }))
+    .sort((a, b) => b.ahead - a.ahead);
+
+  if (usable.length === 0) return { head: candidates[0], note: fetchNote };
+  const head = usable[0].ref;
+  const note = [fetchNote, head === 'HEAD' && originRef ? `游標不在 ${originRef} 上,讀本機 HEAD` : null]
+    .filter(Boolean).join(';') || null;
+  return { head, note };
+}
+
+function isBaselineUsable(repo, sha, head) {
+  try {
+    gitCmd(repo, `merge-base --is-ancestor ${sha} ${head}`);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function getNewCommits(repo, sinceSha, maxCount, head) {
   const { range, resetBaseline } = selectLogRange(
     sinceSha,
     maxCount,
-    sha => isBaselineUsable(repo, sha),
+    sha => isBaselineUsable(repo, sha, head),
+    head,
   );
   const format = '%H%x09%aI%x09%s';
   try {
@@ -77,7 +133,9 @@ function main() {
     if (project.contentPolicy === 'disabled') { log(`略過(內容更新已停用):${project.name}`); continue; }
     if (!isGitRepo(project.path)) { log(`略過(非 git repo):${project.name}`); continue; }
     const lastSha = lastrun.projects[project.name];
-    const { commits, resetBaseline } = getNewCommits(project.path, lastSha, config.maxCommitsPerRun ?? 40);
+    const { head, note } = resolveHead(project.path, lastSha);
+    if (note) log(`  ${project.name}: ${note}`);
+    const { commits, resetBaseline } = getNewCommits(project.path, lastSha, config.maxCommitsPerRun ?? 40, head);
     if (resetBaseline) log(`  ${project.name}: 同步基準失效，有限回溯最新 commit`);
     if (commits.length === 0) { log(`  ${project.name}: 無新 commit`); continue; }
     totalCommits += commits.length;
@@ -92,7 +150,11 @@ function main() {
     lines.push('');
     lines.push(rules);
     lines.push('');
-    lines.push(`新 commit 數:${commits.length}  |  最新 SHA:\`${commits[0].sha}\``);
+    lines.push(`新 commit 數:${commits.length}  |  最新 SHA:\`${commits[0].sha}\`  |  讀取範圍:\`${lastSha ? lastSha.slice(0, 7) : '(無基準)'}..${head}\``);
+    if (commits.length >= (config.maxCommitsPerRun ?? 40)) {
+      lines.push('');
+      lines.push(`⚠ 已達 maxCommitsPerRun 上限,這份 digest 可能不完整;寫活動前用 \`git -C "${project.path}" log ${lastSha ? lastSha.slice(0, 7) : ''}..${head} --no-merges\` 讀完整範圍。`);
+    }
     lines.push('');
     for (const c of commits.slice(0, 20)) {
       const { body, stat } = getCommitDetail(project.path, c.sha);
