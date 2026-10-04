@@ -144,7 +144,7 @@
     "title": "ExileAppraiser：PoE1 / PoE2 遊戲內查價工具",
     "date": "2026-10-04",
     "tags": ["Path of Exile", "Electron", "OCR", "交易站"],
-    "draft": true,
+    "draft": false,
     "type": "guide",
     "visibility": "public",
     "excerpt": "ExileAppraiser 在遊戲裡按熱鍵就能查價，國際服與台服、繁中與英文客戶端都能用；PoE2 另外用 OCR 標出靈魂之井與符文塑形的詞綴 Tier 和參考價。",

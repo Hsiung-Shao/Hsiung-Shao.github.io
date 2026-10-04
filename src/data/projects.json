@@ -141,7 +141,7 @@
       "畫面辨識 — OCR 讀取靈魂之井與符文塑形面板，旁邊直接標註 Tier 與價格",
       "可回報的錯誤 — 查價失敗時整理成 issue 草稿，由使用者確認後才送出"
     ],
-    "articles": []
+    "articles": ["exile-appraiser-guide"]
   },
   {
     "id": "awakened-poe-trade-zh-tw",
