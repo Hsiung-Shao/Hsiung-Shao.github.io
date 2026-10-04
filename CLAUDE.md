@@ -174,10 +174,10 @@ npm run record-history   # 把今天的下載數寫進 src/data/download-history
 
 ### 4.5 專案與隱私邊界
 
-- `Awakened PoE Trade-zh-TW` 的 repo 是 `D:/codeproject/Pob2/apt-patched`。
-- `poeMarketTranslate` 的 repo 是 `D:/codeproject/Pob2/poeMarketTranslate/poe-market-zh`，
-  前台名稱固定寫 `Poe Market zh`。
-- `ai-Music` 設定路徑為 `D:/codeproject/ai-Music`；如果輸出為非 Git repo,先驗證實際位置，
+- 各專案 repo 的實際路徑以 `scripts/projects.config.json` 為準,這份文件不重複列。
+- `Awakened PoE Trade-zh-TW` 的 repo 資料夾叫 `apt-patched`。
+- `poeMarketTranslate` 的前台名稱固定寫 `Poe Market zh`。
+- `ai-Music` 若輸出為非 Git repo,先驗證實際位置,
   不可因 config 有一列就聲稱已讀取其 Git 歷史。
 - protected 專案的真實路徑與名稱不得放進這個公開 repo。若另有授權來源提供其變更，
   必須先去識別化,只整理可複用的技術決策,再以 `tier: protected` 寫入活動。
@@ -186,8 +186,8 @@ npm run record-history   # 把今天的下載數寫進 src/data/download-history
 
 ### 4.6 每日排程(Claude 桌面版)
 
-排程任務 `myweb-daily-site-update`,每天 08:00(本機時間)在主 checkout `D:\codeproject\web\myweb`
-執行,完整指令存在 `C:\Users\jerry\.claude\scheduled-tasks\myweb-daily-site-update\SKILL.md`。流程:
+排程任務 `myweb-daily-site-update`,每天 08:00(本機時間)在主 checkout(非 worktree)
+執行,完整指令存在使用者家目錄的 `.claude/scheduled-tasks/myweb-daily-site-update/SKILL.md`。流程:
 
 1. 只在 `main`、工作區乾淨時才動手,先 `git pull --ff-only`;不符合就中止回報。
 2. `fetch-releases` → `record-history`。
