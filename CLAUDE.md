@@ -55,10 +55,10 @@
 
 ```bash
 npm run dev              # 開發伺服器
-npm test                 # vitest,52 個測試
+npm test                 # vitest,51 個測試
 npm run validate-content # 內容護欄(隱私掃描 + 資料結構),build 會自動先跑
 npm run build            # validate-content + astro build
-npm run typecheck        # astro check —— 目前有 2 個既有錯誤,見 §5
+npm run typecheck        # astro check,必須 0 錯誤(CI 硬性 gate)
 npm run update-site      # 掃描允許的專案 Git 紀錄,產生待審 digest(不自動發布)
 npm run fetch-releases   # 抓 /poe 頁的 GitHub Release 下載數與版本,更新 src/data/releases.json 快照
 ```
@@ -173,20 +173,17 @@ npm run fetch-releases   # 抓 /poe 頁的 GitHub Release 下載數與版本,更
 
 ## 5. 已知狀況
 
-- **死碼**:`src/components/HeroSection.astro`、`src/components/AboutSection.astro`、
-  `src/components/three/HeroScene.tsx`、`src/components/three/SkillSphere.tsx`、
-  `src/components/react/FeaturedProjects.tsx`
-  沒有被任何頁面引用(舊版首頁殘留)。`astro check` 那 2 個型別錯誤
-  (`bufferAttribute` 缺 `args`)都在其中,所以 CI 的 typecheck job 掛的是
-  `continue-on-error: true`。清掉死碼或補好 `args` 之後,把那行刪掉轉成硬性 gate。
+- **型別檢查是硬性 gate**:2026-10-04 刪掉舊版首頁殘留的死碼(HeroSection、AboutSection、
+  three/HeroScene、three/SkillSphere、react/FeaturedProjects)後,`astro check` 歸零,
+  CI 的 typecheck job 拿掉了 `continue-on-error`。新增任何型別錯誤 PR 就會紅。
 - **首頁的精選由 `projects.json` 的 `featured` 決定**。`src/components/CinematicHome.astro`
   讀 `featuredProjects`:排最前面的當 hero(標題、狀態標籤、tech 前三項、description、
   連到第一篇**已發布**的 article),其餘列進下排 reel,計數也跟著筆數走。
   要換首頁展示什麼就改資料,不要回頭在 astro 裡寫死專案名——2026-10-02 之前那段
   是寫死的,導致改 `featured` 完全沒有效果。沒有任何 featured 專案時建置會直接失敗。
 - **Three.js 元件不進單元測試**:jsdom 沒有 WebGL context。
-  `SpatialScene.astro` 與 `three/` 底下的東西要用實際瀏覽器驗證。
-- **CI 分兩條**:`ci.yml`(PR 進 main 時跑 validate + test + build)與
+  `SpatialScene.astro` 與 `react/ConceptScene.tsx` 要用實際瀏覽器驗證。
+- **CI 分兩條**:`ci.yml`(PR 進 main 時跑 validate + test + build + typecheck)與
   `deploy.yml`(push main 後建置並部署)。
 
 ## 6. 本機環境陷阱

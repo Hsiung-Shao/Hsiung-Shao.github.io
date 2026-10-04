@@ -45,15 +45,9 @@ jobs:
           PROTECTED_TERMS: ${{ secrets.PROTECTED_TERMS }}
 
   typecheck:
-    name: 型別檢查(advisory)
+    name: 型別檢查
     runs-on: ubuntu-latest
-    # 目前 astro check 有 2 個既有錯誤,都在未被任何頁面引用的死碼裡
-    # (src/components/HeroSection.astro → src/components/three/HeroScene.tsx,
-    #  以及同樣無人引用的 src/components/three/SkillSphere.tsx)。
-    # 掛成硬性 gate 會讓 CI 第一天就是紅的,紅的 gate 大家會習慣性忽略。
-    # 回收條件:清掉那些死碼、或補上 bufferAttribute 的 args 之後,
-    # 刪掉下面這行 continue-on-error,轉成硬性 gate。
-    continue-on-error: true
+    # 2026-10-04 清掉舊首頁死碼(那 2 個既有錯誤的來源)後轉成硬性 gate。
     steps:
       - name: Checkout
         uses: actions/checkout@v4
