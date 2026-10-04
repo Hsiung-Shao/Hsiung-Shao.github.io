@@ -1,6 +1,68 @@
 [
   {
     "date": "2026-10-04",
+    "project": "個人網站",
+    "tier": "personal",
+    "summary": "新增 /poe 頁集中列出三個 PoE 工具的版本與下載數，資料在建置時從 GitHub Releases 抓取、失敗就沿用快照；之後每天記一筆累計值，畫出 30 天趨勢線與近 7 天新增。",
+    "tags": ["Astro", "automation", "content"],
+    "commits": ["383e3f5", "ece223b", "bb18fc5"]
+  },
+  {
+    "date": "2026-10-04",
+    "project": "個人網站",
+    "tier": "personal",
+    "summary": "首頁的精選展示改由專案資料決定，不再寫死在版面裡；一併刪掉舊版首頁留下的死碼，型別檢查歸零後改成 CI 的硬性關卡。",
+    "tags": ["Astro", "CI", "dead code"],
+    "commits": ["2d99fc1", "b9c00b4"]
+  },
+  {
+    "date": "2026-10-04",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "以十部動畫為靈感各寫一首原創主題歌，完成日文詞作、繁中對譯、逐行讀音與生成；九首通過技術檢查後整理成試聽清單，第一首則在人工試聽沒有通過。",
+    "tags": ["AI Music", "詞作", "ACE-Step"]
+  },
+  {
+    "date": "2026-10-04",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "〈暁を担ぐ者〉改做 180 秒的全曲歌詞影片；試過 AI 動態生成後因接縫殘影放棄，維持 2D 運鏡，插圖改以 2K 原生解析度重新生成再重新渲染。",
+    "tags": ["AI Music", "MV", "動畫"]
+  },
+  {
+    "date": "2026-10-03",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "五種語言的教學、FAQ 與介面字串全面補齊：寫死在程式裡的中文改走語系檔，簡中、日文、韓文補上缺漏與過時的教學段落，並加上找出缺漏翻譯的稽核腳本。",
+    "tags": ["i18n", "documentation"],
+    "commits": ["12b13be", "886f825", "9f500a9"]
+  },
+  {
+    "date": "2026-10-02",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "週表新增 VTuber 推薦與資料回報：貼頻道網址自動帶入名稱與頭像，經 Turnstile 驗證後送進後台審核；核准投稿與套用補充資料都在單一資料庫交易內完成，失敗就整筆回滾。",
+    "tags": ["feature", "Supabase", "VTuber"],
+    "commits": ["3e0bfd7", "fdb4fe7", "8712b72", "c5b6f18", "1f98ce7"]
+  },
+  {
+    "date": "2026-10-02",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "新介面計算頁補回技能詳情的插槽、主動技能與計算模式選單（無頭模式從沒算過控制項的顯示狀態），細項浮層也改依內容決定寬度、隨視窗大小重新擺放，不再被捲軸截掉。",
+    "tags": ["Path of Building", "UI", "headless"],
+    "commits": ["edce42a", "c42229e", "d63a6ee"]
+  },
+  {
+    "date": "2026-09-04",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "靜態頁改在建置時用 Node 預先渲染中英兩版，Function 依瀏覽器語言回傳對應檔案，爬蟲不再只拿到空殼 HTML；語言與主題跟預渲染一致才接手 hydrate，否則重新渲染。",
+    "tags": ["SEO", "performance", "React"],
+    "commits": ["d7a4dfd", "73f9d61"]
+  },
+  {
+    "date": "2026-10-04",
     "project": "MultiStream Hub",
     "tier": "personal",
     "summary": "直播偵測撞上 Workers 免費方案的 CPU 上限與 YouTube API 配額，改成邊緣快取加全站共享查詢結果、串流讀取 YouTube 頁面只解析需要的兩段，並限制每人每輪的查詢量，CPU 與配額用量都大幅下降。",

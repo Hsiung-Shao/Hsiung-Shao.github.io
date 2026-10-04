@@ -2,9 +2,9 @@
   "pobtools": [
     {
       "date": "2026-10-04",
-      "full": 10140,
-      "update": 3493,
-      "data": 8223
+      "full": 10143,
+      "update": 3499,
+      "data": 8228
     }
   ],
   "poe-market-translate": [
@@ -128,7 +128,7 @@
   "exile-appraiser": [
     {
       "date": "2026-10-04",
-      "combined": 250
+      "combined": 266
     }
   ]
 }
