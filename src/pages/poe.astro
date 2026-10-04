@@ -4,10 +4,49 @@ import Layout from '../layouts/Layout.astro';
 import { projects } from '../data/projects';
 import poeTools from '../data/poe-tools.json';
 import releaseSnapshot from '../data/releases.json';
+import downloadHistory from '../data/download-history.json';
 import type { ToolReleaseSummary } from '../../scripts/lib/releases.mjs';
+import { recentGain, taipeiDate, type HistoryEntry } from '../../scripts/lib/download-history.mjs';
 
 type Snapshot = ToolReleaseSummary & { fetchedAt: string };
 const snapshots = releaseSnapshot.tools as Record<string, Snapshot>;
+// JSON 匯入推斷出的是逐筆的聯集型別,先轉 unknown 再收斂成歷史結構(驗證器負責擋格式錯誤)。
+const histories = downloadHistory as unknown as Record<string, HistoryEntry[]>;
+const today = taipeiDate();
+
+// 迷你趨勢線:最近 30 天的累計值,x 依實際日期間隔、y 依區間最小到最大值。
+const TREND_DAYS = 30;
+const SPARK = { width: 160, height: 36, pad: 4 };
+const dayNumber = (date: string) => Date.parse(`${date}T00:00:00Z`) / 86_400_000;
+
+function buildTrend(entries: HistoryEntry[] | undefined, key: string, label: string) {
+  const withKey = (entries ?? []).filter(entry => typeof entry[key] === 'number');
+  const firstDate = withKey[0]?.date ?? null;
+  const points = withKey.filter(entry => dayNumber(today) - dayNumber(entry.date) <= TREND_DAYS);
+  const gain = recentGain(entries, key, 7, today);
+  if (points.length < 2) return { firstDate, gain, line: null };
+
+  const values = points.map(entry => entry[key] as number);
+  const [min, max] = [Math.min(...values), Math.max(...values)];
+  const [start, end] = [dayNumber(points[0].date), dayNumber(points[points.length - 1].date)];
+  const { width, height, pad } = SPARK;
+  const marks = points.map(entry => ({
+    x: pad + ((dayNumber(entry.date) - start) / Math.max(end - start, 1)) * (width - pad * 2),
+    y: max === min ? height / 2 : pad + (1 - ((entry[key] as number) - min) / (max - min)) * (height - pad * 2),
+    title: `${entry.date}：${(entry[key] as number).toLocaleString('zh-TW')}`,
+  }));
+  const first = points[0];
+  const last = points[points.length - 1];
+  return {
+    firstDate,
+    gain,
+    line: {
+      polyline: marks.map(mark => `${mark.x.toFixed(1)},${mark.y.toFixed(1)}`).join(' '),
+      marks,
+      summary: `${label}，${first.date} ${(first[key] as number).toLocaleString('zh-TW')}，${last.date} ${(last[key] as number).toLocaleString('zh-TW')}`,
+    },
+  };
+}
 
 const statusLabels: Record<string, string> = {
   active: '開發中',
@@ -26,11 +65,12 @@ const tools = await Promise.all(poeTools.tools.map(async tool => {
   const manual = tool.manual as Record<string, { value: number | null; asOf: string | null }>;
 
   const stats = tool.stats.map(stat => {
+    const trend = buildTrend(histories[tool.projectId], stat.key, stat.label);
     if (stat.source === 'manual') {
       const entry = manual[stat.key];
-      return { ...stat, value: formatCount(entry?.value), asOf: entry?.asOf ?? null };
+      return { ...stat, trend, value: formatCount(entry?.value), asOf: entry?.asOf ?? null };
     }
-    return { ...stat, value: formatCount(snapshot?.downloads[stat.key]), asOf: null };
+    return { ...stat, trend, value: formatCount(snapshot?.downloads[stat.key]), asOf: null };
   });
 
   const releases = await Promise.all((snapshot?.recent ?? []).map(async release => ({
@@ -74,6 +114,22 @@ const oldestFetch = fetchedTimes[0] ? formatDate(fetchedTimes[0]) : null;
                   <dt>{stat.label}</dt>
                   <dd class:list={{ pending: !stat.value }}>{stat.value ?? '待更新'}</dd>
                   <span>{stat.note}{stat.asOf && `，${stat.asOf}`}</span>
+                  {stat.trend.line ? (
+                    <svg class="poe-spark" viewBox={`0 0 ${SPARK.width} ${SPARK.height}`} role="img" aria-label={`近 ${TREND_DAYS} 天趨勢：${stat.trend.line.summary}`}>
+                      <polyline points={stat.trend.line.polyline} />
+                      {stat.trend.line.marks.map((mark, markIndex) => (
+                        <g>
+                          <circle class="hit" cx={mark.x} cy={mark.y} r="7"><title>{mark.title}</title></circle>
+                          {markIndex === stat.trend.line!.marks.length - 1 && <circle class="end" cx={mark.x} cy={mark.y} r="3" />}
+                        </g>
+                      ))}
+                    </svg>
+                  ) : stat.trend.firstDate && (
+                    <span class="poe-trend-note">從 {stat.trend.firstDate} 開始記錄，累積兩天以上才會畫趨勢</span>
+                  )}
+                  {stat.trend.gain !== null && (
+                    <span class="poe-trend-note">近 7 天 {stat.trend.gain >= 0 ? '+' : ''}{stat.trend.gain.toLocaleString('zh-TW')}</span>
+                  )}
                 </div>
               ))}
               <div>
@@ -128,6 +184,12 @@ const oldestFetch = fetchedTimes[0] ? formatDate(fetchedTimes[0]) : null;
   .poe-stats dd { margin: 0; color: var(--ink); font-family: var(--mono); font-size: 1.9rem; font-variant-numeric: tabular-nums; line-height: 1.15; }
   .poe-stats dd.pending { color: var(--quiet); font-family: var(--display); font-size: 1.2rem; }
   .poe-stats span { color: var(--quiet); font-size: .7rem; line-height: 1.5; }
+  .poe-spark { display: block; width: 100%; max-width: 220px; height: 40px; margin-top: .35rem; overflow: visible; }
+  .poe-spark polyline { fill: none; stroke: var(--acid); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .poe-spark .hit { fill: transparent; cursor: default; }
+  .poe-spark .hit:hover { fill: rgb(198 220 90 / 25%); }
+  .poe-spark .end { fill: var(--acid); stroke: #202420; stroke-width: 2; pointer-events: none; }
+  .poe-stats .poe-trend-note { color: var(--muted); font-size: .7rem; }
 
   .poe-actions { display: flex; flex-wrap: wrap; gap: .9rem 1.4rem; align-items: center; }
   .poe-primary { display: inline-flex; min-height: 40px; padding: .55rem 1rem; align-items: center; border-radius: 5px; background: var(--acid); color: #111; font-size: .8rem; font-weight: 700; text-decoration: none; }
