@@ -1,5 +1,20 @@
 [
   {
+    "date": "2026-10-05",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "降載修正後仍有修正前就開著的舊分頁，每 5 分鐘連打幾十次直播偵測端點。新版前端改帶版本標頭，端點對沒帶的直接回 426、不去抓 YouTube，舊分頁重新整理就恢復正常。",
+    "tags": ["performance", "infrastructure", "bugfix"],
+    "commits": ["ba42868"]
+  },
+  {
+    "date": "2026-10-05",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "〈獣火の旗〉沿用〈暁を担ぐ者〉的剪法做出 178 秒全曲歌詞影片，12 張戰國和風插圖以 2K 原生生成；另剪出 30 秒直式 Shorts、排好縮圖並寫完上架文案，目前還沒上傳。",
+    "tags": ["AI Music", "MV", "YouTube"]
+  },
+  {
     "date": "2026-10-04",
     "project": "個人網站",
     "tier": "personal",
