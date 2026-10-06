@@ -1,5 +1,43 @@
 [
   {
+    "date": "2026-10-06",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "新介面技能頁滑過寶石時，卡片會列出 POB 比較段的數值變化；新增依 DPS 增量排序的輔助寶石清單（PoE2 也支援），匯入頁點一下或按右鍵就自動帶入剪貼簿內容。",
+    "tags": ["Path of Building", "UI", "headless"],
+    "commits": ["fd0a2c1", "92ca2b0"]
+  },
+  {
+    "date": "2026-10-06",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "以 GGPK 為準整理 PoE2 字典：清掉混進來的 PoE1 英文條目、修正中英對錯與半句片段，貼上中文物品不再被轉成 PoE1 詞綴；stats 也移除 POB 用不到的跨代詞綴，誤刪的 10 筆終局詞綴已補回。",
+    "tags": ["translation", "data", "Path of Exile"],
+    "commits": ["dbac07b", "4b0ae78", "56370fe", "b04e020"]
+  },
+  {
+    "date": "2026-10-03",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "新介面貼上物品時，缺少稀有度行的 POB 格式會依前綴／後綴槽位行的數量補回稀有度，原本會被拒絕或被當成傳奇；槽位資訊不足或有歧義就不猜，改提示缺少稀有度。",
+    "tags": ["Path of Building", "parsing", "bugfix"],
+    "commits": ["aeeb0a0"]
+  },
+  {
+    "date": "2026-10-06",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "用 YouTube Data API 比對頻道上傳清單，確認〈獣火の旗〉與〈暁を担ぐ者〉已公開後移進已上架；已上架單曲的 metadata 也補上公開網址與日期，曲庫狀態有實際證據可查。",
+    "tags": ["AI Music", "YouTube", "automation"]
+  },
+  {
+    "date": "2026-10-05",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "完成約 58 分鐘的青春日常 J-Pop 合輯 Vol.2，10 首播兩輪，畫面是單一主視覺加陽光光塵粒子；合輯工具新增歌曲間隔設定，檢查腳本也跟著支援。",
+    "tags": ["AI Music", "longform", "tooling"]
+  },
+  {
     "date": "2026-10-05",
     "project": "MultiStream Hub",
     "tier": "personal",
