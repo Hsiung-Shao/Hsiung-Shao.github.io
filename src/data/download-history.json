@@ -17,6 +17,12 @@
       "full": 10168,
       "update": 3553,
       "data": 8302
+    },
+    {
+      "date": "2026-10-07",
+      "full": 10267,
+      "update": 3636,
+      "data": 8478
     }
   ],
   "poe-market-translate": [
@@ -143,6 +149,10 @@
     {
       "date": "2026-10-06",
       "manual": 631
+    },
+    {
+      "date": "2026-10-07",
+      "manual": 640
     }
   ],
   "exile-appraiser": [
@@ -157,6 +167,10 @@
     {
       "date": "2026-10-06",
       "combined": 362
+    },
+    {
+      "date": "2026-10-07",
+      "combined": 423
     }
   ]
 }

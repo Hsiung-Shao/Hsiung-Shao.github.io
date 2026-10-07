@@ -1,5 +1,19 @@
 [
   {
+    "date": "2026-10-07",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "照〈獣火の旗〉的做法再做兩首單曲上架包：〈午前二時の生放送〉與〈幕間に星を盗む〉各有一支約 160 秒的歌詞影片、12 張 2K 插圖、30 秒 Shorts 和縮圖；逐字歌詞都先看過初剪才定稿，兩首還沒上傳。",
+    "tags": ["AI Music", "MV", "YouTube"]
+  },
+  {
+    "date": "2026-10-06",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "試做五個 R&B 方向的日文女聲原創曲：Modern Japanese R&B、Neo Soul、City Pop R&B、Alternative R&B 和 Funk R&B，每首都附立意、中文翻譯與逐行讀音；四首技術檢查通過，一首動態偏低，先留著等試聽再決定。",
+    "tags": ["AI Music", "生成模型", "workflow"]
+  },
+  {
     "date": "2026-10-06",
     "project": "PobTools",
     "tier": "personal",
