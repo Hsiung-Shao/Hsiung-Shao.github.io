@@ -30,6 +30,8 @@ interface Resume {
   otherProjects: string[];
   skills: { label: string; items: string[] }[];
   education: { school: string; department: string; degree: string; period: string }[];
+  certifications: string[];
+  awards: { name: string; result: string }[];
 }
 
 export const resume = rawResume as Resume;

@@ -81,6 +81,14 @@
     { "label": "維運與流程", "items": ["Cloudflare Pages / Workers", "GitHub Actions", "Composer / PHPStan", "Vitest", "本地模型推論（LM Studio、ComfyUI）"] }
   ],
   "education": [
-    { "school": "東南科技大學", "department": "資訊科技學系", "degree": "大學畢業", "period": "2019/9 – 2022/6" }
+    { "school": "東南科技大學", "department": "資訊科技學系", "degree": "大學畢業", "period": "2019/9 – 2022/6" },
+    { "school": "國立羅東高級工業職業學校", "department": "資訊科", "degree": "畢業", "period": "2015/9 – 2018/6" }
+  ],
+  "certifications": ["電腦硬體裝修 乙級", "電腦硬體裝修 丙級", "網路架設 丙級"],
+  "awards": [
+    { "name": "第 21、22 屆資訊應用服務創新競賽 校園 4G 行動應用服務組（高中職組）", "result": "連續兩屆第一名" },
+    { "name": "第二屆裕隆盃全國高中職工程創意專題競賽 資訊工程組", "result": "第一名" },
+    { "name": "106 年度全國高中職學生智慧生活創意設計比賽", "result": "第一名" },
+    { "name": "第 14 屆全國電子設計創意競賽", "result": "第一名" }
   ]
 }

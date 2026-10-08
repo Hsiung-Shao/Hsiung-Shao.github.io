@@ -685,6 +685,8 @@ details[open] .project-summary .toggle { transform: rotate(45deg); }
 .resume-skills { display: grid; gap: .6rem; }
 .resume-skills > div { display: grid; padding: 1.2rem 1.6rem; grid-template-columns: 140px minmax(0, 1fr); gap: 1.5rem; background: rgb(17 19 17 / 94%); }
 .resume-skills p { margin: 0; color: #c9c9c1; font-size: .88rem; line-height: 1.8; }
+.resume-awards { margin: 0; padding: 0; list-style: none; color: #c9c9c1; font-size: .88rem; line-height: 1.8; }
+.resume-awards strong { margin-left: .7rem; color: var(--acid); font-weight: 600; white-space: nowrap; }
 .resume-page > section:last-child { padding-bottom: 7rem; }
 
 @media (max-width: 720px) {
@@ -698,7 +700,7 @@ details[open] .project-summary .toggle { transform: rotate(45deg); }
 
 /* 履歷列印:只在履歷頁生效,轉成白底黑字的 A4 單欄 */
 @media print {
-  @page { size: A4; margin: 14mm 14mm 16mm; }
+  @page { size: A4; margin: 12mm 14mm 12mm; }
   html:has(.resume-page),
   body:has(.resume-page) { background: #fff !important; color: #111 !important; }
   /* 還沒捲到的區塊仍是 motion-reveal 的透明狀態,列印時要強制顯示 */
@@ -721,8 +723,9 @@ details[open] .project-summary .toggle { transform: rotate(45deg); }
   .resume-section { padding: 3mm 0 0; }
   .resume-heading { margin-bottom: 2.5mm; padding-bottom: 1.5mm; border-bottom: 1px solid #999; font-size: 13pt; break-after: avoid; }
   .resume-heading .kicker { display: none; }
-  .resume-summary p, .resume-item > p, .resume-item ul, .resume-skills p, .resume-others { font-size: 10pt !important; line-height: 1.6 !important; }
-  .resume-item { margin: 0 0 3mm; padding: 0; break-inside: avoid; }
+  .resume-summary p, .resume-item > p, .resume-item ul, .resume-skills p, .resume-awards, .resume-others { font-size: 10pt !important; line-height: 1.5 !important; }
+  .resume-awards strong { font-weight: 700; }
+  .resume-item { margin: 0 0 2.5mm; padding: 0; break-inside: avoid; }
   .resume-item h3 { font-size: 11.5pt; }
   .resume-item h3 a::after { content: none; }
   .resume-projects { grid-template-columns: 1fr 1fr; gap: 3mm 6mm; }

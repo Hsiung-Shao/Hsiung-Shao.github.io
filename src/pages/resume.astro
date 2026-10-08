@@ -76,6 +76,14 @@ import { resume, resumeProjects, otherResumeProjects } from '../data/resume';
         </article>
       ))}
     </section>
+
+    <section class="site-shell resume-section">
+      <h2 class="resume-heading"><span class="kicker">Credentials</span>證照與獲獎</h2>
+      <div class="resume-skills">
+        <div><span class="meta-label">技術士證照</span><p>{resume.certifications.join('、')}</p></div>
+        <div><span class="meta-label">競賽（高職時期）</span><ul class="resume-awards">{resume.awards.map(award => <li>{award.name}<strong>{award.result}</strong></li>)}</ul></div>
+      </div>
+    </section>
   </div>
 </Layout>
 
