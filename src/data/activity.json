@@ -1,5 +1,21 @@
 [
   {
+    "date": "2026-10-08",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "直播狀態更新問題修正：手動重整查詢上限增加、Twitch 與 YouTube 分開不互相覆寫、批次失敗不全標離線、直播中 YouTube 重查改 30 分鐘、五語同步。",
+    "tags": ["bugfix", "performance", "VTuber"],
+    "commits": ["5932365"]
+  },
+  {
+    "date": "2026-10-08",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "社群週表與使用者投稿（v3.8.0）：本機腳本抓 YouTube 貼文候選圖、排程看圖寫結果、後台自動或待審；個人頁對話框新增週表、後台編輯核准、邊緣函式處理過期併入待機、五語 i18n。",
+    "tags": ["feature", "VTuber", "schedule"],
+    "commits": ["e06b24a"]
+  },
+  {
     "date": "2026-10-07",
     "project": "AI Music / Kumori Music",
     "tier": "personal",
