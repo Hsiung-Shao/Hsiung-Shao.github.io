@@ -182,6 +182,15 @@ for (const [projectId, entries] of Object.entries(downloadHistory)) {
   }
 }
 
+// 履歷頁:專案卡只能指向公開專案。客戶經歷用 experience 裡的去識別化文字寫,
+// 不走專案卡,免得受保護專案的標題或技術組合被當成公開作品列出。
+const resume = readJson('src/data/resume.json');
+for (const id of [...(resume.projects ?? []).map(ref => ref.id), ...(resume.otherProjects ?? [])]) {
+  const project = projects.find(candidate => candidate.id === id);
+  if (!project) errors.push(`resume.json: 找不到專案 ${id}`);
+  else if (project.visibility !== 'public') errors.push(`resume.json: 只能列公開專案(${id})`);
+}
+
 const supportPath = resolve(root, 'src/pages/support.astro');
 if (!existsSync(supportPath)) {
   errors.push('缺少贊助頁: src/pages/support.astro');

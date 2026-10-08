@@ -1,0 +1,92 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { resume, resumeProjects, otherResumeProjects } from '../data/resume';
+---
+
+<Layout title="履歷 | 熊少愆" description="熊少愆（Jerry）的履歷：PHP／ERP 後端開發經歷、客戶專案，以及 Path of Exile 工具、直播與 AI 音樂等個人專案。">
+  <div class="resume-page">
+    <header class="page-intro site-shell resume-intro">
+      <span class="kicker">Resume</span>
+      <h1>{resume.name}<small>{resume.nameEn}</small></h1>
+      <p class="resume-headline">{resume.headline}・{resume.location}</p>
+      <ul class="resume-contact">
+        {resume.contact.map(item => <li><span class="meta-label">{item.label}</span><a href={item.href}>{item.value}</a></li>)}
+      </ul>
+      <div class="resume-actions">
+        <button type="button" class="command-link" data-resume-print>列印 / 存成 PDF</button>
+        <a class="command-link secondary" href="/projects">看完整作品</a>
+      </div>
+    </header>
+
+    <section class="site-shell resume-section">
+      <h2 class="resume-heading"><span class="kicker">Summary</span>簡介</h2>
+      <div class="resume-summary">{resume.summary.map(paragraph => <p>{paragraph}</p>)}</div>
+    </section>
+
+    <section class="site-shell resume-section">
+      <h2 class="resume-heading"><span class="kicker">Experience</span>工作經歷</h2>
+      {resume.experience.map(job => (
+        <article class="resume-item">
+          <div class="resume-item-head">
+            <div>
+              <h3>{job.role}<span>{job.company}</span></h3>
+              <p class="resume-sub">{job.industry}</p>
+            </div>
+            {job.period && <span class="resume-period">{job.period}</span>}
+          </div>
+          <p>{job.summary}</p>
+          <ul>{job.highlights.map(item => <li>{item}</li>)}</ul>
+          <div class="resume-tags">{job.tech.map(tech => <span class="tag">{tech}</span>)}</div>
+        </article>
+      ))}
+    </section>
+
+    <section class="site-shell resume-section">
+      <h2 class="resume-heading"><span class="kicker">Projects</span>個人專案</h2>
+      <div class="resume-projects">
+        {resumeProjects.map(({ project, note, metric }) => (
+          <article class="resume-item">
+            <div class="resume-item-head">
+              <h3>{project.link ? <a href={project.link} target="_blank" rel="noopener noreferrer">{project.title} ↗</a> : project.title}</h3>
+            </div>
+            <p>{note}</p>
+            {metric && <p class="resume-metric">{metric.label} {metric.value}（{metric.asOf}）</p>}
+            <div class="resume-tags">{project.tech.slice(0, 5).map(tech => <span class="tag">{tech}</span>)}</div>
+          </article>
+        ))}
+      </div>
+      <p class="resume-others">其他專案：{otherResumeProjects.map(project => project.title).join('、')}。詳細說明在 <a href="/projects">/projects</a>。</p>
+    </section>
+
+    <section class="site-shell resume-section">
+      <h2 class="resume-heading"><span class="kicker">Skills</span>技能</h2>
+      <div class="resume-skills">
+        {resume.skills.map(group => <div><span class="meta-label">{group.label}</span><p>{group.items.join('、')}</p></div>)}
+      </div>
+    </section>
+
+    <section class="site-shell resume-section">
+      <h2 class="resume-heading"><span class="kicker">Education</span>學歷</h2>
+      {resume.education.map(item => (
+        <article class="resume-item">
+          <div class="resume-item-head">
+            <h3>{item.school}<span>{item.department}・{item.degree}</span></h3>
+            <span class="resume-period">{item.period}</span>
+          </div>
+        </article>
+      ))}
+    </section>
+  </div>
+</Layout>
+
+<script>
+  function setupResumePrint() {
+    const button = document.querySelector<HTMLButtonElement>('[data-resume-print]');
+    if (!button || button.dataset.bound === 'true') return;
+    button.dataset.bound = 'true';
+    button.addEventListener('click', () => window.print());
+  }
+
+  document.addEventListener('astro:page-load', setupResumePrint);
+  setupResumePrint();
+</script>

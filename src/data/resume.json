@@ -1,0 +1,86 @@
+{
+  "name": "熊少愆",
+  "nameEn": "Hsiung Shao (Jerry)",
+  "headline": "全端工程師（偏後端）",
+  "location": "新北市",
+  "summary": [
+    "我做後端與資料系統，正職是一個人負責公司內部 ERP，從資料庫 schema、後端程式到前端畫面和第三方 API 串接都是我寫的，系統已經穩定運行超過兩年。",
+    "下班後我做自己會用到的工具，主要是 Path of Exile 的繁中化與查價工具、多平台直播觀看網站，還有 AI 音樂的製作流程。這些工具都依附在別人的產品上，遊戲會更新、網站會改版，所以我花很多時間在相容性、資料驗證和長期維護。"
+  ],
+  "contact": [
+    { "label": "Email", "value": "jerry29221979@gmail.com", "href": "mailto:jerry29221979@gmail.com" },
+    { "label": "GitHub", "value": "github.com/Hsiung-Shao", "href": "https://github.com/Hsiung-Shao" },
+    { "label": "作品集", "value": "hsiung-shao.github.io", "href": "https://hsiung-shao.github.io/projects" }
+  ],
+  "experience": [
+    {
+      "company": "萬灃國際有限公司",
+      "industry": "醫療器材製造業",
+      "role": "後端工程師",
+      "period": "2019/4 – 至今",
+      "summary": "負責公司內部 ERP／管理系統的規劃、開發與維運，包含前後端程式、資料庫 schema 設計、第三方 API 串接、Excel 自動化整合，以及長期的功能擴充與改版。",
+      "highlights": [
+        "獨立開發並維護 ERP 系統（無框架），由我一個人負責全流程",
+        "模組涵蓋客戶、訂單、採購、庫存、批號效期與報表管理",
+        "用 PhpSpreadsheet 做 Excel 自動匯入／匯出，手動對帳時間降低約 90%",
+        "整合電子發票 API，開立、自動寄送與狀態回寫都自動化",
+        "設計資料庫 schema、改善查詢效能，報表產生速度變快",
+        "建立批號與效期流程，含到期警示與隔離庫存控管",
+        "支援 Shopee 訂單整合，包含 Excel 匯入、對帳與自動出貨流程",
+        "以 Composer 整合第三方函式庫，並導入 PHPStan 靜態分析"
+      ],
+      "tech": ["PHP（無框架）", "MySQL", "jQuery", "HTML/CSS", "PhpSpreadsheet", "Composer", "PHPStan"]
+    },
+    {
+      "company": "獨立接案",
+      "industry": "客戶專案（客戶名稱不公開）",
+      "role": "全端工程師",
+      "period": null,
+      "summary": "替客戶開發資料管理平台與品牌網站，以下只寫可公開的工程內容。",
+      "highlights": [
+        "資料管理平台：React 19 + PostgreSQL，以前後端雙層規則限制資料存取，表單、驗證與資料存取共用 Zod 結構",
+        "資料管理平台：修正數值資料的型別邊界與計算一致性，當日報表改用即時指標",
+        "品牌網站：前端從原框架遷移到 React + Vite，處理 SPA fallback、SEO 與圖片輸出",
+        "品牌網站：完成權限與資料存取面稽核，收斂管理角色與公開查詢邊界，建立變更前備份與回復流程"
+      ],
+      "tech": ["React 19", "TypeScript", "Supabase", "PostgreSQL", "Zod", "Vite", "Cloudflare Pages"]
+    }
+  ],
+  "projects": [
+    {
+      "id": "pobtools",
+      "note": "C++ 啟動器在執行時把翻譯和字型注入 Path of Building，原本的程式檔案不動。最近在做無頭引擎和新前端，新介面已經進入正式版。"
+    },
+    {
+      "id": "poe-market-translate",
+      "note": "交易站的瀏覽器擴充，依官方 id 對接美服與台服 API 做中文化，無法印證的譯名保留英文。",
+      "metric": { "tool": "poe-market-translate", "key": "users", "label": "Chrome 每週使用者" }
+    },
+    {
+      "id": "exile-appraiser",
+      "note": "遊戲內查價工具，按熱鍵就在游標旁顯示交易站結果，並用 OCR 讀遊戲面板標註 Tier 與價格。"
+    },
+    {
+      "id": "awakened-poe-trade-zh-tw",
+      "note": "開源查價工具的繁中修正版，修繁中客戶端的物品解析，每次修正都附遊戲內實際樣本做回歸驗證。"
+    },
+    {
+      "id": "multistream-hub",
+      "note": "同時看多個 Twitch／YouTube 直播的網站，已上線。直播偵測撞到 Workers 免費方案的 CPU 與 API 配額後，改成邊緣快取和共享查詢結果。"
+    },
+    {
+      "id": "ai-music",
+      "note": "從歌曲企劃、生成、品質檢查到封面和影片輸出的製作流程，作品發布在 YouTube 頻道 Kumori Music。"
+    }
+  ],
+  "otherProjects": ["discord-bot", "gameserver-control-panel", "local-task-manager", "minecraft-translate"],
+  "skills": [
+    { "label": "後端與資料", "items": ["PHP（純手寫、無框架）", "MySQL schema 設計與查詢調校", "PostgreSQL / Supabase", "Python", "API 串接（電子發票、電商平台、遊戲交易 API）", "Excel 自動化（PhpSpreadsheet、ExcelJS）"] },
+    { "label": "前端", "items": ["TypeScript / JavaScript", "React", "Vue 3", "Astro", "Tailwind CSS", "瀏覽器擴充（Manifest V3）"] },
+    { "label": "桌面與系統", "items": ["C++17 / CMake", "Lua", "Electron", "Windows 程序管理", "SQLite"] },
+    { "label": "維運與流程", "items": ["Cloudflare Pages / Workers", "GitHub Actions", "Composer / PHPStan", "Vitest", "本地模型推論（LM Studio、ComfyUI）"] }
+  ],
+  "education": [
+    { "school": "東南科技大學", "department": "資訊科技學系", "degree": "大學畢業", "period": "2019/9 – 2022/6" }
+  ]
+}
