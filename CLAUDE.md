@@ -175,7 +175,7 @@ npm run record-history   # 把今天的下載數寫進 src/data/download-history
 ### 4.5 專案與隱私邊界
 
 - 各專案 repo 的實際路徑以 `scripts/projects.config.json` 為準,這份文件不重複列。
-- `Awakened PoE Trade-zh-TW` 的 repo 資料夾叫 `apt-patched`。
+- `Awakened PoE Trade-zh-TW` 已於 2026-10-10 封存(`contentPolicy: disabled`),不再掃描。
 - `poeMarketTranslate` 的前台名稱固定寫 `Poe Market zh`。
 - `ai-Music` 若輸出為非 Git repo,先驗證實際位置,
   不可因 config 有一列就聲稱已讀取其 Git 歷史。

@@ -150,7 +150,7 @@
     "longDescription": "保留原作的查價、overlay 與快捷鍵體驗，針對繁中客戶端的分隔線、全形標點、魔法物品名、詞綴標籤、區域名稱與交易類型進行修正。提供安裝版與免安裝版，並改成由使用者確認後才下載更新。",
     "tech": ["Electron", "Vue 3", "TypeScript", "Vite", "PoE Trade API"],
     "category": "tool",
-    "status": "active",
+    "status": "archived",
     "visibility": "public",
     "featured": false,
     "highlights": [

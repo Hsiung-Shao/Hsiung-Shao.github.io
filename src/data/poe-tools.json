@@ -26,7 +26,7 @@
         "manual": "^poe-market-zh-.+\\.zip$"
       },
       "manual": {
-        "users": { "value": 7193, "asOf": "2026-10-01" }
+        "users": { "value": 7266, "asOf": "2026-10-07" }
       },
       "stats": [
         { "source": "manual", "key": "users", "label": "每週使用者", "note": "Chrome 線上應用程式商店後台" },
