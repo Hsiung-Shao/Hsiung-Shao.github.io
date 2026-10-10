@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-04T21:00:00+08:00",
-  "focus": "目前主線是 PobTools 的無頭引擎與新前端重寫，以及交易工具在官網改版後的資料解析維護。",
+  "updated": "2026-10-09T08:00:00+08:00",
+  "focus": "目前主線是 PobTools 的介面改版與工具移植，以及 MultiStream Hub 的服務狀態頁與週表收錄。",
   "projects": [
     {
       "name": "AI Music / Kumori Music",
@@ -20,12 +20,12 @@
     {
       "name": "PobTools",
       "tier": "personal",
-      "status": "無頭引擎與新前端已進入正式版，持續對齊經典介面功能與跨平台渲染路徑"
+      "status": "啟動器與各工具視窗依設計稿改版，並把 ExileAppraiser 的搜尋字串工具移植進來"
     },
     {
       "name": "MultiStream Hub",
       "tier": "personal",
-      "status": "開台週表剛上線，持續補齊 VTuber 名冊與資料回報流程，並在免費方案的額度內壓低直播偵測的流量"
+      "status": "新增公開服務狀態頁，並持續改善開台週表的搜尋引擎收錄與載入速度"
     },
     {
       "name": "個人網站",

@@ -1,5 +1,68 @@
 [
   {
+    "date": "2026-10-09",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "把 ExileAppraiser 的搜尋字串產生器完整移植進 PobTools：自寫對齊 JS 語意的正則比對器，補上多頁合併、書籤資料夾與分享碼，並用 ExileAppraiser 自己的測試向量逐字比對；書籤包也能直接送到 ExileAppraiser。",
+    "tags": ["Path of Exile", "regex", "porting"],
+    "commits": ["9a8b869", "470c2cd", "4c94609", "6f3c78a", "ca32379"]
+  },
+  {
+    "date": "2026-10-09",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "啟動器與輿圖、軍團珠寶、倉庫收益、過濾器、翻譯編輯器等工具依設計稿改用共用元件、色票與圖示；過濾器編輯器看得出哪些規則改過、可單條還原，工具視窗改成畫好第一幀才顯示，不再先閃 0.3–0.5 秒白畫面。",
+    "tags": ["UI", "design-system", "performance"],
+    "commits": ["c4eddaf", "c9fcf1d", "87a208b", "bfe0a0b", "67122f4"]
+  },
+  {
+    "date": "2026-10-08",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "登記 pob:// 與 pob2:// 連結協定，在 poe.ninja 點「Open in PoB」會由 PobTools 開啟並匯入建置，有未儲存的建置時先確認；設定頁可開關，登錄被其他程式改走時啟動會自動重新登記。",
+    "tags": ["Path of Building", "integration"],
+    "commits": ["c889a9e"]
+  },
+  {
+    "date": "2026-10-08",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "新增公開服務狀態頁 /status：Twitch 接官方狀態，YouTube 與本站排程依偵測失敗率和資料新鮮度判燈號，另列已知問題與公告；使用者回報只公開站方看過的內容，並先截短再遮蔽 email、網址與帳號等聯絡資訊。",
+    "tags": ["feature", "privacy", "i18n"],
+    "commits": ["71e08b2", "50a67ba", "c18b68e", "c40614e", "ab3ca79"]
+  },
+  {
+    "date": "2026-10-08",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "個人週表頁的可索引條件改成與頁面內容一致，edge 先把名字、場次摘要與清單寫進 HTML，修正搜尋引擎判成 soft 404 或未建立索引；週表頁改由同源快取代理預載資料，加快載入。",
+    "tags": ["SEO", "performance", "bugfix"],
+    "commits": ["749c04f"]
+  },
+  {
+    "date": "2026-09-27",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "畫布聊天室可拖左緣或用選單調寬、收合，調整時保留使用者排好的串流位置；縮放改成四邊把手、預覽時就套用尺寸上下限，拖曳時調整碰撞偵測順序，消除每幀的強制重排。",
+    "tags": ["UI", "performance"],
+    "commits": ["632894c", "a1d1cf4", "bccd730"]
+  },
+  {
+    "date": "2026-10-08",
+    "project": "個人網站",
+    "tier": "personal",
+    "summary": "新增可列印的 /resume 履歷頁，以 104 履歷為底補上近期專案，專案卡直接取 projects.json 的資料，列印時轉成白底兩頁 A4；內容驗證會擋下引用不存在或受保護專案的履歷。",
+    "tags": ["feature", "print", "content"],
+    "commits": ["6bd04f3", "1a2521f"]
+  },
+  {
+    "date": "2026-10-08",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "單曲歌詞影片改成約 20 張插圖的固定做法：以〈幕間に星を盗む〉試做 19 張的版本確認可行後寫進製作手冊，規定主歌與 Bridge 一句一張、同一張最多用 4 次，重試兩次不合格就改用既有插圖取景。",
+    "tags": ["AI Music", "MV", "workflow"]
+  },
+  {
     "date": "2026-10-08",
     "project": "MultiStream Hub",
     "tier": "personal",
