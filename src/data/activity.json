@@ -1,5 +1,43 @@
 [
   {
+    "date": "2026-10-10",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "Poe Regex 物品詞綴數值頁同步 ExileAppraiser 的兩項改動：行尾錨點容許破裂標記，破裂詞綴也搜得到；同一詞綴有多種寫法時依仲裁表組成交替式，可選詞綴變多，並逐一測試每種寫法都能命中自己。",
+    "tags": ["Path of Exile", "regex", "testing"],
+    "commits": ["cd05c9f", "302e50b", "25d73ee"]
+  },
+  {
+    "date": "2026-10-10",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "照約 20 張插圖的做法完成〈片道ぶんの春〉與〈借りものじゃない歌〉的歌詞影片、Shorts、縮圖與上架包，表情太相似的插圖重生 28 張；插圖合格線另加人體關節可動範圍的檢查，目前還沒上傳。",
+    "tags": ["music video", "illustration", "workflow"]
+  },
+  {
+    "date": "2026-10-09",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "Poe Regex 合併輸出只併入同類物品的頁，條件取交集並去重，修正碑牌頁被加上換界石條件而搜不到；片段依遊戲實測格式縮短，碑牌頁也補上類型條件與固有詞綴語料。",
+    "tags": ["Path of Exile", "regex", "bugfix"],
+    "commits": ["1f51f17", "c428614", "46d1ae2", "829c19d"]
+  },
+  {
+    "date": "2026-10-09",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "週表排程的讀取改成資料庫端 RPC：名冊依用途篩選、新影片只回傳沒看過的 id、快照以指紋判斷沒變就不讀，降低 Supabase 出口流量與日誌量；新函式只授權 service_role，migration 附回滾。",
+    "tags": ["Supabase", "performance", "postgres"],
+    "commits": ["c7bf020", "89ce381", "c81d36c", "43c85c1"]
+  },
+  {
+    "date": "2026-10-09",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "架設 YuE2 獨立環境，在 12GB 顯卡以完整精度生成整首歌並接進曲庫；試做兩首後女聲控制都沒通過聆聽驗收，保留音訊與參數紀錄，根因還沒找到，不列為可用做法。",
+    "tags": ["AI music", "local generation", "experiment"]
+  },
+  {
     "date": "2026-10-09",
     "project": "PobTools",
     "tier": "personal",
