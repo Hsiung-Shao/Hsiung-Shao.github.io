@@ -730,5 +730,50 @@
     "tier": "personal",
     "summary": "建立個人作品集網站雛形 — Astro 5 + React 19 + Tailwind 4 + Three.js,部署至 GitHub Pages。",
     "tags": ["Astro", "portfolio"]
+  },
+  {
+    "date": "2026-10-08",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "側邊欄新增「大量賣家」分頁，把同一賣家有多筆上架的結果分組列出；可開啟自動載入前 50／100 筆，並依官方回應的限流標頭暫停與接續，不自己組 API 請求。",
+    "tags": [
+      "extension",
+      "rate-limit"
+    ],
+    "commits": [
+      "5c1984d",
+      "8d68f37",
+      "428e5f9"
+    ]
+  },
+  {
+    "date": "2026-10-09",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "交易站階級選單改成一階一列的階級面板，列出 T 級、詞綴名稱、需求等級與完整文字；＋ 鈕改為只加入詞綴、選階級一律填最低數值；poe.ninja 搜尋篩選支援中英建議清單。",
+    "tags": [
+      "extension",
+      "i18n"
+    ],
+    "commits": [
+      "60c693c",
+      "70f6519",
+      "9278123"
+    ]
+  },
+  {
+    "date": "2026-10-10",
+    "project": "DiscordBot",
+    "tier": "personal",
+    "summary": "新增每晚 03:30 執行的 Obsidian vault 健檢排程，失敗才私訊；後續補上設定錯誤不讓 bot 崩潰、長輸出截斷、啟動測試旗標與 18 項單元測試。",
+    "tags": [
+      "automation",
+      "testing"
+    ],
+    "commits": [
+      "cc30f6d",
+      "ccfcffe",
+      "b9135e3"
+    ]
   }
 ]
