@@ -775,5 +775,21 @@
       "ccfcffe",
       "b9135e3"
     ]
+  },
+  {
+    "date": "2026-10-11",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "PoE2 階級選單新增異界的、創生之樹（召喚物／法術）三種詞綴來源標籤，中英字串補齊並加上測試；版號更新至 329.5.21 並寫入版本紀錄。",
+    "tags": ["extension", "i18n"],
+    "commits": ["8ba7600", "87666e5"]
+  },
+  {
+    "date": "2026-10-11",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "以已確認女聲案例的固定種子與設定，完成新原創熱血歌曲的 YuE2 單首試聽與技術檢查：長度約 200 秒、響度與峰值無警示；新曲仍待聆聽，發布狀態不變。",
+    "tags": ["AI music", "QA"],
+    "commits": []
   }
 ]
