@@ -55,14 +55,18 @@
 
 ```bash
 npm run dev              # 開發伺服器
-npm test                 # vitest,75 個測試
+npm test                 # vitest,87 個測試
 npm run validate-content # 內容護欄(隱私掃描 + 資料結構),build 會自動先跑
 npm run build            # validate-content + astro build
 npm run typecheck        # astro check,必須 0 錯誤(CI 硬性 gate)
 npm run update-site      # 掃描允許的專案 Git 紀錄,產生 digest(本身不改內容)
-npm run fetch-releases   # 抓 /poe 頁的 GitHub Release 下載數與版本,更新 src/data/releases.json 快照
+npm run pull-data        # 從 data 分支拉 releases.json、download-history.json 到 src/data/
+npm run fetch-releases   # 抓 /poe 頁的 GitHub Release 下載數與版本,寫 src/data/releases.json
 npm run record-history   # 把今天的下載數寫進 src/data/download-history.json(同一天重跑會覆蓋)
 ```
+
+`dev`、`build`、`validate-content`、`typecheck` 前會自動跑 `pull-data`;離線時沿用上次拉到的副本,
+一次都沒拉過就會失敗。後兩支平常由 Actions 執行(見 §3),本機手動跑只改到自己的副本。
 
 沒有 lint。
 
@@ -78,18 +82,21 @@ npm run record-history   # 把今天的下載數寫進 src/data/download-history
 - `src/data/now.json` — 目前動態,版面上限 6 個專案
 - `src/data/poe-tools.json` — `/poe` 頁列哪些工具、各自的下載數口徑(資產檔名 regex)與手動數字。
   Chrome 每週使用者數沒有 API,由人工填 `manual.users.value` + `asOf`;`null` 時頁面顯示「待更新」
-- `src/data/releases.json` — `fetch-releases` 產生的快照,**提交進 repo**。本機 build 不抓網路;
-  `deploy.yml` 每天排程重建時會先抓最新值(只用於該次建置、不回寫),抓失敗就沿用提交的快照。
-  下載數是檔案下載次數,不是使用人數——頁面文案要維持這個區分
-- `src/data/download-history.json` — 每天一筆的下載數累計值(`record-history` 寫入),`/poe` 的
-  迷你趨勢線與「近 7 天新增」由它算出。GitHub 不提供歷史,所以只能從 2026-10-04 開始累積;
-  Chrome 每週使用者用匯出的 CSV 回填(`npm run record-history -- --import-chrome-csv <檔> <projectId>`)
+- `src/data/poe-products.json` — `/poe/<slug>` 三個產品頁的文案、統計口徑與截圖路徑;
+  截圖放 `src/assets/poe/<slug>/`,副檔名只能是小寫 png/jpg/webp(要和頁面的 glob 一致)
+- `releases.json`、`download-history.json` — **不在 main,存在 `data` 分支**,`pull-data` 拉到
+  `src/data/`(已 gitignore)。`deploy.yml` 的 stats job 每天台灣 04:00 跑 `fetch-releases` →
+  `record-history` 後推上 data 分支,再用新資料部署;電腦關著也照常累積。
+  下載數是檔案下載次數,不是使用人數——頁面文案要維持這個區分。
+  歷史從 2026-10-04 開始累積(GitHub 不提供歷史),`/poe` 的每日長條圖與「較前日」由它算出。
+  Chrome 每週使用者用匯出的 CSV 回填:`pull-data` → `npm run record-history -- --import-chrome-csv <檔> <projectId>`
+  → 把 `src/data/download-history.json` commit 到 data 分支並 push(push 要使用者同意)
 - `src/data/articles/<slug>.md` — 一般文章的內文,檔名就是 slug,`posts.ts` 會蓋進 posts.json 的 `body`
 
 **新文章一律先以 `draft: true` 加入,人工確認後才發佈。** 開發伺服器上草稿也會顯示並標「草稿」,
 方便預覽;正式建置不輸出草稿。
 
-**活動日誌、`now.json` 與下載數由每日排程自動更新並推上線**(見 §4.6),這是 2026-10-04
+**活動日誌、`now.json` 由本機每日排程、下載數由 Actions 自動更新並推上線**(見 §4.6),這是 2026-10-04
 使用者明確選擇的,不需要逐次人工確認。文章不在自動範圍內。
 
 `validate-content.mjs` 裡有一批寫死的內容契約(必備教學文、Kumori Music 的頻道與首發連結、
@@ -190,15 +197,16 @@ npm run record-history   # 把今天的下載數寫進 src/data/download-history
 執行,完整指令存在使用者家目錄的 `.claude/scheduled-tasks/myweb-daily-site-update/SKILL.md`。流程:
 
 1. 只在 `main`、工作區乾淨時才動手,先 `git pull --ff-only`;不符合就中止回報。
-2. `fetch-releases` → `record-history`。
-3. 照 §4.2 跑 Git Log 同步,寫 `activity.json`(必要時 `now.json`),推進游標;AI Music 從
+2. 照 §4.2 跑 Git Log 同步,寫 `activity.json`(必要時 `now.json`),推進游標;AI Music 從
    Obsidian 的 `Change Log.md` 取新條目。不建立或修改文章。
-4. `npm test`、`validate-content`、`typecheck`、`build` 任一失敗就不 commit。
-5. 有變更才 commit(`chore: daily site update YYYY-MM-DD`)並 `git push origin main`,
+3. `npm test`、`validate-content`、`typecheck`、`build` 任一失敗就不 commit。
+4. 有變更才 commit(`chore: daily site update YYYY-MM-DD`)並 `git push origin main`,
    被拒就中止,不 force push、不 rebase。push 會觸發 `deploy.yml` 部署。
 
-排程只在 Claude 桌面版開著時執行,關著時會在下次開啟補跑。`deploy.yml` 的 04:00 排程保留當備援:
-電腦沒開時快照數字仍會更新,但不會寫歷史、也不會更新活動日誌。
+排程只在 Claude 桌面版開著時執行,關著時會在下次開啟補跑。下載數不歸這個排程管(2026-10-14 起):
+`deploy.yml` 的 04:00 stats job 負責寫 data 分支,電腦沒開也會累積。
+repo 連續 60 天沒有活動時 GitHub 會停用排程,bot 推 data 分支算不算活動文件沒寫清楚;
+`/poe` 出現「MM-DD 較 MM-DD」代表歷史停更了,先去 Actions 頁看排程是不是被停用。
 
 ## 5. 已知狀況
 
@@ -213,7 +221,7 @@ npm run record-history   # 把今天的下載數寫進 src/data/download-history
 - **Three.js 元件不進單元測試**:jsdom 沒有 WebGL context。
   `SpatialScene.astro` 與 `react/ConceptScene.tsx` 要用實際瀏覽器驗證。
 - **CI 分兩條**:`ci.yml`(PR 進 main 時跑 validate + test + build + typecheck)與
-  `deploy.yml`(push main 後建置並部署)。
+  `deploy.yml`(push main 後建置並部署;排程與手動觸發時先跑 stats job 寫 data 分支)。
 
 ## 6. 本機環境陷阱
 
