@@ -6,7 +6,7 @@ import poeTools from '../data/poe-tools.json';
 import releaseSnapshot from '../data/releases.json';
 import downloadHistory from '../data/download-history.json';
 import type { ToolReleaseSummary } from '../../scripts/lib/releases.mjs';
-import { recentGain, taipeiDate, type HistoryEntry } from '../../scripts/lib/download-history.mjs';
+import { dailyGains, latestDelta, recentGain, taipeiDate, type HistoryEntry } from '../../scripts/lib/download-history.mjs';
 
 type Snapshot = ToolReleaseSummary & { fetchedAt: string };
 const snapshots = releaseSnapshot.tools as Record<string, Snapshot>;
@@ -48,6 +48,46 @@ function buildTrend(entries: HistoryEntry[] | undefined, key: string, label: str
   };
 }
 
+// 每日新增長條圖:一天一格。排程沒跑的日子,下一筆是多天合計,畫成橫跨那幾格、高度取平均,
+// 才不會把三天的量畫成單日暴衝。
+const shortDate = (date: string) => date.slice(5);
+const signed = (value: number) => `${value >= 0 ? '+' : ''}${value.toLocaleString('zh-TW')}`;
+
+function buildBars(entries: HistoryEntry[] | undefined, key: string, label: string) {
+  const gains = dailyGains(entries, key, TREND_DAYS, today);
+  if (gains.length === 0) return null;
+  const start = dayNumber(gains[0].prevDate);
+  const slots = dayNumber(gains[gains.length - 1].date) - start;
+  const { width, height, pad } = SPARK;
+  const slot = (width - pad * 2) / slots;
+  const maxAverage = Math.max(...gains.map(gain => Math.max(gain.gain, 0) / gain.span), 1);
+  const total = gains.reduce((sum, gain) => sum + gain.gain, 0);
+  return {
+    bars: gains.map(gain => {
+      const barHeight = Math.max((Math.max(gain.gain, 0) / gain.span / maxAverage) * (height - pad * 2), 1);
+      const average = Math.round(gain.gain / gain.span).toLocaleString('zh-TW');
+      return {
+        x: pad + (dayNumber(gain.prevDate) - start) * slot + 1,
+        y: height - pad - barHeight,
+        width: Math.max(gain.span * slot - 2, 1),
+        height: barHeight,
+        title: gain.span === 1
+          ? `${shortDate(gain.date)}：${signed(gain.gain)}`
+          : `${shortDate(gain.prevDate)} ~ ${shortDate(gain.date)} 共 ${gain.span} 天：${signed(gain.gain)}（平均 ${average}/天）`,
+      };
+    }),
+    summary: `${label}每日新增，${gains[0].prevDate} 到 ${gains[gains.length - 1].date} 共 ${signed(total)}`,
+  };
+}
+
+// 「較前日」:下載數是累計值,差值就是新增;Chrome 每週使用者不是累計值,改寫「較上次」並允許負值。
+function describeDelta(entries: HistoryEntry[] | undefined, key: string, source: string) {
+  const delta = latestDelta(entries, key);
+  if (!delta) return null;
+  if (source === 'manual') return `較上次（${delta.prevDate}）${signed(delta.gain)}`;
+  return delta.span === 1 ? `較前日 ${signed(delta.gain)}` : `較 ${shortDate(delta.prevDate)} ${signed(delta.gain)}（${delta.span} 天）`;
+}
+
 const statusLabels: Record<string, string> = {
   active: '開發中',
   maintained: '持續維護',
@@ -65,12 +105,15 @@ const tools = await Promise.all(poeTools.tools.map(async tool => {
   const manual = tool.manual as Record<string, { value: number | null; asOf: string | null }>;
 
   const stats = tool.stats.map(stat => {
-    const trend = buildTrend(histories[tool.projectId], stat.key, stat.label);
+    const history = histories[tool.projectId];
+    const trend = buildTrend(history, stat.key, stat.label);
+    const delta = describeDelta(history, stat.key, stat.source);
     if (stat.source === 'manual') {
       const entry = manual[stat.key];
-      return { ...stat, trend, value: formatCount(entry?.value), asOf: entry?.asOf ?? null };
+      return { ...stat, trend, bars: null, delta, value: formatCount(entry?.value), asOf: entry?.asOf ?? null };
     }
-    return { ...stat, trend, value: formatCount(snapshot?.downloads[stat.key]), asOf: null };
+    const bars = buildBars(history, stat.key, stat.label);
+    return { ...stat, trend, bars, delta, value: formatCount(snapshot?.downloads[stat.key]), asOf: null };
   });
 
   const releases = await Promise.all((snapshot?.recent ?? []).map(async release => ({
@@ -90,7 +133,7 @@ const oldestFetch = fetchedTimes[0] ? formatDate(fetchedTimes[0]) : null;
   <header class="page-intro site-shell">
     <span class="kicker">PoE tools / {tools.length} projects</span>
     <h1>Path of Exile 繁中工具。</h1>
-    <p>三個替繁中玩家補上缺口的工具：Path of Building 中文化、交易站中文搜尋、遊戲內查價。下面是各自的狀態、下載數和最近幾版改了什麼。</p>
+    <p>三個替繁中玩家補上缺口的工具：Path of Building 中文化、交易站中文搜尋、遊戲內查價。下面是各自的狀態、下載數和最近幾版改了什麼。想先知道每個工具能做什麼，看<a class="text-link" href="/poe/about">工具介紹</a>。</p>
   </header>
 
   <section class="site-shell pb-20">
@@ -113,8 +156,16 @@ const oldestFetch = fetchedTimes[0] ? formatDate(fetchedTimes[0]) : null;
                 <div>
                   <dt>{stat.label}</dt>
                   <dd class:list={{ pending: !stat.value }}>{stat.value ?? '待更新'}</dd>
+                  {stat.delta && <span class="poe-delta">{stat.delta}</span>}
                   <span>{stat.note}{stat.asOf && `，${stat.asOf}`}</span>
-                  {stat.trend.line ? (
+                  {stat.bars ? (
+                    <svg class="poe-spark" viewBox={`0 0 ${SPARK.width} ${SPARK.height}`} role="img" aria-label={`近 ${TREND_DAYS} 天${stat.bars.summary}`}>
+                      <line class="base" x1={SPARK.pad} x2={SPARK.width - SPARK.pad} y1={SPARK.height - SPARK.pad} y2={SPARK.height - SPARK.pad} />
+                      {stat.bars.bars.map(bar => (
+                        <rect class="bar" x={bar.x.toFixed(1)} y={bar.y.toFixed(1)} width={bar.width.toFixed(1)} height={bar.height.toFixed(1)} rx="1"><title>{bar.title}</title></rect>
+                      ))}
+                    </svg>
+                  ) : stat.trend.line ? (
                     <svg class="poe-spark" viewBox={`0 0 ${SPARK.width} ${SPARK.height}`} role="img" aria-label={`近 ${TREND_DAYS} 天趨勢：${stat.trend.line.summary}`}>
                       <polyline points={stat.trend.line.polyline} />
                       {stat.trend.line.marks.map((mark, markIndex) => (
@@ -190,6 +241,10 @@ const oldestFetch = fetchedTimes[0] ? formatDate(fetchedTimes[0]) : null;
   .poe-spark .hit:hover { fill: rgb(198 220 90 / 25%); }
   .poe-spark .end { fill: var(--acid); stroke: #202420; stroke-width: 2; pointer-events: none; }
   .poe-stats .poe-trend-note { color: var(--muted); font-size: .7rem; }
+  .poe-stats .poe-delta { color: var(--acid); font-family: var(--mono); font-size: .78rem; font-variant-numeric: tabular-nums; }
+  .poe-spark .base { stroke: var(--line); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  .poe-spark .bar { fill: var(--acid); opacity: .75; }
+  .poe-spark .bar:hover { opacity: 1; }
 
   .poe-actions { display: flex; flex-wrap: wrap; gap: .9rem 1.4rem; align-items: center; }
   .poe-primary { display: inline-flex; min-height: 40px; padding: .55rem 1rem; align-items: center; border-radius: 5px; background: var(--acid); color: #111; font-size: .8rem; font-weight: 700; text-decoration: none; }

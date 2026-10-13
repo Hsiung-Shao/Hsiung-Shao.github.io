@@ -36,6 +36,36 @@ export function recentGain(entries, key, days, today) {
   return last[key] - base[key];
 }
 
+const dayNumber = date => Date.parse(`${date}T00:00:00Z`) / 86_400_000;
+
+/** 相鄰兩筆有效紀錄的差。span 是相隔天數,排程沒跑的日子會讓 span > 1,代表這筆是多天合計。 */
+function pairwiseGains(entries, key) {
+  const points = (entries ?? []).filter(entry => Number.isInteger(entry[key]));
+  return points.slice(1).map((entry, index) => {
+    const prev = points[index];
+    return {
+      date: entry.date,
+      prevDate: prev.date,
+      gain: entry[key] - prev[key],
+      span: dayNumber(entry.date) - dayNumber(prev.date),
+    };
+  });
+}
+
+/**
+ * 最近 days 天內每一筆紀錄的新增量,給每日長條圖用。
+ * 先對全部歷史相減再篩日期,範圍內第一筆才會以範圍外的前一筆為基準,不會少算一段。
+ */
+export function dailyGains(entries, key, days, today) {
+  const cutoff = dayNumber(today) - days;
+  return pairwiseGains(entries, key).filter(gain => dayNumber(gain.date) >= cutoff);
+}
+
+/** 最後兩筆有效紀錄的差,給「較前日」用;Chrome 每週使用者不是累計值,gain 可能是負的。 */
+export function latestDelta(entries, key) {
+  return pairwiseGains(entries, key).at(-1) ?? null;
+}
+
 /**
  * 解析 Chrome 開發人員資訊主頁匯出的「每週使用者人數」CSV。
  * 日期是不補零的 YYYY/M/D;值為 0 的列是資料缺口,不是真的歸零,直接略過。

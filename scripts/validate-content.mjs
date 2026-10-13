@@ -6,6 +6,7 @@ import {
   loadProtectedTerms,
   scanProjectContent,
 } from './lib/content-policy.mjs';
+import { validatePoeIntro } from './lib/poe-intro.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const readJson = (path) => JSON.parse(readFileSync(resolve(root, path), 'utf8'));
@@ -157,6 +158,7 @@ for (const tool of poeTools.tools ?? []) {
       }
     }
   }
+  errors.push(...validatePoeIntro(tool, path => existsSync(resolve(root, 'public', `.${path}`))));
   const snapshot = releaseSnapshot.tools?.[tool.projectId];
   if (!snapshot) {
     errors.push(`releases.json: 缺少 ${tool.projectId} 的快照,請執行 npm run fetch-releases`);
