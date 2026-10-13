@@ -49,27 +49,28 @@ function buildTrend(entries: HistoryEntry[] | undefined, key: string, label: str
 }
 
 // 每日新增長條圖:一天一格。排程沒跑的日子,下一筆是多天合計,畫成橫跨那幾格、高度取平均,
-// 才不會把三天的量畫成單日暴衝。
+// 才不會把三天的量畫成單日暴衝。x 軸最多回溯 TREND_DAYS 天,更早的區間左緣會被截齊。
 const shortDate = (date: string) => date.slice(5);
 const signed = (value: number) => `${value >= 0 ? '+' : ''}${value.toLocaleString('zh-TW')}`;
 
 function buildBars(entries: HistoryEntry[] | undefined, key: string, label: string) {
   const gains = dailyGains(entries, key, TREND_DAYS, today);
   if (gains.length === 0) return null;
-  const start = dayNumber(gains[0].prevDate);
+  const start = Math.max(dayNumber(gains[0].prevDate), dayNumber(today) - TREND_DAYS);
   const slots = dayNumber(gains[gains.length - 1].date) - start;
   const { width, height, pad } = SPARK;
-  const slot = (width - pad * 2) / slots;
+  const slot = (width - pad * 2) / Math.max(slots, 1);
   const maxAverage = Math.max(...gains.map(gain => Math.max(gain.gain, 0) / gain.span), 1);
   const total = gains.reduce((sum, gain) => sum + gain.gain, 0);
   return {
     bars: gains.map(gain => {
       const barHeight = Math.max((Math.max(gain.gain, 0) / gain.span / maxAverage) * (height - pad * 2), 1);
       const average = Math.round(gain.gain / gain.span).toLocaleString('zh-TW');
+      const left = Math.max(dayNumber(gain.prevDate), start);
       return {
-        x: pad + (dayNumber(gain.prevDate) - start) * slot + 1,
+        x: pad + (left - start) * slot + 1,
         y: height - pad - barHeight,
-        width: Math.max(gain.span * slot - 2, 1),
+        width: Math.max((dayNumber(gain.date) - left) * slot - 2, 1),
         height: barHeight,
         title: gain.span === 1
           ? `${shortDate(gain.date)}：${signed(gain.gain)}`
@@ -85,7 +86,10 @@ function describeDelta(entries: HistoryEntry[] | undefined, key: string, source:
   const delta = latestDelta(entries, key);
   if (!delta) return null;
   if (source === 'manual') return `較上次（${delta.prevDate}）${signed(delta.gain)}`;
-  return delta.span === 1 ? `較前日 ${signed(delta.gain)}` : `較 ${shortDate(delta.prevDate)} ${signed(delta.gain)}（${delta.span} 天）`;
+  const spanNote = delta.span === 1 ? '' : `（${delta.span} 天）`;
+  // 歷史停更時最後一筆離今天很遠,要寫明是哪天的差值,不能冒充「較前日」。
+  if (dayNumber(delta.date) < dayNumber(today) - 1) return `${shortDate(delta.date)} 較 ${shortDate(delta.prevDate)} ${signed(delta.gain)}${spanNote}`;
+  return delta.span === 1 ? `較前日 ${signed(delta.gain)}` : `較 ${shortDate(delta.prevDate)} ${signed(delta.gain)}${spanNote}`;
 }
 
 const statusLabels: Record<string, string> = {

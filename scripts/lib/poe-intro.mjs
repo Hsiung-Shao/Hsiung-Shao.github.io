@@ -20,7 +20,7 @@ export function validatePoeIntro(tool, imageExists) {
     if (!Array.isArray(intro[field])) errors.push(`${label}: ${field} 必須是陣列`);
   }
   if (intro.image !== null) {
-    if (typeof intro.image !== 'string' || !intro.image.startsWith('/images/')) {
+    if (typeof intro.image !== 'string' || !intro.image.startsWith('/images/') || intro.image.split('/').some(seg => seg === '..' || seg === '.')) {
       errors.push(`${label}: image 必須是 null 或 /images/ 底下的路徑`);
     } else if (!imageExists(intro.image)) {
       errors.push(`${label}: 找不到圖片 public${intro.image}`);

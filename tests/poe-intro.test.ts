@@ -48,6 +48,12 @@ describe('/poe 工具介紹驗證', () => {
     expect(errors.every((message: string) => message.includes('sample-tool'))).toBe(true);
   });
 
+  it('圖片路徑含 .. 時回報錯誤', () => {
+    const errors = validatePoeIntro(completeTool({ image: '/images/../../package.json' }), () => true);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.every((message: string) => message.includes('sample-tool'))).toBe(true);
+  });
+
   it('圖片檔不存在時回報錯誤', () => {
     const imageExists = vi.fn(() => false);
     const errors = validatePoeIntro(completeTool({ image: '/images/poe/missing.png' }), imageExists);
