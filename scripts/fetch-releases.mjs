@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * 抓 PoE 工具頁需要的 GitHub Release 資料,寫進 src/data/releases.json(提交進 repo 的快照)。
+ * 抓 PoE 工具頁需要的 GitHub Release 資料,寫進 src/data/releases.json。
  *
- * - 本機:手動執行後 commit,更新快照。`npm run build` 不會呼叫這支,工作區不會被改髒。
- * - 部署:deploy.yml 在 build 前執行,結果只用於那次建置,不回寫 repo。
+ * 這個檔不進 main,存在 data 分支:deploy.yml 的 stats job 每天執行這支、再推上 data 分支;
+ * 建置與本機開發前由 pull-data 拉回 src/data/。本機手動執行只會改到自己的副本。
  *
  * 任一 repo 抓失敗時保留該工具的舊資料、印警告、仍以 0 結束——
  * 下載數晚一天更新,比整站部署失敗好。

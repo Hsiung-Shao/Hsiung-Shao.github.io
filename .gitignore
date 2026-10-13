@@ -14,3 +14,7 @@ scripts/pending-digest.md
 # 客戶真名只存在本機,絕不進版控(這個 repo 是公開的)
 scripts/protected-terms.local.json
 screenshots-inbox/
+
+# /poe 的下載數與歷史存在 data 分支,由 pull-data 拉到這裡,不進 main
+src/data/releases.json
+src/data/download-history.json

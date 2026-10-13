@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * 把今天的下載數寫進 src/data/download-history.json(每日排程在 fetch-releases 之後呼叫)。
+ * 把今天的下載數寫進 src/data/download-history.json(deploy.yml 的 stats job 在 fetch-releases 之後呼叫,
+ * 結果推上 data 分支;這個檔不進 main)。
  *
  * - 下載數:取 releases.json 快照的累計值,記在今天(台灣時間)。同一天重跑會覆蓋同一筆。
  * - 手動使用者數(Chrome 每週使用者):記在它的 asOf 日期,不是今天——手動值沒更新時,

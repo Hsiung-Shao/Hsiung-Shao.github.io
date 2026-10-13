@@ -3,7 +3,12 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
+    "predev": "node scripts/pull-data.mjs",
     "dev": "astro dev",
+    "prebuild": "node scripts/pull-data.mjs",
+    "prevalidate-content": "node scripts/pull-data.mjs",
+    "pretypecheck": "node scripts/pull-data.mjs",
+    "pull-data": "node scripts/pull-data.mjs",
     "build": "npm run validate-content && astro build",
     "validate-content": "node scripts/validate-content.mjs",
     "test": "vitest run",

@@ -4,13 +4,13 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  # 每天重建一次,讓 /poe 的下載數與版本跟上 GitHub Releases(UTC 20:00 = 台灣 04:00)。
+  # 每天抓一次下載數寫進 data 分支,再用新資料重建(UTC 20:00 = 台灣 04:00)。
   # 注意:repo 連續 60 天沒有活動時 GitHub 會停用排程,需到 Actions 頁手動重新啟用。
   schedule:
     - cron: '0 20 * * *'
 
 permissions:
-  contents: read
+  contents: write # stats job 要推 data 分支
   pages: write
   id-token: write
 
@@ -19,7 +19,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  # 下載數與歷史只存在 data 分支(main 不再提交),由這個 job 每天寫一筆。
+  # 只在排程與手動觸發時跑;push main 時略過,build 直接用 data 分支現有的版本。
+  stats:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -34,14 +37,54 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 更新 src/data/releases.json 只用於這次建置,不回寫 repo。
-      # 抓取失敗時腳本會保留已提交的快照;continue-on-error 是最後一道保險,下載數晚一天不該擋部署。
+      - name: Pull data branch
+        run: node scripts/pull-data.mjs
+
+      # 抓取失敗時腳本會保留舊資料並以 0 結束,今天只是沒有新的一筆。
       - name: Fetch release stats
         run: npm run fetch-releases
-        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Record history
+        run: npm run record-history
+
+      - name: Commit to data branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin data --depth=1
+          git worktree add ../data-branch FETCH_HEAD
+          cp src/data/releases.json src/data/download-history.json ../data-branch/
+          cd ../data-branch
+          git add releases.json download-history.json
+          if git diff --cached --quiet; then
+            echo '資料沒有變化,不 commit'
+          else
+            git commit -m "chore(data): $(TZ=Asia/Taipei date +%F)"
+            git push origin HEAD:data
+          fi
+
+  build:
+    needs: stats
+    # stats 被略過(push main)或成功時都要建置;stats 失敗時仍用 data 分支上次的版本部署,
+    # 下載數晚一天不該擋上線。
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # build 前的 prebuild 鉤子會跑 pull-data,從 data 分支拉 releases.json 與 download-history.json。
       # build 會先跑 validate-content。客戶真名不在這個公開 repo 裡,靠 secret 注入。
       #
       # REQUIRE_PROTECTED_TERMS=1 讓「拿不到識別詞」直接使建置失敗,不接受降級掃描。
@@ -61,6 +104,8 @@ jobs:
 
   deploy:
     needs: build
+    # 預設的 success() 會連 stats 被略過也一起算進來而跳過部署,所以明確只看 build。
+    if: ${{ !cancelled() && needs.build.result == 'success' }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages
