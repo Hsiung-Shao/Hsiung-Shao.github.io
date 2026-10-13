@@ -55,7 +55,7 @@
 
 ```bash
 npm run dev              # 開發伺服器
-npm test                 # vitest,58 個測試
+npm test                 # vitest,75 個測試
 npm run validate-content # 內容護欄(隱私掃描 + 資料結構),build 會自動先跑
 npm run build            # validate-content + astro build
 npm run typecheck        # astro check,必須 0 錯誤(CI 硬性 gate)
