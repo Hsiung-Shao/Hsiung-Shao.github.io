@@ -791,5 +791,37 @@
     "summary": "以已確認女聲案例的固定種子與設定，完成新原創熱血歌曲的 YuE2 單首試聽與技術檢查：長度約 200 秒、響度與峰值無警示；新曲仍待聆聽，發布狀態不變。",
     "tags": ["AI music", "QA"],
     "commits": []
+  },
+  {
+    "date": "2026-10-12",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "專案改採 PolyForm Noncommercial 1.0.0 授權並補上 LICENSE，README 依現況改寫週表、收藏與本地開發說明；關於頁、設定與首頁的 GitHub 按鈕改指向公開原始碼 repo，作者身分連結維持個人頁。",
+    "tags": ["license", "docs", "bugfix"],
+    "commits": ["542f7bc", "d61d5d1", "499926d"]
+  },
+  {
+    "date": "2026-10-13",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "新介面 76 個原生下拉選單全部換成自寫 Select：依可用空間往上或往下開、限高內捲、項目多時可搜尋且認得英文名，不再像 WebView2 原生清單長到視窗外；也修好編輯物品時詞綴區被壓成細縫的問題。",
+    "tags": ["UI", "Svelte", "bugfix"],
+    "commits": ["b584e4e", "8c01839"]
+  },
+  {
+    "date": "2026-10-13",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "新介面各頁改用扣掉側欄後的主區寬度當斷點重排，窄視窗時欄位上下堆疊、側欄可收合，並在 1024×640 到 1920×1080 幾種解析度量過沒有水平溢出；PoE1 字典也把 Burst 從誤譯的「地裂」改回「爆發」。",
+    "tags": ["UI", "RWD", "i18n"],
+    "commits": ["b5518bb", "356c9a2"]
+  },
+  {
+    "date": "2026-10-13",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "沿用已確認的女聲設定，再完成一首更有爆發力的 YuE2 新原創歌曲試聽：生成前把譜面從 180 提到 196 BPM 並縮減器樂重複，長約 194 秒、沒有截斷或削波；女聲與熱血感的聆聽驗收還沒確認。",
+    "tags": ["AI music", "QA"],
+    "commits": []
   }
 ]
