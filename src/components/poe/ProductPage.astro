@@ -43,12 +43,15 @@ const { product, stats, statsNote, images } = Astro.props;
 const isExternal = (href: string) => /^https?:\/\//.test(href);
 // 有截圖的段落做成圖文交錯的列,其餘照內容型別排版
 let featureIndex = 0;
-const sections = product.sections.map(section => ({
-  ...section,
-  number: String(product.sections.indexOf(section) + 1).padStart(2, '0'),
-  picture: section.image ? images[section.image] : undefined,
-  flip: section.image ? featureIndex++ % 2 === 1 : false,
-}));
+const sections = product.sections.map(section => {
+  const picture = section.image ? images[section.image] : undefined;
+  return {
+    ...section,
+    number: String(product.sections.indexOf(section) + 1).padStart(2, '0'),
+    picture,
+    flip: picture ? featureIndex++ % 2 === 1 : false,
+  };
+});
 ---
 
 <div class="product" style={`--p-accent: ${product.accent}`}>

@@ -7,6 +7,11 @@ const isText = value => typeof value === 'string' && value.trim() !== '';
 // Windows 會把 \ 當分隔符,所以兩種斜線都切
 const hasTraversal = path => path.split(/[\\/]/).some(segment => segment === '..' || segment === '.' || segment === '');
 
+// 副檔名要和 src/pages/poe/[slug].astro 的 import.meta.glob('/src/assets/poe/**/*.{png,jpg,webp}') 同步,
+// 不然驗證通過的圖在頁面裡查不到。含 ':' 的路徑(Windows 磁碟代號)一律拒絕。
+const IMAGE_EXTENSION = /\.(png|jpg|webp)$/i;
+const isValidImagePath = path => isText(path) && !hasTraversal(path) && !path.includes(':') && IMAGE_EXTENSION.test(path);
+
 function validateProduct(product, tools, imageExists) {
   const label = `poe-products.json(${product.slug})`;
   const errors = [];
@@ -24,7 +29,7 @@ function validateProduct(product, tools, imageExists) {
 
   for (const section of product.sections ?? []) {
     if (section.image === undefined) continue;
-    if (!isText(section.image) || hasTraversal(section.image)) {
+    if (!isValidImagePath(section.image)) {
       errors.push(`${label}: ${section.id} 的 image 必須是 src/assets/poe/ 底下的相對路徑`);
     } else if (!imageExists(section.image)) {
       errors.push(`${label}: 找不到截圖 src/assets/poe/${section.image}`);

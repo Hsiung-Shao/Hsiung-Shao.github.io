@@ -90,6 +90,18 @@ describe('/poe 產品頁資料驗證', () => {
     expectErrorsFor(errors, 'sample');
   });
 
+  it('截圖副檔名不是 png、jpg、webp 時報錯', () => {
+    const sections = [{ id: 'intro', title: '介紹', body: '內容', image: 'sample/shot.gif' }];
+    const errors = validatePoeProducts([product({ sections })], { tools, imageExists: alwaysExists });
+    expectErrorsFor(errors, 'sample');
+  });
+
+  it('截圖路徑含磁碟代號時報錯', () => {
+    const sections = [{ id: 'intro', title: '介紹', body: '內容', image: 'C:/shot.png' }];
+    const errors = validatePoeProducts([product({ sections })], { tools, imageExists: alwaysExists });
+    expectErrorsFor(errors, 'sample');
+  });
+
   it('截圖檔案不存在時報錯', () => {
     const errors = validatePoeProducts([product()], { tools, imageExists: () => false });
     expectErrorsFor(errors, 'sample');
