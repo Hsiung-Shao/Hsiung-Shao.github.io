@@ -1,0 +1,256 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+export interface ProductSection {
+  id: string;
+  kicker?: string;
+  title: string;
+  body?: string;
+  note?: string;
+  image?: string;
+  imageAlt?: string;
+  cards?: { tag?: string; title: string; body: string }[];
+  bullets?: string[];
+  steps?: string[];
+  table?: { columns: string[]; rows: string[][] };
+}
+
+export interface ProductStat {
+  value: string | null;
+  label: string;
+}
+
+export interface Product {
+  slug: string;
+  accent: string;
+  hero: { kicker: string; title: string; lede: string; chips: string[] };
+  ctas: { label: string; href: string; primary?: boolean }[];
+  sections: ProductSection[];
+  limits: string[];
+  closing: string;
+  disclaimer: string;
+}
+
+interface Props {
+  product: Product;
+  stats: ProductStat[];
+  statsNote: string | null;
+  images: Record<string, ImageMetadata>;
+}
+
+const { product, stats, statsNote, images } = Astro.props;
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+// 有截圖的段落做成圖文交錯的列,其餘照內容型別排版
+let featureIndex = 0;
+const sections = product.sections.map(section => ({
+  ...section,
+  number: String(product.sections.indexOf(section) + 1).padStart(2, '0'),
+  picture: section.image ? images[section.image] : undefined,
+  flip: section.image ? featureIndex++ % 2 === 1 : false,
+}));
+---
+
+<div class="product" style={`--p-accent: ${product.accent}`}>
+  <nav class="product-jump site-shell" aria-label="頁內導覽">
+    <a href="/poe">← PoE Tools</a>
+    {sections.map(section => <a href={`#${section.id}`}>{section.kicker ?? section.title}</a>)}
+  </nav>
+
+  <section class="product-hero site-shell">
+    <div class="product-hero-copy">
+      <span class="product-kicker">{product.hero.kicker}</span>
+      <h1>{product.hero.title}</h1>
+      <p class="product-lede">{product.hero.lede}</p>
+      <div class="product-ctas">
+        {product.ctas.map(cta => (
+          <a class:list={['product-btn', { primary: cta.primary }]} href={cta.href} target={isExternal(cta.href) ? '_blank' : undefined} rel={isExternal(cta.href) ? 'noopener noreferrer' : undefined}>
+            {cta.label}{isExternal(cta.href) && ' ↗'}
+          </a>
+        ))}
+      </div>
+      <div class="product-chips">{product.hero.chips.map(chip => <span>{chip}</span>)}</div>
+    </div>
+    <div class="product-hero-mockup">
+      <slot name="mockup" />
+    </div>
+  </section>
+
+  <section class="product-stats" aria-label="數字">
+    <div class="site-shell product-stats-grid">
+      {stats.map(stat => (
+        <div>
+          <span class:list={['product-stat-value', { pending: !stat.value }]}>{stat.value ?? '待更新'}</span>
+          <span class="product-stat-label">{stat.label}</span>
+        </div>
+      ))}
+    </div>
+    {statsNote && <p class="site-shell product-stats-note">{statsNote}</p>}
+  </section>
+
+  {sections.map(section => (
+    <section id={section.id} class:list={['product-section site-shell', { feature: section.picture, flip: section.flip }]}>
+      <div class="product-section-head">
+        <span class="product-kicker">{section.number} · {section.kicker ?? section.title}</span>
+        <h2>{section.title}</h2>
+        {section.body && <p>{section.body}</p>}
+        {section.note && <p class="product-note">{section.note}</p>}
+        {section.bullets && <ul class="product-bullets">{section.bullets.map(item => <li>{item}</li>)}</ul>}
+      </div>
+
+      {section.picture && (
+        <figure class="product-shot">
+          <Image src={section.picture} alt={section.imageAlt ?? section.title} widths={[720, 1440]} sizes="(max-width: 900px) 100vw, 720px" />
+        </figure>
+      )}
+
+      {section.cards && (
+        <div class="product-cards">
+          {section.cards.map(card => (
+            <div class="product-card">
+              {card.tag && <span class="product-card-tag">{card.tag}</span>}
+              <h3>{card.title}</h3>
+              <p>{card.body}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {section.steps && (
+        <ol class="product-steps">
+          {section.steps.map((step, index) => <li><span>{index + 1}</span>{step}</li>)}
+        </ol>
+      )}
+
+      {section.table && (
+        <div class="product-table">
+          <table>
+            <thead><tr>{section.table.columns.map(column => <th scope="col">{column}</th>)}</tr></thead>
+            <tbody>
+              {section.table.rows.map(row => (
+                <tr>{row.map((cell, index) => <td class:list={{ yes: index > 0 && !/不提供|本身/.test(cell) }}>{cell}</td>)}</tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+  ))}
+
+  {product.limits.length > 0 && (
+    <section class="product-section site-shell">
+      <div class="product-limits">
+        <h2>裝之前先知道</h2>
+        <ul>{product.limits.map(limit => <li>{limit}</li>)}</ul>
+      </div>
+    </section>
+  )}
+
+  <section class="product-closing">
+    <div class="site-shell product-closing-inner">
+      <h2>{product.closing}</h2>
+      <div class="product-ctas">
+        {product.ctas.map(cta => (
+          <a class:list={['product-btn', { primary: cta.primary }]} href={cta.href} target={isExternal(cta.href) ? '_blank' : undefined} rel={isExternal(cta.href) ? 'noopener noreferrer' : undefined}>
+            {cta.label}{isExternal(cta.href) && ' ↗'}
+          </a>
+        ))}
+      </div>
+    </div>
+    <p class="site-shell product-disclaimer">{product.disclaimer}</p>
+  </section>
+</div>
+
+<style>
+  .product {
+    --p-bg: #14120e;
+    --p-deep: #0e0d0a;
+    --p-bar: #18150f;
+    --p-surface: #1c1915;
+    --p-surface-2: #24201a;
+    --p-line: #37312a;
+    --p-line-strong: #4a4237;
+    --p-ink: #f1ead9;
+    --p-muted: #b9ae98;
+    --p-quiet: #8f856f;
+    --p-mod: #c9b8f0;
+    --p-english: #9cc3e6;
+    --p-rare: #e9c46a;
+    --p-serif: 'Noto Serif TC', serif;
+    --p-mono: var(--mono);
+    position: relative;
+    background: var(--p-bg);
+    color: var(--p-ink);
+    line-height: 1.7;
+  }
+
+  .product-jump { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; padding-top: 7rem; padding-bottom: 1rem; border-bottom: 1px solid var(--p-line); font-size: .85rem; }
+  .product-jump a { color: var(--p-muted); text-decoration: none; }
+  .product-jump a:hover { color: var(--p-accent); }
+
+  .product-hero { display: flex; flex-wrap: wrap; gap: 3.5rem; align-items: center; padding-top: 4rem; padding-bottom: 4rem; }
+  .product-hero-copy { flex: 1 1 420px; min-width: 0; display: grid; gap: 1.5rem; align-content: start; }
+  .product-hero-mockup { flex: 1 1 460px; min-width: 0; }
+  .product-kicker { color: var(--p-accent); font-family: var(--p-mono); font-size: .8rem; letter-spacing: .08em; }
+  .product-hero h1 { margin: 0; font-family: var(--p-serif); font-size: clamp(2.4rem, 5.2vw, 4.2rem); font-weight: 900; line-height: 1.15; white-space: pre-line; }
+  .product-lede { max-width: 32rem; margin: 0; color: var(--p-muted); font-size: 1.1rem; }
+  .product-ctas { display: flex; flex-wrap: wrap; gap: .75rem; }
+  .product-btn { display: inline-flex; min-height: 48px; align-items: center; padding: 0 1.4rem; border: 1px solid var(--p-line-strong); border-radius: 6px; color: var(--p-ink); text-decoration: none; }
+  .product-btn:hover { border-color: var(--p-accent); color: var(--p-accent); }
+  .product-btn.primary { border-color: var(--p-accent); background: var(--p-accent); color: var(--p-bg); font-weight: 700; }
+  .product-btn.primary:hover { background: var(--p-ink); border-color: var(--p-ink); color: var(--p-bg); }
+  .product-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .product-chips span { padding: .2rem .6rem; border-radius: 4px; background: var(--p-surface-2); color: var(--p-muted); font-family: var(--p-mono); font-size: .75rem; }
+
+  .product-stats { border-top: 1px solid var(--p-line); border-bottom: 1px solid var(--p-line); background: var(--p-bar); }
+  .product-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.75rem; padding-top: 2.25rem; padding-bottom: 2.25rem; }
+  .product-stats-grid > div { display: grid; gap: .25rem; }
+  .product-stat-value { color: var(--p-accent); font-family: var(--p-mono); font-size: 2.1rem; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.2; }
+  .product-stat-value.pending { color: var(--p-quiet); font-size: 1.3rem; }
+  .product-stat-label { color: var(--p-muted); font-size: .88rem; }
+  .product-stats-note { margin: 0; padding-bottom: 1.5rem; color: var(--p-quiet); font-size: .75rem; }
+
+  .product-section { display: grid; gap: 2.5rem; padding-top: 5.5rem; padding-bottom: 1.5rem; scroll-margin-top: 90px; }
+  .product-section-head { max-width: 40rem; display: grid; gap: .9rem; align-content: start; }
+  .product-section h2 { margin: 0; font-family: var(--p-serif); font-size: clamp(1.9rem, 3.4vw, 2.6rem); font-weight: 900; line-height: 1.25; }
+  .product-section-head p { margin: 0; color: var(--p-muted); }
+  .product-section-head .product-note { color: var(--p-quiet); font-size: .9rem; }
+  .product-bullets { display: grid; gap: .5rem; margin: 0; padding-left: 1.1rem; list-style: square; }
+
+  .product-section.feature { grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); align-items: center; gap: 3rem; }
+  .product-section.feature.flip .product-section-head { order: 2; }
+  .product-shot { margin: 0; overflow: hidden; border: 1px solid var(--p-line); border-radius: 10px; background: var(--p-deep); }
+  .product-shot :global(img) { display: block; width: 100%; height: auto; }
+
+  .product-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+  .product-card { display: grid; gap: .55rem; align-content: start; padding: 1.5rem; border-radius: 8px; background: var(--p-surface); }
+  .product-card h3 { margin: 0; font-size: 1.1rem; }
+  .product-card p { margin: 0; color: var(--p-muted); font-size: .9rem; }
+  .product-card-tag { color: var(--p-quiet); font-family: var(--p-mono); font-size: .75rem; }
+
+  .product-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none; }
+  .product-steps li { display: grid; gap: .5rem; padding: 1.5rem; border-radius: 8px; background: var(--p-surface); }
+  .product-steps span { color: var(--p-accent); font-family: var(--p-mono); font-size: 1.75rem; }
+
+  .product-table { overflow-x: auto; border: 1px solid var(--p-line); border-radius: 8px; }
+  .product-table table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: .95rem; }
+  .product-table th { padding: .9rem 1.1rem; background: var(--p-surface); text-align: left; }
+  .product-table th:first-child { color: var(--p-muted); font-weight: 500; }
+  .product-table td { padding: .75rem 1.1rem; border-top: 1px solid var(--p-line); color: var(--p-quiet); }
+  .product-table td:first-child { color: var(--p-muted); }
+  .product-table td.yes { color: var(--p-accent); }
+
+  .product-limits { display: grid; gap: .75rem; padding: 1.75rem 2rem; border: 1px solid var(--p-line); border-radius: 8px; }
+  .product-limits h2 { font-family: inherit; font-size: 1.05rem; font-weight: 700; }
+  .product-limits ul { display: grid; gap: .4rem; margin: 0; padding-left: 1.1rem; color: var(--p-muted); font-size: .92rem; list-style: square; }
+
+  .product-closing { margin-top: 5rem; border-top: 1px solid var(--p-line); }
+  .product-closing-inner { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between; padding-top: 4.5rem; padding-bottom: 3rem; }
+  .product-closing h2 { margin: 0; font-family: var(--p-serif); font-size: clamp(1.7rem, 3vw, 2.4rem); font-weight: 900; }
+  .product-disclaimer { margin: 0; padding-bottom: 3rem; color: var(--p-quiet); font-size: .75rem; }
+
+  @media (max-width: 900px) {
+    .product-section.feature { grid-template-columns: minmax(0, 1fr); }
+    .product-section.feature.flip .product-section-head { order: 0; }
+  }
+</style>

@@ -3,25 +3,7 @@
     {
       "projectId": "pobtools",
       "repo": "Hsiung-Shao/PobTools-zh",
-      "intro": {
-        "problem": "想用中文看 Path of Building，以前常遇到兩件事：社群翻譯跟不上賽季，POB 一更新中文化就壞掉。PobTools 從外面把翻譯帶進 POB，POB 自己照常更新，翻譯資料另外單獨更新。",
-        "audience": "用 Path of Building 配 BD 的繁中玩家，PoE1 和 PoE2 都可以。",
-        "features": [
-          "POB 介面和詞綴換成繁中，約 10 萬組對照取自官方遊戲客戶端，也可以切簡中、韓文或英文",
-          "內建字典編輯器，看到不順的譯名可以直接改",
-          "物品過濾器編輯器，有中文和圖示",
-          "輿圖策略可以存多個方案、用分享碼互傳，新賽季會自動更新",
-          "軍團珠寶種子計算器，支援中文搜尋並直接開交易連結",
-          "搜尋字串（regex）產生器，PoE1、PoE2 都能用"
-        ],
-        "support": ["PoE1 / PoE2", "Windows 10 / 11", "需自備 Path of Building Community"],
-        "privacy": "不改磁碟上的 POB 檔案，翻譯只在記憶體裡注入；也不碰遊戲本身。自動更新會先驗 ECDSA 簽章，驗不過就不裝，手動下載可以用 SHA256SUMS 核對。",
-        "limits": [
-          "沒有程式碼簽章憑證，防毒軟體可能誤判",
-          "非官方的粉絲工具，使用風險自負"
-        ],
-        "image": null
-      },
+      "slug": "pobtools",
       "primaryUrl": "https://github.com/Hsiung-Shao/PobTools-zh/releases/latest",
       "primaryLabel": "下載最新版",
       "assets": {
@@ -39,25 +21,7 @@
     {
       "projectId": "poe-market-translate",
       "repo": "Hsiung-Shao/poe-market-zh",
-      "intro": {
-        "problem": "國際服的官方交易站只有英文。裝了這個擴充，詞綴、篩選器和搜尋結果都會變成中文，滑鼠移過去還看得到英文原文，搜尋也可以存成書籤分資料夾管理。",
-        "audience": "常用官方交易站、想用中文找東西的玩家，國際服和台服都適用。",
-        "features": [
-          "交易站介面、詞綴、篩選器中文化，搜尋結果即時翻譯，hover 看英文原文",
-          "書籤側邊欄，兩層資料夾、可以拖曳排序，換季後舊書籤照樣能開",
-          "貼上 PoB code，依部位自動建好交易搜尋（PoE1）",
-          "多關鍵字和模糊搜尋，打「移速」或「phy gem」都找得到",
-          "搜尋歷史最多保留 20 筆",
-          "選用：poe.ninja 物價查詢、poe.ninja 與 pobb.in 頁面中文化"
-        ],
-        "support": ["PoE1 /trade、PoE2 /trade2", "國際服 / 台服", "Chrome、Firefox 140+"],
-        "privacy": "不傳任何使用者資料給開發者或第三方，沒有分析、追蹤或廣告，資料只存在你的瀏覽器。poe.ninja 是選用權限，沒授權就不會發請求。",
-        "limits": [
-          "PoE2 目前沒有 PoB 匯入和物價查詢，物價只支援國際服 PoE1",
-          "官網改版時可能暫時壞掉，要等擴充更新"
-        ],
-        "image": null
-      },
+      "slug": "market-zh",
       "primaryUrl": "https://chromewebstore.google.com/detail/poe-market-zh/ipnmbepaghlkapopikbpcchblhfkieed",
       "primaryLabel": "Chrome 線上應用程式商店",
       "assets": {
@@ -74,27 +38,7 @@
     {
       "projectId": "exile-appraiser",
       "repo": "Hsiung-Shao/exile-appraiser",
-      "intro": {
-        "problem": "在遊戲裡滑鼠指著物品按 Ctrl+D，官方交易站的查價結果就直接出現在游標旁邊，不用切出去開網頁。",
-        "audience": "PoE1、PoE2 玩家，繁中或英文客戶端，國際服或台服都可以。",
-        "features": [
-          "遊戲內 overlay 查價，結果面板出現在游標旁",
-          "依前景視窗自動切換 PoE1 / PoE2",
-          "PoE2 靈魂之井三選一用 Windows OCR 辨識，直接標出詞綴 Tier、詞綴池和數值範圍",
-          "PoE2 符文塑形自動標 poe.ninja 參考價",
-          "內建 regex 搜尋字串產生器和 PoE1 拆粉排行",
-          "聊天指令和倉庫搜尋熱鍵，例如一鍵 /hideout"
-        ],
-        "support": ["PoE1 / PoE2", "國際服 / 台服（台服限繁中客戶端）", "僅 Windows"],
-        "privacy": "OCR 在本機跑，截圖不存檔也不上傳；查價是匿名的，不用登入也不用 POESESSID。錯誤回報會先整理好，由你自己確認後才送出。",
-        "limits": [
-          "遊戲要用無邊框或視窗模式，全螢幕獨占時 overlay 可能蓋不上",
-          "沒有程式碼簽章，第一次執行會跳 SmartScreen",
-          "台服沒有 poe.ninja 價格",
-          "OCR 需要 Windows 內建的繁中或英文 OCR 語言包"
-        ],
-        "image": null
-      },
+      "slug": "exile-appraiser",
       "primaryUrl": "https://github.com/Hsiung-Shao/exile-appraiser/releases/latest",
       "primaryLabel": "下載最新版",
       "assets": {

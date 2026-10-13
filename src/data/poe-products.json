@@ -1,0 +1,267 @@
+[
+  {
+    "slug": "market-zh",
+    "projectId": "poe-market-translate",
+    "accent": "#e3a94b",
+    "hero": {
+      "kicker": "PATH OF EXILE 交易站助手",
+      "title": "國際服交易站，\n用中文找東西。",
+      "lede": "篩選器、詞綴和搜尋結果換成繁體中文，滑鼠停一下就看得到英文原文。常用的搜尋存成書籤，分資料夾管理，換季也打得開。",
+      "chips": ["PoE1 /trade", "PoE2 /trade2", "pathofexile.com", "pathofexile.tw", "Chrome · Firefox 140+"]
+    },
+    "ctas": [
+      { "label": "Chrome 線上應用程式商店", "href": "https://chromewebstore.google.com/detail/poe-market-zh/ipnmbepaghlkapopikbpcchblhfkieed", "primary": true },
+      { "label": "安裝與使用教學", "href": "/blog/poe-market-zh-guide" },
+      { "label": "GitHub 手動安裝包", "href": "https://github.com/Hsiung-Shao/poe-market-zh/releases" }
+    ],
+    "stats": [
+      { "source": "static", "value": "20,000+", "label": "PoE1 詞綴對照" },
+      { "source": "static", "value": "8,000+", "label": "PoE2 詞綴對照" },
+      { "source": "manual", "key": "users", "label": "Chrome 每週使用者" },
+      { "source": "static", "value": "2 × 2", "label": "國際服、台服 × PoE1、PoE2，依網址自動判斷" }
+    ],
+    "sections": [
+      {
+        "id": "localize",
+        "kicker": "中文化",
+        "title": "打中文、打英文、打縮寫，都找得到。",
+        "body": "只在國際服、介面選中文時生效。下拉選單用「中文 (English)」對照顯示，兩種語言都能搜；不想用了，一鍵切回英文，重新整理就生效。",
+        "cards": [
+          { "title": "篩選器完整中文化", "body": "欄位標題、群組標題、靜態下拉選項都換成中文。" },
+          { "title": "多關鍵字廣義配對", "body": "輸入「phy gem」就找得到 Physical…Gems 的詞綴，中英可以混著打。" },
+          { "title": "搜尋結果即時翻譯", "body": "結果列的詞綴直接翻好，滑鼠停留看英文原文；開「詞綴雙語顯示」就常駐在中文下方。" },
+          { "title": "物品名與傳奇名", "body": "物品和傳奇名稱也翻；PoE1 另外有天賦卡（星團珠寶、塗油）和傭兵契約書。" }
+        ]
+      },
+      {
+        "id": "bookmarks",
+        "kicker": "書籤側邊欄",
+        "title": "常用的搜尋，換季也打得開。",
+        "body": "兩層資料夾，可以拖曳排序、選遊戲圖示、釘選常用的。國際服和台服的書籤分開放，站內再分 PoE1、PoE2，開哪一款就切到哪一邊。",
+        "bullets": [
+          "各站、各款各自記住自己的聯盟，書籤不會被套上別的聯盟",
+          "最近開過的搜尋自動記錄，可以直接存成書籤，或取代既有書籤",
+          "從 PoE Trade Extension 或 Better PathOfExile Trading 匯入現有書籤",
+          "完整備份匯出與還原，也可以只匯出或只匯入其中一款"
+        ]
+      },
+      {
+        "id": "extras",
+        "kicker": "小功能",
+        "title": "常常用到的那幾下。",
+        "cards": [
+          { "tag": "PoE1", "title": "貼 PoB code 建整套搜尋", "body": "從 Path of Building code 匯入整套裝備，依部位各建一個交易搜尋。" },
+          { "tag": "PoE1 · PoE2", "title": "＋ / − 一鍵篩選", "body": "搜尋結果每條詞綴旁有按鈕，點一下就加入篩選或排除。" },
+          { "tag": "PoE2", "title": "複製物品文字進 PoB", "body": "PoE2 搜尋結果可以複製物品文字，直接貼進 Path of Building。" }
+        ]
+      },
+      {
+        "id": "ninja",
+        "kicker": "選用功能",
+        "title": "poe.ninja 和 pobb.in 也能看中文。",
+        "body": "流派、角色、物價、天賦樹頁，還有 pobb.in 的配裝頁：物品、詞綴、天賦、昇華、技能和網站介面字都換成繁中，物品浮窗和技能說明一起翻，滑鼠停留看英文原文。聯盟名稱維持英文。",
+        "note": "要另外同意這兩個網站的存取權限才會啟用。名稱資料只在打開該代遊戲的網頁時才下載；跟物價查詢共用 poe.ninja 權限，關掉中文化不影響物價。"
+      },
+      {
+        "id": "sites",
+        "kicker": "兩個交易站",
+        "title": "台服本來就是中文，所以只給工具。",
+        "body": "台服頁面不載入任何翻譯資料，書籤、歷史、＋/− 按鈕和 PoB 匯入照常能用。",
+        "table": {
+          "columns": ["功能", "國際服 pathofexile.com", "台服 pathofexile.tw"],
+          "rows": [
+            ["介面與詞綴中文化", "有", "頁面本身是中文"],
+            ["詞綴雙語顯示", "有", "不提供"],
+            ["通貨物價查詢", "PoE1，選用", "不提供"],
+            ["書籤側邊欄與搜尋歷史", "有", "有"],
+            ["＋/− 篩選按鈕", "有", "有"],
+            ["PoB 匯入（PoE1）", "有", "有"]
+          ]
+        }
+      },
+      {
+        "id": "privacy",
+        "kicker": "資料與隱私",
+        "title": "資料只在你的瀏覽器。",
+        "cards": [
+          { "title": "譯名從哪來", "body": "翻譯資料用官方美服與台服的 trade data API 依 id 對接產生，再用遊戲檔文本補缺。字典是線上更新的，修正譯名不用重裝擴充；抓不到時依序退回本機快取和擴充內建版本。" },
+          { "title": "不收集任何資料", "body": "書籤和搜尋紀錄只存在你的瀏覽器，隨時可以清除或匯出。對外連線只拿公開資料；poe.ninja / pobb.in 中文化只在瀏覽器內替換文字，不會送出頁面內容。" },
+          { "title": "Prefer English?", "body": "Pick English on first install: the trade site stays in official English and no translation data is downloaded. Bookmarks, history, +/− buttons, PoB import and backups all still work." }
+        ]
+      }
+    ],
+    "limits": [],
+    "closing": "裝好，打開交易站就能用。",
+    "disclaimer": "本擴充為玩家社群工具，與 Grinding Gear Games 無關。Path of Exile 為 Grinding Gear Games 的商標。"
+  },
+  {
+    "slug": "pobtools",
+    "projectId": "pobtools",
+    "accent": "#7fc0a8",
+    "hero": {
+      "kicker": "PATH OF BUILDING 繁中化啟動器",
+      "title": "POB 照常更新，\n中文不會壞。",
+      "lede": "PobTools 從外面把翻譯帶進 Path of Building，磁碟上的 POB 一個檔都不改。約 10 萬組英中對照取自官方遊戲客戶端，翻譯資料和程式分開更新。",
+      "chips": ["PoE1 · PoE2", "Windows 10 / 11", "需自備 Path of Building Community"]
+    },
+    "ctas": [
+      { "label": "下載最新版", "href": "https://github.com/Hsiung-Shao/PobTools-zh/releases/latest", "primary": true },
+      { "label": "安裝與使用教學", "href": "/blog/pobtools-installation-guide" }
+    ],
+    "stats": [
+      { "source": "static", "value": "~100,000", "label": "組英中對照，取自官方客戶端" },
+      { "source": "downloads", "key": "full", "label": "完整包下載次數" },
+      { "source": "downloads", "key": "data", "label": "翻譯資料更新下載次數" },
+      { "source": "static", "value": "2", "label": "條發佈線：程式、翻譯資料各自更新" }
+    ],
+    "sections": [
+      {
+        "id": "pob-zh",
+        "kicker": "中文化",
+        "title": "配 BD 的畫面，整個是中文。",
+        "body": "裝備欄、物品清單、角色數值都換成繁中。POB 有新版時照常更新，翻譯不會因此壞掉。",
+        "image": "pobtools/hero-pob-zh.png",
+        "imageAlt": "PobTools 物品分頁，裝備欄與物品清單顯示繁體中文"
+      },
+      {
+        "id": "launcher",
+        "kicker": "啟動器",
+        "title": "一個啟動器，PoE1、PoE2 都在這。",
+        "body": "自動偵測兩代的 POB 版本，按一下就開。常用工具和外部連結都放在主畫面。",
+        "image": "pobtools/launcher.png",
+        "imageAlt": "PobTools 啟動器主畫面，有 PoE1、PoE2 兩張遊戲卡片與工具列"
+      },
+      {
+        "id": "dict",
+        "kicker": "翻譯編輯器",
+        "title": "看到不順的譯名，自己改。",
+        "body": "英文 key 對照繁中譯文，可以搜尋、篩出改過的條目，改完直接生效。",
+        "image": "pobtools/dict-editor.png",
+        "imageAlt": "翻譯編輯器列出英文 key 與繁中譯文"
+      },
+      {
+        "id": "atlas",
+        "kicker": "輿圖策略",
+        "title": "輿圖配點、星盤和聖甲蟲，一頁排好。",
+        "body": "存多個方案、用分享碼互傳，新賽季會自動更新。",
+        "image": "pobtools/atlas.png",
+        "imageAlt": "輿圖策略配點頁，左側輿圖天賦樹，右側星盤與地圖格"
+      },
+      {
+        "id": "timeless",
+        "kicker": "軍團珠寶",
+        "title": "想要的詞綴挑好，種子幫你找。",
+        "body": "支援中文搜尋詞綴，算完直接開交易站連結。",
+        "image": "pobtools/timeless.png",
+        "imageAlt": "軍團珠寶計算器，左側詞綴清單，中間天賦樹"
+      },
+      {
+        "id": "regex",
+        "kicker": "Poe Regex",
+        "title": "勾選詞綴，產生遊戲內搜尋字串。",
+        "body": "PoE1、PoE2 都可以，輸出繁中或英文的搜尋字串，常用組合可以存成書籤。",
+        "image": "pobtools/regex.png",
+        "imageAlt": "Poe Regex 頁面，勾選詞綴後右側產生搜尋字串"
+      },
+      {
+        "id": "more",
+        "kicker": "其他",
+        "title": "還有幾個小工具。",
+        "cards": [
+          { "title": "物品過濾器編輯器", "body": "NeverSink 式的過濾器編輯，有中文和圖示。" },
+          { "title": "介面語言與字型", "body": "介面可切繁中、简中、한국어、English，字型也可以換。" }
+        ]
+      },
+      {
+        "id": "safety",
+        "kicker": "安全性",
+        "title": "不改 POB，不碰遊戲。",
+        "cards": [
+          { "title": "翻譯只在記憶體裡", "body": "磁碟上的 POB 檔案不動，POB 自己更新也不會把中文化弄壞。" },
+          { "title": "不碰遊戲本身", "body": "不注入遊戲行程，也不讀寫遊戲記憶體。" },
+          { "title": "更新先驗簽章", "body": "自動更新用編譯進 exe 的公鑰驗 ECDSA P-256 簽章，驗不過一律不裝。手動下載可以用 SHA256SUMS 核對。" }
+        ]
+      },
+      {
+        "id": "install",
+        "kicker": "安裝",
+        "title": "三步，雙擊就開。",
+        "steps": [
+          "到 GitHub Releases 下載 PobTools-<版本>.zip 並解壓",
+          "把你的 Path of Building 資料夾放在 pob-zh.exe 旁邊",
+          "雙擊 pob-zh.exe，翻譯資料之後會自動更新"
+        ]
+      }
+    ],
+    "limits": [
+      "沒有程式碼簽章憑證，防毒軟體可能誤判",
+      "這是非官方的粉絲工具，使用風險自負"
+    ],
+    "closing": "中文的 POB，今天就能用。",
+    "disclaimer": "非官方粉絲工具，與 Grinding Gear Games 無關。"
+  },
+  {
+    "slug": "exile-appraiser",
+    "projectId": "exile-appraiser",
+    "accent": "#e0714a",
+    "hero": {
+      "kicker": "遊戲內查價 · POE1 / POE2",
+      "title": "指著物品，\n按 Ctrl+D。",
+      "lede": "官方交易站的查價結果直接出現在游標旁邊，不用切出遊戲開網頁。繁中或英文客戶端、國際服或台服都能解析。",
+      "chips": ["Windows", "國際服 · 台服", "繁中 · 英文客戶端", "無邊框 / 視窗模式"]
+    },
+    "ctas": [
+      { "label": "下載安裝版", "href": "https://github.com/Hsiung-Shao/exile-appraiser/releases/latest", "primary": true },
+      { "label": "安裝與使用教學", "href": "/blog/exile-appraiser-guide" }
+    ],
+    "stats": [
+      { "source": "downloads", "key": "combined", "label": "累計下載次數，含自動更新" },
+      { "source": "static", "value": "2 × 2", "label": "PoE1、PoE2 × 國際服、台服" },
+      { "source": "static", "value": "0", "label": "需要登入或 POESESSID 的地方" }
+    ],
+    "sections": [
+      {
+        "id": "features",
+        "kicker": "功能",
+        "title": "查價之外，PoE2 的面板它也看得懂。",
+        "cards": [
+          { "tag": "PoE1 · PoE2", "title": "游標旁的 overlay 查價", "body": "結果面板疊在遊戲上，依前景視窗自動切換 PoE1 或 PoE2。" },
+          { "tag": "PoE2", "title": "靈魂之井三選一辨識", "body": "用 Windows OCR 讀面板，直接標出褻瀆詞綴的 Tier、詞綴池和數值範圍。" },
+          { "tag": "PoE2", "title": "符文塑形參考價", "body": "符文塑形面板自動標上 poe.ninja 參考價。" },
+          { "tag": "PoE1 · PoE2", "title": "Regex 搜尋字串產生器", "body": "內建 Poe Regex 產生器，PoE1 另外有拆粉排行。" },
+          { "tag": "PoE1 · PoE2", "title": "聊天指令熱鍵", "body": "常用聊天指令和倉庫搜尋綁熱鍵，例如一鍵 /hideout。" },
+          { "tag": "安裝版", "title": "背景自動更新", "body": "安裝版不用管理員權限，會在背景更新；免安裝版不自動更新。" }
+        ]
+      },
+      {
+        "id": "privacy",
+        "kicker": "隱私",
+        "title": "截圖不存檔，也不送按鍵給遊戲。",
+        "bullets": [
+          "OCR 在你的電腦上跑，截圖不存檔、不上傳",
+          "查價是匿名的，不用登入，也不用 POESESSID",
+          "查價失敗時會整理成 GitHub issue 草稿，由你確認後自己送出",
+          "記錄只存在本機，保留 7 天"
+        ]
+      },
+      {
+        "id": "install",
+        "kicker": "安裝",
+        "title": "兩種版本，挑一個。",
+        "cards": [
+          { "tag": "建議", "title": "ExileAppraiser-Setup-<版本>.exe", "body": "免管理員權限，會自動更新。" },
+          { "tag": "免安裝", "title": "ExileAppraiser-<版本>-portable.exe", "body": "不會自動更新，新版要自己下載。" }
+        ]
+      }
+    ],
+    "limits": [
+      "沒有程式碼簽章，第一次執行會跳 SmartScreen，選「其他資訊 → 仍要執行」",
+      "遊戲要用無邊框或視窗模式，全螢幕獨占時 overlay 可能蓋不上",
+      "交易站有 Cloudflare，第一次要手動驗證一次",
+      "OCR 需要 Windows 內建的繁中或英文 OCR 語言包",
+      "台服沒有 poe.ninja 價格"
+    ],
+    "closing": "下次撿到東西，按一下就知道價。",
+    "disclaimer": "非官方粉絲工具，與 Grinding Gear Games 無關。Path of Exile 為 Grinding Gear Games 的商標。"
+  }
+]

@@ -6,7 +6,7 @@ import {
   loadProtectedTerms,
   scanProjectContent,
 } from './lib/content-policy.mjs';
-import { validatePoeIntro } from './lib/poe-intro.mjs';
+import { validatePoeProducts } from './lib/poe-products.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const readJson = (path) => JSON.parse(readFileSync(resolve(root, path), 'utf8'));
@@ -158,12 +158,23 @@ for (const tool of poeTools.tools ?? []) {
       }
     }
   }
-  errors.push(...validatePoeIntro(tool, path => existsSync(resolve(root, 'public', `.${path}`))));
   const snapshot = releaseSnapshot.tools?.[tool.projectId];
   if (!snapshot) {
     errors.push(`releases.json: 缺少 ${tool.projectId} 的快照,請執行 npm run fetch-releases`);
   } else if (!snapshot.downloads || !Array.isArray(snapshot.recent) || !snapshot.fetchedAt) {
     errors.push(`releases.json(${tool.projectId}): 快照結構不完整`);
+  }
+}
+
+// /poe/<slug> 產品頁:slug 不重複、統計指得到真的下載規則、截圖檔存在且沒有路徑穿越。
+const poeProducts = readJson('src/data/poe-products.json');
+errors.push(...validatePoeProducts(poeProducts, {
+  tools: poeTools.tools ?? [],
+  imageExists: path => existsSync(resolve(root, 'src/assets/poe', path)),
+}));
+for (const tool of poeTools.tools ?? []) {
+  if (!poeProducts.some(product => product.slug === tool.slug)) {
+    errors.push(`poe-tools.json(${tool.projectId}): slug ${tool.slug} 沒有對應的產品頁`);
   }
 }
 

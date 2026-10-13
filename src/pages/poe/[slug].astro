@@ -1,0 +1,52 @@
+---
+import type { ImageMetadata } from 'astro';
+import Layout from '../../layouts/Layout.astro';
+import ProductPage, { type Product, type ProductStat } from '../../components/poe/ProductPage.astro';
+import MarketMockup from '../../components/react/poe/MarketMockup';
+import PobMockup from '../../components/react/poe/PobMockup';
+import ExileMockup from '../../components/react/poe/ExileMockup';
+import { projects } from '../../data/projects';
+import poeProducts from '../../data/poe-products.json';
+import poeTools from '../../data/poe-tools.json';
+import releaseSnapshot from '../../data/releases.json';
+
+export function getStaticPaths() {
+  return poeProducts.map(product => ({ params: { slug: product.slug } }));
+}
+
+const product = poeProducts.find(candidate => candidate.slug === Astro.params.slug)!;
+const tool = poeTools.tools.find(candidate => candidate.projectId === product.projectId)!;
+const project = projects.find(candidate => candidate.id === product.projectId)!;
+const snapshot = (releaseSnapshot.tools as Record<string, { downloads: Record<string, number>; fetchedAt: string }>)[product.projectId];
+const manual = tool.manual as Record<string, { value: number | null; asOf: string | null }>;
+
+// 截圖放在 src/assets/poe/<slug>/,交給 astro:assets 轉檔與產生多尺寸
+const imageModules = import.meta.glob<{ default: ImageMetadata }>('/src/assets/poe/**/*.{png,jpg,webp}', { eager: true });
+const images = Object.fromEntries(
+  Object.entries(imageModules).map(([path, module]) => [path.replace('/src/assets/poe/', ''), module.default]),
+);
+
+// 數字沿用 /poe 的口徑:下載數來自 releases.json 快照、Chrome 使用者來自人工填寫,都標上日期
+const formatCount = (value: number | null | undefined) => (typeof value === 'number' ? value.toLocaleString('zh-TW') : null);
+const snapshotDate = snapshot ? new Date(snapshot.fetchedAt).toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' }) : null;
+const stats: ProductStat[] = product.stats.map(stat => {
+  if (stat.source === 'downloads') return { value: formatCount(snapshot?.downloads[stat.key!]), label: stat.label };
+  if (stat.source === 'manual') {
+    const entry = manual[stat.key!];
+    return { value: formatCount(entry?.value), label: entry?.asOf ? `${stat.label}（${entry.asOf}）` : stat.label };
+  }
+  return { value: stat.value ?? null, label: stat.label };
+});
+const hasDownloads = product.stats.some(stat => stat.source === 'downloads');
+const statsNote = hasDownloads && snapshotDate
+  ? `下載次數取自 GitHub Releases（${snapshotDate}），是檔案下載次數，不是使用人數。`
+  : null;
+---
+
+<Layout title={`${project.title} | PoE Tools`} description={product.hero.lede}>
+  <ProductPage product={product as Product} stats={stats} statsNote={statsNote} images={images}>
+    {product.slug === 'market-zh' && <MarketMockup slot="mockup" client:visible />}
+    {product.slug === 'pobtools' && <PobMockup slot="mockup" client:visible />}
+    {product.slug === 'exile-appraiser' && <ExileMockup slot="mockup" client:visible />}
+  </ProductPage>
+</Layout>
