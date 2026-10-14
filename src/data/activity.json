@@ -823,5 +823,21 @@
     "summary": "沿用已確認的女聲設定，再完成一首更有爆發力的 YuE2 新原創歌曲試聽：生成前把譜面從 180 提到 196 BPM 並縮減器樂重複，長約 194 秒、沒有截斷或削波；女聲與熱血感的聆聽驗收還沒確認。",
     "tags": ["AI music", "QA"],
     "commits": []
+  },
+  {
+    "date": "2026-10-14",
+    "project": "個人網站",
+    "tier": "personal",
+    "summary": "/poe 新增 PobTools、Poe Market zh、ExileAppraiser 三個產品頁，首屏改用 React 互動示意，PobTools 實機截圖轉成 webp；下載數改畫 30 天每日新增長條圖並標「較前日」，缺日的紀錄攤平成多格，不把幾天合計畫成單日暴衝。",
+    "tags": ["Astro", "React", "dataviz"],
+    "commits": ["a5f41c2", "4411af0", "52ec589", "fd1eb8e"]
+  },
+  {
+    "date": "2026-10-14",
+    "project": "個人網站",
+    "tier": "personal",
+    "summary": "下載數改由 GitHub Actions 每天抓取並寫進獨立的 data 分支，電腦沒開也會累積歷史，main 不再追蹤這兩個資料檔；建置與開發前自動拉取，拉不到就沿用本機副本。CI 也一併升級到 Node 24。",
+    "tags": ["CI", "automation"],
+    "commits": ["37f2e67", "13e0625"]
   }
 ]
