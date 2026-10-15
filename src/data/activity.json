@@ -839,5 +839,37 @@
     "summary": "下載數改由 GitHub Actions 每天抓取並寫進獨立的 data 分支，電腦沒開也會累積歷史，main 不再追蹤這兩個資料檔；建置與開發前自動拉取，拉不到就沿用本機副本。CI 也一併升級到 Node 24。",
     "tags": ["CI", "automation"],
     "commits": ["37f2e67", "13e0625"]
+  },
+  {
+    "date": "2026-10-14",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "週表讀圖腳本收進 X 來源：用 x-handles 名單收集 X 時間軸上的週表貼文，同一來源依發文時間取代舊結果；原本只在另一個 worktree 未提交的改動，這次和 main 的 0 列待審防再發邏輯合併進主線。",
+    "tags": ["feature", "VTuber", "schedule"],
+    "commits": ["7c67c5c"]
+  },
+  {
+    "date": "2026-10-14",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "讀圖週表沒寫時間的列改收成「時間未定」場次，前端與個人頁以台北日期分天顯示，日期早於今天的直接剔除；企業勢與子團頻道先掃，掃描游標改成複合鍵。",
+    "tags": ["feature", "schedule", "Supabase"],
+    "commits": ["57e6d04"]
+  },
+  {
+    "date": "2026-10-14",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "時間未定場次的合併規則：只由發文時間（announced_at）之後的開台兌現，同篇貼文同日已有具體時間就不合併，主場次結束即一起過期；一批列裡時間未定過半改送人工審核，組列與送審邏輯抽成純函式補測試。",
+    "tags": ["schedule", "Supabase", "testing"],
+    "commits": ["bcd372c", "7e7391f", "052090d", "e173460", "e10fa3a"]
+  },
+  {
+    "date": "2026-10-14",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "用 YouTube Data API 讀頻道上傳清單、以完整標題比對，確認〈午前二時の生放送〉〈幕間に星を盗む〉〈片道ぶんの春〉〈借りものじゃない歌〉都已公開，移進已上架並補上公開網址與日期；〈借りものじゃない歌〉的 Shorts 仍是 private。",
+    "tags": ["YouTube", "automation"],
+    "commits": []
   }
 ]
