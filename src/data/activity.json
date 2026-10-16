@@ -871,5 +871,21 @@
     "summary": "用 YouTube Data API 讀頻道上傳清單、以完整標題比對，確認〈午前二時の生放送〉〈幕間に星を盗む〉〈片道ぶんの春〉〈借りものじゃない歌〉都已公開，移進已上架並補上公開網址與日期；〈借りものじゃない歌〉的 Shorts 仍是 private。",
     "tags": ["YouTube", "automation"],
     "commits": []
+  },
+  {
+    "date": "2026-10-15",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "新增 YouTube 上架時間對照表工具：讀快取的每日分析 CSV 與上傳清單，逐支列出上架時段與上架後 48 小時的觀看、曝光與 CTR，再依「類型 × 時段」取中位數；切日直接用報表自帶的時間範圍，不寫死時區。",
+    "tags": ["YouTube", "analytics", "tooling"],
+    "commits": []
+  },
+  {
+    "date": "2026-10-15",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "新曲〈測れるもんなら〉連做四版：先放寬生成條件改善人聲太平與高潮提早斷，歌詞兩度被否決後改由 Codex 作詞、Claude 審稿，並用 ACE-Step Cover 保留第一版的曲，以 chroma 與能量相關挑出最接近原曲的第四版，仍待試聽。",
+    "tags": ["music", "generation", "workflow"],
+    "commits": []
   }
 ]
