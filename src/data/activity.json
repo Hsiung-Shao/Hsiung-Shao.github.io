@@ -887,5 +887,13 @@
     "summary": "新曲〈測れるもんなら〉連做四版：先放寬生成條件改善人聲太平與高潮提早斷，歌詞兩度被否決後改由 Codex 作詞、Claude 審稿，並用 ACE-Step Cover 保留第一版的曲，以 chroma 與能量相關挑出最接近原曲的第四版，仍待試聽。",
     "tags": ["music", "generation", "workflow"],
     "commits": []
+  },
+  {
+    "date": "2026-10-20",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "新增 YuE2 序列生成佇列：六首自選曲風新歌先備好詞稿、日文讀音與詞曲企劃，背景一次只跑一首，沿用已確認的女聲設定；偏離與錯誤照實記下、不自動重抽。首曲已開始作曲，其餘排隊中，音訊都還沒完成。",
+    "tags": ["music", "generation", "tooling"],
+    "commits": []
   }
 ]
