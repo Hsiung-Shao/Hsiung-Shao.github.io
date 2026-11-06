@@ -314,7 +314,8 @@ a.media-card:hover img { transform: scale(1.02); }
 
 @media print {
   @page { size: A4; margin: 12mm 14mm; }
-  body.site:has(.cv) { background: #fff; color: #111; }
+  /* html 也要改白:body 內容結束後,頁面剩下的部分會露出 html 的深色背景 */
+  html:has(.cv), body.site:has(.cv) { background: #fff; color: #111; }
   body:has(.cv) .site-nav, body:has(.cv) .site-footer, body:has(.cv) .nav-mobile, .cv-actions { display: none !important; }
   .cv-page * { color: #111 !important; background: transparent !important; border-color: #bbb !important; box-shadow: none !important; }
   .cv-page { font-size: 10.5pt; }

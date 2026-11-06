@@ -61,29 +61,32 @@ const inProjects = inSection('/projects');
 </nav>
 
 <script>
-  function setupNav() {
-    const toggle = document.getElementById('nav-toggle');
-    const menu = document.getElementById('nav-mobile');
-    const dropdown = document.querySelector<HTMLDetailsElement>('[data-nav-menu]');
-    if (!toggle || !menu || toggle.dataset.bound === 'true') return;
-    toggle.dataset.bound = 'true';
-    const setMobile = (open: boolean) => {
-      toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? '關閉選單' : '開啟選單');
-      menu.classList.toggle('is-open', open);
-    };
-    toggle.addEventListener('click', () => setMobile(toggle.getAttribute('aria-expanded') !== 'true'));
-    // 點選單外面、按 Esc 都會關;視窗加寬到桌機版時也關掉手機選單,不然切換鈕藏起來就關不掉
-    document.addEventListener('click', event => {
-      if (dropdown?.open && !dropdown.contains(event.target as Node)) dropdown.open = false;
-    });
-    document.addEventListener('keydown', event => {
-      if (event.key !== 'Escape') return;
-      if (dropdown?.open) dropdown.open = false;
-      if (menu.classList.contains('is-open')) setMobile(false);
-    });
-    window.matchMedia('(min-width: 901px)').addEventListener('change', event => { if (event.matches) setMobile(false); });
+  // ClientRouter 換頁會換掉整個導覽列,所以每次都從 document 重新取當前節點
+  const nodes = () => ({
+    toggle: document.getElementById('nav-toggle'),
+    menu: document.getElementById('nav-mobile'),
+    dropdown: document.querySelector<HTMLDetailsElement>('[data-nav-menu]'),
+  });
+  function setMobile(open: boolean) {
+    const { toggle, menu } = nodes();
+    if (!toggle || !menu) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? '關閉選單' : '開啟選單');
+    menu.classList.toggle('is-open', open);
   }
-  document.addEventListener('astro:page-load', setupNav);
-  setupNav();
+
+  // 全域監聽器只掛一次(這段 script 在整個瀏覽期間只執行一次);
+  // 點選單外面、按 Esc 都會關,視窗加寬到桌機版時也關掉手機選單,不然切換鈕藏起來就關不掉
+  document.addEventListener('click', event => {
+    const { toggle, dropdown } = nodes();
+    if (toggle && toggle.contains(event.target as Node)) setMobile(toggle.getAttribute('aria-expanded') !== 'true');
+    if (dropdown?.open && !dropdown.contains(event.target as Node)) dropdown.open = false;
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    const { dropdown, menu } = nodes();
+    if (dropdown?.open) dropdown.open = false;
+    if (menu?.classList.contains('is-open')) setMobile(false);
+  });
+  window.matchMedia('(min-width: 901px)').addEventListener('change', event => { if (event.matches) setMobile(false); });
 </script>
