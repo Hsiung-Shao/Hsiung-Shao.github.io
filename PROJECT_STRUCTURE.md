@@ -5,10 +5,9 @@
 | Category | Technology |
 |---|---|
 | Framework | Astro 5 |
-| Interactive UI | React 19 + TypeScript |
-| Styling | Tailwind CSS 4 |
-| Motion | Astro ClientRouter + native Web Animations API |
-| 3D | Three.js + React Three Fiber |
+| Pages | Astro components, no client framework islands |
+| Styling | Hand-written design system in `src/styles/site.css`; legacy pages still use Tailwind CSS 4 and `global.css` |
+| Motion | Astro ClientRouter + CSS hover transitions |
 | Content | JSON data + Markdown rendering with marked |
 | Deployment | GitHub Pages + GitHub Actions |
 
@@ -29,8 +28,6 @@ myweb/
 |   `-- validate-content.mjs
 |-- src/
 |   |-- components/
-|   |   |-- react/
-|   |   `-- three/
 |   |-- data/
 |   |   `-- guides/
 |   |-- layouts/
@@ -52,15 +49,19 @@ myweb/
 - `src/data/guides/` - Long-form public usage guides with verified screenshots and procedures.
 - `src/pages/blog/` - Static blog index and article routes.
 - `src/components/Analytics.astro` - Site-wide GA4 page views and delegated support-link conversion events.
-- `src/components/MotionSystem.astro` - Shared page transitions, scroll reveals, progress, parallax, tilt, and reduced-motion behavior.
-- `src/components/SpatialScene.astro` - Persistent route-aware Three.js environment with project textures, spatial route artifacts, lifecycle cleanup, and reduced-motion fallback.
-- `src/components/react/ProjectCard.tsx` - Interactive portfolio card with status and article actions.
+- `src/data/products.json` + `src/data/products.ts` - Content, stat sources, and screenshots for the five `/projects/<slug>` pages.
+- `src/components/ProductPage.astro` - Renders a product page from its section types (feature, cards, table, steps, bullets, songs).
+- `src/components/Home.astro` - Home page: latest release card, PoE tools, other projects, recent activity and posts.
+- `src/pages/downloads.astro` - Download counts with daily-gain charts built at build time and a native series toggle.
+- `scripts/lib/products.mjs` - Validates product data before builds.
+- `scripts/lib/release-notes.mjs` - Splits GitHub release notes into fix / add / change sections.
+- `scripts/lib/download-chart.mjs` - Lays out daily-gain bars in day units, merging gaps left by skipped schedule runs.
 - `scripts/projects.config.json` - Source repositories and per-project content policy. Protected entries carry de-identified aliases only.
 - `scripts/update-site.mjs` - Generates a review digest from allowed Git histories.
 - `scripts/lib/git-history.mjs` - Selects bounded Git log ranges and recovers from rewritten history baselines.
 - `scripts/lib/content-policy.mjs` - Shared privacy guardrail: loads protected terms from a CI secret or a gitignored local file, then scans `src/` and `public/` for leaks. Used by both the build validator and the test suite.
 - `scripts/validate-content.mjs` - Validates content schema and privacy invariants before builds.
-- `tests/` - Vitest suite covering the privacy guardrail, data-layer invariants, Git log range selection, and React component smoke tests.
+- `tests/` - Vitest suite covering the privacy guardrail, data-layer invariants, Git log range selection, product data validation, release-note splitting, and chart layout.
 - `CLAUDE.md` - Working rules for agents: the privacy invariant, the Git log sync handoff, commands, and known pitfalls.
 - `.github/workflows/ci.yml` - Pull-request gate: validate, test, build, plus an advisory type check.
 - `.github/workflows/deploy.yml` - Builds and deploys to GitHub Pages on pushes to `main`; requires protected terms to be present.
@@ -76,6 +77,7 @@ myweb/
 
 | Date | Changes |
 |---|---|
+| 2026-11-06 | Redesign phase 1 from the Claude Design dark "A" direction: new home, five `/projects/<slug>` product pages (adding MultiStream Hub and Kumori Music), `/downloads` with per-series toggles, redirects from `/poe/*` and `/concepts/*`, and removal of Three.js, React, the concept pages, and the cinematic home. |
 | 2026-10-02 | Logged a month of cross-project activity (headless engine rewrite, browser fallback path, extension data-source recovery), drafted three engineering retrospectives, and completed the directory and module inventory. |
 | 2026-09-18 | Documented the full Git Log synchronization handoff, including baselines, deduplication, content rules, privacy boundaries, and verification. |
 | 2026-09-08 | Made Git activity sync recover safely from rewritten history and refreshed recent project activity. |

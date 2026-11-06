@@ -1,0 +1,35 @@
+---
+import { splitReleaseSections } from '../../scripts/lib/release-notes.mjs';
+import type { ReleaseEntry } from '../../scripts/lib/releases.mjs';
+import { releaseDate } from '../data/products';
+
+interface Props {
+  name: string;
+  release: ReleaseEntry;
+  /** 每段最多顯示幾條,首頁只放重點 */
+  limit?: number;
+  footLeft?: string;
+  footHref?: string;
+  footLabel?: string;
+}
+
+const { name, release, limit = Infinity, footLeft, footHref = release.url, footLabel = '看完整更新紀錄' } = Astro.props;
+const sections = splitReleaseSections(release.body).map(section => ({ ...section, items: section.items.slice(0, limit) }));
+const external = /^https?:\/\//.test(footHref);
+---
+
+<article class="release">
+  <div class="release-head"><span>{name} {release.tag}</span><span>{releaseDate(release.publishedAt)}</span></div>
+  <div class="release-body">
+    {sections.map(section => (
+      <>
+        <h3>{section.title}</h3>
+        <ul>{section.items.map(item => <li>{item}</li>)}</ul>
+      </>
+    ))}
+  </div>
+  <div class="release-foot">
+    <span>{footLeft}</span>
+    <a class="more" href={footHref} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>{footLabel}</a>
+  </div>
+</article>

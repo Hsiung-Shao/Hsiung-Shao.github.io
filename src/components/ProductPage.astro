@@ -1,0 +1,202 @@
+---
+import { Image } from 'astro:assets';
+import ReleaseCard from './ReleaseCard.astro';
+import { imageFor, resolveStats, snapshotDate, snapshotFor, youtubeThumb, youtubeUrl, type Product } from '../data/products';
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+const linkAttrs = (href: string) => (isExternal(href) ? { target: '_blank', rel: 'noopener noreferrer' } : {});
+
+const heroImage = imageFor(product.hero.image);
+const stats = resolveStats(product);
+const hasDownloads = product.stats.some(stat => stat.source === 'downloads');
+const fetchedOn = snapshotDate(product.projectId);
+const statsNote = hasDownloads && fetchedOn ? `下載次數取自 GitHub Releases（${fetchedOn}），是檔案下載次數，不是使用人數。` : null;
+const latest = product.release ? snapshotFor(product.projectId)?.recent[0] : undefined;
+const releaseCount = snapshotFor(product.projectId)?.releaseCount;
+
+// 首屏標題裡要畫成按鍵的字(ExileAppraiser 的 Ctrl+D),拆成前後兩段
+const [titleBefore, titleAfter] = product.hero.titleKey
+  ? [product.hero.title.split(product.hero.titleKey)[0], product.hero.title.split(product.hero.titleKey).slice(1).join(product.hero.titleKey)]
+  : [product.hero.title, ''];
+
+// 有截圖的段落做成圖文交錯,其餘依內容型別排版;卡片段落交替用淺底
+let featureIndex = 0;
+let blockIndex = 0;
+const sections = product.sections.map(section => {
+  const picture = imageFor(section.image);
+  const kind = picture ? 'feature' : section.cards ? 'cards' : section.table ? 'table' : section.steps ? 'steps' : 'bullets';
+  return { ...section, picture, kind, flip: picture ? featureIndex++ % 2 === 1 : false, alt: !picture && blockIndex++ % 2 === 0 };
+});
+// 連續的圖文段落放在同一個 section 裡,分隔線才不會重複
+type Built = (typeof sections)[number];
+const groups: Built[][] = [];
+for (const section of sections) {
+  const last = groups.at(-1);
+  if (section.kind === 'feature' && last?.[0].kind === 'feature') last.push(section);
+  else groups.push([section]);
+}
+const recentSongs = (product.songs ?? []).slice(0, 8);
+const primary = product.ctas.find(cta => cta.primary) ?? product.ctas[0];
+// 只有直接下載 GitHub Releases 的按鈕才標版本號,商店安裝的版本由商店決定
+const withVersion = (cta: { href: string; primary?: boolean }) => (cta.primary && latest && cta.href.includes('/releases') ? ` ${latest.tag}` : '');
+---
+
+<section class="hero">
+  <div class:list={['wrap', { 'hero-grid': (heroImage && !product.hero.wide) || (!heroImage && recentSongs.length > 0) }]}>
+    <div style={product.hero.wide ? 'max-width: 820px' : undefined}>
+      <p class="kick">{product.hero.kicker}</p>
+      <h1 class="h1">{titleBefore}{product.hero.titleKey && <span class="key">{product.hero.titleKey}</span>}{titleAfter}</h1>
+      <p class="lede">{product.hero.lede}</p>
+      {product.hero.chips && <ul class="chips">{product.hero.chips.map(chip => <li class="chip">{chip}</li>)}</ul>}
+      <div class="btns">
+        {product.ctas.map(cta => <a class:list={['btn', cta.primary ? 'btn-main' : 'btn-sub']} href={cta.href} {...linkAttrs(cta.href)}>{cta.label}{withVersion(cta)}</a>)}
+      </div>
+    </div>
+    {heroImage && (
+      <figure class="shot" style={product.hero.wide ? 'margin-top: 56px' : undefined}>
+        <Image src={heroImage} alt={product.hero.imageAlt ?? product.name} widths={[720, 1440]} sizes={product.hero.wide ? '(max-width: 1200px) 100vw, 1120px' : '(max-width: 900px) 100vw, 640px'} loading="eager" />
+      </figure>
+    )}
+    {!heroImage && recentSongs[0] && (
+      <a class="shot song" href={youtubeUrl(recentSongs.at(-1)!.youtubeId)} target="_blank" rel="noopener noreferrer" style="border-radius: 14px">
+        <img src={youtubeThumb(product.songs!.at(-1)!.youtubeId)} alt={`〈${product.songs!.at(-1)!.title}〉的影片縮圖`} width="480" height="360" />
+        <div class="song-meta"><span class="ptag">第一首 · {product.songs!.at(-1)!.date}</span><div class="song-title">{product.songs!.at(-1)!.title}</div></div>
+      </a>
+    )}
+  </div>
+</section>
+
+{stats.length > 0 && (
+  <section class="stat-strip">
+    <div class="wrap">
+      <div class="grid">
+        {stats.map(stat => <div><div class="stat-num">{stat.value ?? '待更新'}</div><div class="stat-label">{stat.label}</div></div>)}
+      </div>
+      {statsNote && <p class="stat-note">{statsNote}<a class="more" href="/downloads" style="margin-left: 8px">看每日下載數</a></p>}
+    </div>
+  </section>
+)}
+
+{recentSongs.length > 0 && (
+  <section class="sec alt" id="songs">
+    <div class="wrap">
+      <div class="head-row"><h2 class="h2">最近公開的 {recentSongs.length} 首</h2><span class="note">共 {product.songs!.length} 首，依公開日期排列</span></div>
+      <div class="grid songs">
+        {recentSongs.map(song => (
+          <a class="song" href={youtubeUrl(song.youtubeId)} target="_blank" rel="noopener noreferrer">
+            <img src={youtubeThumb(song.youtubeId)} alt={`〈${song.title}〉的影片縮圖`} width="480" height="360" loading="lazy" />
+            <div class="song-meta"><span class="ptag">{song.date.slice(5)} · {song.tag}</span><div class="song-title">{song.title}</div></div>
+          </a>
+        ))}
+      </div>
+      {product.songs!.length > recentSongs.length && (
+        <details style="margin-top: 28px">
+          <summary class="more" style="cursor: pointer; list-style: none">看全部 {product.songs!.length} 首</summary>
+          <ul class="list" style="margin-top: 16px">
+            {product.songs!.slice(recentSongs.length).map(song => <li><span><a href={youtubeUrl(song.youtubeId)} target="_blank" rel="noopener noreferrer" style="font-weight: 700">{song.title}</a><span class="note" style="margin-left: 12px">{song.date} · {song.tag}</span></span></li>)}
+          </ul>
+        </details>
+      )}
+    </div>
+  </section>
+)}
+
+{groups.map(group => group[0].kind === 'feature' ? (
+  <section class="sec" style="padding-block: 24px">
+    <div class="wrap">
+      {group.map(section => (
+        <div id={section.id} class:list={['feat', { flip: section.flip }]}>
+          <div class="feat-text">
+            {section.kicker && <p class="kick">{section.kicker}</p>}
+            <h2 class="h2" style="font-size: 32px">{section.title}</h2>
+            {section.body && <p class="sub">{section.body}</p>}
+          </div>
+          <figure class="shot"><Image src={section.picture!} alt={section.imageAlt ?? section.title} widths={[720, 1440]} sizes="(max-width: 900px) 100vw, 680px" /></figure>
+        </div>
+      ))}
+    </div>
+  </section>
+) : group.map(section => (
+  <section id={section.id} class:list={['sec', { alt: section.alt }]}>
+    <div class="wrap">
+      {section.kind === 'bullets' || section.kind === 'steps' ? (
+        <div class="split">
+          <div>
+            {section.kicker && <p class="kick">{section.kicker}</p>}
+            <h2 class="h2">{section.title}</h2>
+            {section.body && <p class="sub">{section.body}</p>}
+            {section.kind === 'steps' && product.limits.length > 0 && (
+              <div class="limits"><strong>先講清楚的地方</strong><ul>{product.limits.map(limit => <li>{limit}</li>)}</ul></div>
+            )}
+          </div>
+          <div>
+            {section.kind === 'steps'
+              ? <ol class="list big">{section.steps!.map(step => <li><span>{step}</span></li>)}</ol>
+              : <ul class="list">{section.bullets?.map(item => <li><span>{item}</span></li>)}</ul>}
+          </div>
+        </div>
+      ) : (
+        <>
+          {section.kicker && <p class="kick">{section.kicker}</p>}
+          <h2 class="h2">{section.title}</h2>
+          {section.body && <p class="sub">{section.body}</p>}
+          <div style="margin-top: 36px">
+            {section.kind === 'cards' && (
+              <div class:list={['grid', section.cards!.length === 3 || section.cards!.length > 4 ? 'g3' : 'auto']}>
+                {section.cards!.map(card => <div class="box">{card.tag && <span class="ptag">{card.tag}</span>}<h3 class="h3" style={card.tag ? 'margin-top: 10px' : undefined}>{card.title}</h3><p class="body">{card.body}</p></div>)}
+              </div>
+            )}
+            {section.kind === 'table' && (
+              <div class="tbl-box">
+                <table class="tbl">
+                  <thead><tr>{section.table!.columns.map(column => <th scope="col">{column}</th>)}</tr></thead>
+                  <tbody>{section.table!.rows.map(row => <tr>{row.map(cell => <td>{cell}</td>)}</tr>)}</tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+)))}
+
+{!product.sections.some(section => section.steps) && product.limits.length > 0 && (
+  <section class="sec">
+    <div class="wrap"><div class="limits" style="margin-top: 0"><strong>先講清楚的地方</strong><ul>{product.limits.map(limit => <li>{limit}</li>)}</ul></div></div>
+  </section>
+)}
+
+{latest && (
+  <section class="sec alt">
+    <div class="wrap split">
+      <div>
+        <h2 class="h2">最新版 {latest.tag}</h2>
+        <p class="sub">每一版改了什麼都寫在 GitHub Releases。{releaseCount ? `目前共 ${releaseCount} 個版本。` : ''}</p>
+      </div>
+      <ReleaseCard name={product.name} release={latest} footLeft={releaseCount ? `共 ${releaseCount} 個版本` : undefined} footLabel="看全部更新紀錄" footHref={latest.url.replace(/\/tag\/[^/]+$/, '')} />
+    </div>
+  </section>
+)}
+
+<section class="sec sunk closing">
+  <div class="wrap">
+    <h2 class="h2">{product.closing}</h2>
+    <div class="btns">
+      {primary && <a class="btn btn-main" href={primary.href} {...linkAttrs(primary.href)}>{primary.label}{withVersion(primary)}</a>}
+      {product.ctas.filter(cta => cta !== primary).map(cta => <a class="btn btn-sub" href={cta.href} {...linkAttrs(cta.href)}>{cta.label}</a>)}
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="padding-block: 28px">
+  <div class="wrap" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--faint)">
+    <span>{product.disclaimer}</span>
+    {product.links && <span style="display: flex; flex-wrap: wrap; gap: 20px">{product.links.map(link => <a href={link.href} {...linkAttrs(link.href)}>{link.label}</a>)}</span>}
+  </div>
+</section>

@@ -1,5 +1,5 @@
 /**
- * 從 data 分支把 /poe 的下載數資料拉到 src/data/。
+ * 從 data 分支把 /downloads 的下載數資料拉到 src/data/。
  *
  * 這兩個檔不進 main:deploy.yml 的 stats job 每天寫進 data 分支,建置與本機開發前由這裡拉回來。
  * git 與檔案操作由呼叫端注入,方便測試不碰真的 repo。

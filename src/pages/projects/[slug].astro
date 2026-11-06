@@ -1,0 +1,15 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProductPage from '../../components/ProductPage.astro';
+import { products } from '../../data/products';
+
+export function getStaticPaths() {
+  return products.map(product => ({ params: { slug: product.slug } }));
+}
+
+const product = products.find(candidate => candidate.slug === Astro.params.slug)!;
+---
+
+<Layout title={`${product.name} | 熊少愆`} description={product.hero.lede} accent={product.accent} fresh>
+  <ProductPage product={product} />
+</Layout>

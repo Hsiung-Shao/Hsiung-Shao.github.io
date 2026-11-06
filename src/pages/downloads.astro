@@ -1,0 +1,220 @@
+---
+import { marked } from 'marked';
+import Layout from '../layouts/Layout.astro';
+import poeTools from '../data/poe-tools.json';
+import downloadHistory from '../data/download-history.json';
+import { products, formatCount, snapshotFor, releaseDate } from '../data/products';
+import { buildDailyBars } from '../../scripts/lib/download-chart.mjs';
+import { latestDelta, taipeiDate, type HistoryEntry } from '../../scripts/lib/download-history.mjs';
+
+// JSON 匯入推斷出的是逐筆的聯集型別,先轉 unknown 再收斂成歷史結構(驗證器負責擋格式錯誤)。
+const histories = downloadHistory as unknown as Record<string, HistoryEntry[]>;
+const today = taipeiDate();
+const DAYS = 30;
+const CHART = { width: 600, height: 180 };
+const dayNumber = (date: string) => Date.parse(`${date}T00:00:00Z`) / 86_400_000;
+const shortDate = (date: string) => date.slice(5);
+const signed = (value: number) => `${value >= 0 ? '+' : ''}${value.toLocaleString('zh-TW')}`;
+
+// 「較前日」:下載數是累計值,差值就是新增;Chrome 每週使用者不是累計值,改寫「較上次」並允許負值。
+// 歷史停更時最後一筆離今天很遠,要寫明是哪天的差值,不能冒充「較前日」。
+function describeDelta(entries: HistoryEntry[] | undefined, key: string, source: string) {
+  const delta = latestDelta(entries, key);
+  if (!delta) return null;
+  if (source === 'manual') return `較上次（${shortDate(delta.prevDate)}）${signed(delta.gain)}`;
+  const spanNote = delta.span === 1 ? '' : `（${delta.span} 天）`;
+  if (dayNumber(delta.date) < dayNumber(today) - 1) return `${shortDate(delta.date)} 較 ${shortDate(delta.prevDate)} ${signed(delta.gain)}${spanNote}`;
+  return delta.span === 1 ? `較前日 ${signed(delta.gain)}` : `較 ${shortDate(delta.prevDate)} ${signed(delta.gain)}${spanNote}`;
+}
+
+// 累計下載數畫每日新增長條(跳日合併成一根、高度取日均);每週使用者不是累計值,畫數值本身的折線
+function dailyChart(entries: HistoryEntry[] | undefined, key: string) {
+  const result = buildDailyBars(entries, key, { days: DAYS, today });
+  if (!result) return null;
+  const slot = CHART.width / Math.max(result.slots, 1);
+  const bars = result.bars.map(bar => {
+    const height = Math.max(bar.height * (CHART.height - 16), 2);
+    return {
+      x: bar.x * slot + 1,
+      width: Math.max(bar.width * slot - 2, 1),
+      y: CHART.height - height,
+      height,
+      title: bar.span === 1
+        ? `${shortDate(bar.date)}：${signed(bar.gain)}`
+        : `${shortDate(bar.prevDate)} ~ ${shortDate(bar.date)} 共 ${bar.span} 天：${signed(bar.gain)}（平均 ${Math.round(bar.average).toLocaleString('zh-TW')}/天）`,
+    };
+  });
+  const first = result.bars[0];
+  const last = result.bars[result.bars.length - 1];
+  return {
+    kind: 'bars' as const,
+    bars,
+    axis: [first.prevDate, last.date],
+    summary: `近 ${DAYS} 天共 ${signed(result.total)}`,
+  };
+}
+
+function valueChart(entries: HistoryEntry[] | undefined, key: string) {
+  const points = (entries ?? []).filter(entry => typeof entry[key] === 'number');
+  if (points.length < 2) return null;
+  const values = points.map(entry => entry[key] as number);
+  const [min, max] = [Math.min(...values), Math.max(...values)];
+  const [start, end] = [dayNumber(points[0].date), dayNumber(points[points.length - 1].date)];
+  const pad = 8;
+  const marks = points.map(entry => ({
+    x: pad + ((dayNumber(entry.date) - start) / Math.max(end - start, 1)) * (CHART.width - pad * 2),
+    y: max === min ? CHART.height / 2 : pad + (1 - ((entry[key] as number) - min) / (max - min)) * (CHART.height - pad * 2),
+    title: `${shortDate(entry.date)}：${(entry[key] as number).toLocaleString('zh-TW')}`,
+  }));
+  return {
+    kind: 'line' as const,
+    polyline: marks.map(mark => `${mark.x.toFixed(1)},${mark.y.toFixed(1)}`).join(' '),
+    marks,
+    axis: [points[0].date, points[points.length - 1].date],
+    summary: `${points[0].date.slice(5)} ${values[0].toLocaleString('zh-TW')} → ${points[points.length - 1].date.slice(5)} ${values[values.length - 1].toLocaleString('zh-TW')}`,
+  };
+}
+
+const tools = await Promise.all(poeTools.tools.map(async tool => {
+  const product = products.find(candidate => candidate.projectId === tool.projectId)!;
+  const snapshot = snapshotFor(tool.projectId);
+  const history = histories[tool.projectId];
+  const manual = tool.manual as Record<string, { value: number | null; asOf: string | null }>;
+  // Chrome 每週使用者是唯一接近人數的數字,放在第一個;其餘依 poe-tools.json 的順序
+  const stats = [...tool.stats].sort((a, b) => Number(b.source === 'manual') - Number(a.source === 'manual'));
+  const series = stats.map(stat => {
+    const isManual = stat.source === 'manual';
+    const entry = isManual ? manual[stat.key] : undefined;
+    return {
+      key: stat.key,
+      label: stat.label,
+      note: stat.note,
+      value: isManual ? formatCount(entry?.value) : formatCount(snapshot?.downloads[stat.key]),
+      asOf: entry?.asOf ?? null,
+      delta: describeDelta(history, stat.key, stat.source),
+      chart: isManual ? valueChart(history, stat.key) : dailyChart(history, stat.key),
+    };
+  });
+  const releases = await Promise.all((snapshot?.recent ?? []).map(async release => ({
+    ...release,
+    date: releaseDate(release.publishedAt),
+    html: await marked.parse(release.body),
+  })));
+  return { ...tool, product, series, releases, releaseCount: snapshot?.releaseCount ?? 0 };
+}));
+
+const fetchedTimes = tools.map(tool => snapshotFor(tool.projectId)?.fetchedAt).filter(Boolean).sort() as string[];
+const oldestFetch = fetchedTimes[0] ? releaseDate(fetchedTimes[0]) : null;
+
+const rules = [
+  ['PobTools 完整包', 'PobTools-<版本>.zip', '包含 beta 版；早期的 Translations 包也算在這裡。'],
+  ['PobTools 程式更新', 'PobTools-update-*.zip', '程式內自動更新下載的。'],
+  ['PobTools 翻譯資料', 'PobTools-Data-<N>.zip', '多數由程式自動下載，一個人會下載很多次。'],
+  ['Poe Market zh 每週使用者', 'Chrome 後台 CSV', '沒有 API，手動匯出回填，會過期。'],
+  ['Poe Market zh 手動安裝包', 'poe-market-zh-*.zip', '只算 GitHub 下載，商店安裝的不在內。'],
+  ['ExileAppraiser', 'Setup.exe + portable.exe', '自動更新和新安裝下載的是同一個檔案，拆不開，所以合計。'],
+];
+---
+
+<Layout title="工具下載數 | 熊少愆" description="PobTools、Poe Market zh、ExileAppraiser 三個 Path of Exile 繁中工具的下載數、每日新增與最近幾版更新內容。" fresh>
+  <section class="hero" style="padding-bottom: 48px">
+    <div class="wrap">
+      <h1 class="h1" style="font-size: 48px">三個 PoE 工具的下載數</h1>
+      <p class="lede" style="max-width: 46em">GitHub 只給得出檔案下載次數，自動更新也會算進去，所以這裡的數字不是使用人數。Chrome 每週使用者是唯一接近人數的數字，從後台匯出後手動更新。每天台灣時間 04:00 由 GitHub Actions 記一次，歷史從 10-04 開始累積。</p>
+      <div class="grid g3" style="margin-top: 44px">
+        {tools.map(tool => (
+          <a class="card" href={`#${tool.slug}`} style={`--p-accent: ${tool.product.accent}`}>
+            <div style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px"><span style="font-weight: 700">{tool.product.name}</span><span class="mono" style="font-size: 12px; color: var(--p-accent)">{tool.series[0].delta ?? ''}</span></div>
+            <div class="mono" style="font-size: 36px; font-weight: 600; margin-top: 14px; color: var(--p-accent)">{tool.series[0].value ?? '待更新'}</div>
+            <div class="note" style="margin-top: 4px">{tool.series[0].label}{tool.series[0].asOf && `（${tool.series[0].asOf.slice(5)}）`}</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {tools.map(tool => (
+    <section class="sec" id={tool.slug} style={`--p-accent: ${tool.product.accent}; scroll-margin-top: 80px`} data-chart-group>
+      <div class="wrap">
+        <div class="head-row" style="margin-bottom: 0">
+          <h2 class="h2" style="font-size: 30px">{tool.product.name}</h2>
+          <span class="mono note">{tool.releases[0] ? `${tool.releases[0].tag} · ${tool.releases[0].date} · ` : ''}{tool.releaseCount} 個版本</span>
+        </div>
+        {tool.series.length > 1 && (
+          <div class="series" role="group" aria-label={`${tool.product.name} 要看哪個數字`}>
+            {tool.series.map((series, index) => <button type="button" class="seg" data-series={series.key} aria-pressed={index === 0 ? 'true' : 'false'}>{series.label}</button>)}
+          </div>
+        )}
+        {tool.series.map((series, index) => (
+          <div class="chart" data-panel={series.key} hidden={index > 0} style={tool.series.length > 1 ? undefined : 'margin-top: 26px'}>
+            <div class="chart-total">
+              <div><span class="mono" style="font-size: 32px; font-weight: 600">{series.value ?? '待更新'}</span><span class="note" style="margin-left: 10px; font-size: 14px">{series.label}{series.asOf && `（${series.asOf}）`}</span></div>
+              <span class="body" style="font-size: 14px">{[series.delta, series.chart?.summary].filter(Boolean).join(' · ')}</span>
+            </div>
+            {series.chart?.kind === 'bars' && (
+              <svg viewBox={`0 0 ${CHART.width} ${CHART.height}`} preserveAspectRatio="none" role="img" aria-label={`${series.label}每日新增，${series.chart.summary}`}>
+                <line class="base" x1="0" x2={CHART.width} y1={CHART.height - 0.5} y2={CHART.height - 0.5} vector-effect="non-scaling-stroke" />
+                {series.chart.bars.map(bar => <rect class="bar" x={bar.x.toFixed(1)} y={bar.y.toFixed(1)} width={bar.width.toFixed(1)} height={bar.height.toFixed(1)} rx="2"><title>{bar.title}</title></rect>)}
+              </svg>
+            )}
+            {series.chart?.kind === 'line' && (
+              <svg viewBox={`0 0 ${CHART.width} ${CHART.height}`} preserveAspectRatio="none" role="img" aria-label={`${series.label}，${series.chart.summary}`}>
+                <polyline points={series.chart.polyline} fill="none" stroke="var(--p-accent)" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+                {series.chart.marks.map(mark => <circle cx={mark.x} cy={mark.y} r="6" fill="transparent"><title>{mark.title}</title></circle>)}
+              </svg>
+            )}
+            {!series.chart && <p class="note">資料還在累積，兩天以上才會畫圖。</p>}
+            {series.chart && <div class="chart-axis"><span>{shortDate(series.chart.axis[0])}</span><span>{shortDate(series.chart.axis[1])}</span></div>}
+            <p class="body" style="margin-top: 18px; font-size: 14px">{series.note}</p>
+          </div>
+        ))}
+        <div style="display: flex; flex-wrap: wrap; gap: 24px; margin-top: 18px">
+          <a class="more" href={`/projects/${tool.product.slug}`}>看 {tool.product.name} 介紹</a>
+          <a class="more" href={tool.primaryUrl} target="_blank" rel="noopener noreferrer" style="color: var(--ink)">{tool.primaryLabel}</a>
+          <a class="more" href={`https://github.com/${tool.repo}/releases`} target="_blank" rel="noopener noreferrer" style="color: var(--ink)">所有版本</a>
+        </div>
+        {tool.releases.length > 0 && (
+          <div class="release-list">
+            {tool.releases.map((release, index) => (
+              <details class="release" open={index === 0}>
+                <summary class="release-head" style="cursor: pointer; border-bottom: 0"><span>{release.tag}</span><span>{release.date}</span></summary>
+                <div class="release-body release-md" style="border-top: 1px solid var(--line)" set:html={release.html}></div>
+              </details>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  ))}
+
+  <section class="sec alt">
+    <div class="wrap">
+      <h2 class="h2" style="font-size: 30px">每個數字怎麼算</h2>
+      <p class="sub" style="margin-bottom: 28px">依 Release 資產的檔名分類，更新檢查檔和雜湊檔不算。</p>
+      <div class="tbl-box" style="background: var(--bg)">
+        <table class="tbl">
+          <thead><tr><th scope="col">數字</th><th scope="col">算哪些檔案</th><th scope="col">要注意的地方</th></tr></thead>
+          <tbody>{rules.map(([name, files, caveat]) => <tr><td style="font-weight: 700; white-space: nowrap; color: var(--ink)">{name}</td><td class="mono" style="font-size: 13px; color: var(--body)">{files}</td><td>{caveat}</td></tr>)}</tbody>
+        </table>
+      </div>
+      <p class="note" style="margin-top: 20px; line-height: 1.8">GitHub 不提供歷史下載數，所以 10-04 以前沒有每日資料；Poe Market zh 的每週使用者是從後台 CSV 回填的，所以從 09-03 開始。{oldestFetch && `資料時間 ${oldestFetch}。`}</p>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // 數列切換:建置時每個數列都畫好,這裡只切換顯示;沒有 JS 時停在第一個
+  function setupCharts() {
+    document.querySelectorAll<HTMLElement>('[data-chart-group]').forEach(group => {
+      if (group.dataset.bound === 'true') return;
+      group.dataset.bound = 'true';
+      const buttons = group.querySelectorAll<HTMLButtonElement>('[data-series]');
+      buttons.forEach(button => button.addEventListener('click', () => {
+        buttons.forEach(other => other.setAttribute('aria-pressed', String(other === button)));
+        group.querySelectorAll<HTMLElement>('[data-panel]').forEach(panel => { panel.hidden = panel.dataset.panel !== button.dataset.series; });
+      }));
+    });
+  }
+  document.addEventListener('astro:page-load', setupCharts);
+  setupCharts();
+</script>

@@ -1,8 +1,4 @@
 @import "tailwindcss";
-@import "@fontsource/inter/400.css";
-@import "@fontsource/inter/500.css";
-@import "@fontsource/inter/600.css";
-@import "@fontsource/inter/700.css";
 
 @theme {
   --color-bg-primary: #0a0b0a;
@@ -14,27 +10,27 @@
   --color-text-secondary: #aaa99f;
   --color-card-bg: #151815;
   --color-card-border: #252a25;
-  --font-sans: "Inter", "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --paper: #0a0b0a;
-  --surface: #151815;
-  --surface-solid: #181b18;
-  --night: #0a0b0a;
-  --ink: #f3f0e8;
-  --muted: #aaa99f;
-  --quiet: #74776f;
-  --line: #252a25;
-  --line-strong: #353b35;
-  --acid: #c6dc5a;
-  --blue: #c6dc5a;
-  --cyan: #68bca9;
-  --red: #ef765d;
-  --green: #68bca9;
-  --yellow: #d7b75d;
-  --display: "Inter", "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
-  --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --paper: #131210;
+  --surface: #1b1a17;
+  --surface-solid: #1b1a17;
+  --night: #0d0c0b;
+  --ink: #eeeae2;
+  --muted: #b9b3a7;
+  --quiet: #a8a296;
+  --line: #2d2b26;
+  --line-strong: #3a372f;
+  --acid: #f0804a;
+  --blue: #f0804a;
+  --cyan: #7fc0a8;
+  --red: #f0804a;
+  --green: #7fc0a8;
+  --yellow: #e3a94b;
+  --display: "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
+  --mono: "JetBrains Mono", Consolas, "Liberation Mono", monospace;
 }
 
 * { box-sizing: border-box; }
@@ -438,22 +434,22 @@ details[open] .project-summary .toggle { transform: rotate(45deg); }
 
 /* Cinematic Archive system */
 .cinematic-system {
-  --paper: #080908;
-  --surface: #111311;
-  --surface-solid: #141714;
-  --night: #080908;
-  --ink: #f2f0e8;
-  --muted: #aaa9a1;
-  --quiet: #666a64;
-  --line: #272a27;
-  --line-strong: #353a35;
-  --acid: #d9f27b;
-  --blue: #d9f27b;
-  --cyan: #80cbb8;
-  --red: #ff684c;
-  --green: #80cbb8;
-  --yellow: #d9f27b;
-  background: #080908;
+  --paper: #131210;
+  --surface: #1b1a17;
+  --surface-solid: #1b1a17;
+  --night: #0d0c0b;
+  --ink: #eeeae2;
+  --muted: #b9b3a7;
+  --quiet: #a8a296;
+  --line: #2d2b26;
+  --line-strong: #3a372f;
+  --acid: #f0804a;
+  --blue: #f0804a;
+  --cyan: #7fc0a8;
+  --red: #f0804a;
+  --green: #7fc0a8;
+  --yellow: #e3a94b;
+  background: #131210;
 }
 
 .cinematic-system .spatial-nav {

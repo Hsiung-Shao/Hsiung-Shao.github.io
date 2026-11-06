@@ -1,0 +1,424 @@
+[
+  {
+    "slug": "pobtools",
+    "projectId": "pobtools",
+    "name": "PobTools",
+    "accent": "#7fc0a8",
+    "release": true,
+    "hero": {
+      "kicker": "Path of Building 繁中化啟動器",
+      "title": "POB 照常更新，\n中文不會壞。",
+      "lede": "PobTools 從外面把翻譯帶進 Path of Building，磁碟上的 POB 一個檔都不改。約 10 萬組英中對照取自官方遊戲客戶端。1.7.2 起還多了重新做過的新介面，不合用隨時切回經典視窗。",
+      "chips": ["PoE1 · PoE2", "Windows 10 / 11", "介面：繁中 · 简中 · 한국어 · English", "需自備 Path of Building Community"],
+      "image": "pobtools/hero-pob-zh.png",
+      "imageAlt": "PobTools 新介面的物品分頁，裝備欄與物品清單顯示繁體中文"
+    },
+    "ctas": [
+      { "label": "下載最新版", "href": "https://github.com/Hsiung-Shao/PobTools-zh/releases/latest", "primary": true },
+      { "label": "看安裝教學", "href": "/blog/pobtools-installation-guide" }
+    ],
+    "stats": [
+      { "source": "static", "value": "~100,000", "label": "組英中對照，取自官方客戶端" },
+      { "source": "downloads", "key": "full", "label": "完整包下載次數，含 beta" },
+      { "source": "downloads", "key": "data", "label": "翻譯資料更新下載次數" },
+      { "source": "releases", "label": "個已發佈版本" }
+    ],
+    "sections": [
+      {
+        "id": "new-ui",
+        "kicker": "新介面 · 1.7.2 起給所有人",
+        "title": "POB 的每一頁都重做了一次",
+        "body": "側欄、天賦樹、物品、技能、配置、計算、備註、隊伍、比較與匯入匯出都在裡面。背後跑的還是 POB 自己的計算，POB 更新照常運作。",
+        "cards": [
+          { "title": "中文物品直接貼上", "body": "遊戲或交易站複製的繁中物品文字直接貼，PoE2 也可以。" },
+          { "title": "技能頁看 DPS 變化", "body": "滑到寶石上看拿掉它的差別，輔助寶石依 DPS 增幅排好。" },
+          { "title": "交易面板", "body": "搜尋結果移上游標，就看得到物品內容和裝上去的差異。" },
+          { "title": "主題與外觀", "body": "石板、淺色、高對比、羊皮紙四種主題，背景圖和霧面都能調。" }
+        ]
+      },
+      {
+        "id": "launcher",
+        "kicker": "啟動器",
+        "title": "一個啟動器，PoE1、PoE2 都在這",
+        "body": "自動偵測兩代的 POB 版本，按一下就開。常用工具和外部連結都放在主畫面，poe.ninja 的「Open in PoB」也能直接用 PobTools 開。",
+        "image": "pobtools/launcher.png",
+        "imageAlt": "PobTools 啟動器主畫面，有 PoE1、PoE2 兩張遊戲卡片與工具列"
+      },
+      {
+        "id": "timeless",
+        "kicker": "軍團珠寶",
+        "title": "想要的詞綴挑好，種子幫你找",
+        "body": "支援中文搜尋詞綴，算完直接開交易站連結，也能整組一起查。",
+        "image": "pobtools/timeless.png",
+        "imageAlt": "軍團珠寶計算器，左側詞綴清單，中間天賦樹"
+      },
+      {
+        "id": "regex",
+        "kicker": "Poe Regex",
+        "title": "勾選詞綴，產生遊戲內搜尋字串",
+        "body": "PoE1、PoE2 都可以，輸出繁中或英文的字串。可以多頁合併、存書籤資料夾、用分享碼互傳，商店頁還能篩連結數和彩色石配方。書籤包可以直接送到 ExileAppraiser。",
+        "image": "pobtools/regex.png",
+        "imageAlt": "Poe Regex 頁面，勾選詞綴後右側產生搜尋字串"
+      },
+      {
+        "id": "atlas",
+        "kicker": "輿圖策略",
+        "title": "輿圖配點、星盤和聖甲蟲，一頁排好",
+        "body": "存多個方案、用分享碼互傳，新賽季會自動更新。",
+        "image": "pobtools/atlas.png",
+        "imageAlt": "輿圖策略配點頁，左側輿圖天賦樹，右側星盤與地圖格"
+      },
+      {
+        "id": "safety",
+        "title": "不改 POB，不碰遊戲",
+        "body": "PobTools 只動 POB 執行時的記憶體，遊戲本身完全不碰。",
+        "cards": [
+          { "title": "翻譯只在記憶體裡", "body": "磁碟上的 POB 檔案不動，POB 自己更新也不會把中文化弄壞。" },
+          { "title": "不碰遊戲本身", "body": "不注入遊戲行程，也不讀寫遊戲記憶體。" },
+          { "title": "更新先驗簽章", "body": "自動更新會先驗 ECDSA P-256 簽章，驗不過一律不裝。手動下載可以用 SHA256SUMS 核對。" }
+        ]
+      },
+      {
+        "id": "install",
+        "title": "三步安裝",
+        "steps": [
+          "到 GitHub Releases 下載 PobTools-<版本>.zip 並解壓",
+          "把你的 Path of Building 資料夾放在 pob-zh.exe 旁邊",
+          "雙擊 pob-zh.exe，翻譯資料之後會自動更新"
+        ]
+      }
+    ],
+    "limits": ["沒有程式碼簽章憑證，防毒軟體可能誤判。", "這是非官方的粉絲工具，使用風險自負。"],
+    "links": [
+      { "label": "Discord 社群", "href": "https://discord.gg/6VamPQb8nC" },
+      { "label": "GitHub", "href": "https://github.com/Hsiung-Shao/PobTools-zh" }
+    ],
+    "closing": "中文的 POB，今天就能用",
+    "disclaimer": "非官方粉絲工具，與 Grinding Gear Games 無關。"
+  },
+  {
+    "slug": "poe-market-zh",
+    "projectId": "poe-market-translate",
+    "name": "Poe Market zh",
+    "accent": "#e3a94b",
+    "release": true,
+    "hero": {
+      "kicker": "Path of Exile 交易站助手",
+      "title": "國際服交易站，\n用中文找東西。",
+      "lede": "篩選器、詞綴和搜尋結果換成繁體中文，滑鼠停一下就看得到英文原文。常用的搜尋存成書籤，分資料夾管理，換季也打得開。",
+      "chips": ["PoE1 /trade", "PoE2 /trade2", "國際服 · 台服", "Chrome · Firefox 140+"],
+      "image": "poe-market-zh/results.jpg",
+      "imageAlt": "交易站搜尋結果的詞綴顯示為繁體中文"
+    },
+    "ctas": [
+      { "label": "到 Chrome 商店安裝", "href": "https://chromewebstore.google.com/detail/poe-market-zh/ipnmbepaghlkapopikbpcchblhfkieed", "primary": true },
+      { "label": "看使用教學", "href": "/blog/poe-market-zh-guide" }
+    ],
+    "stats": [
+      { "source": "manual", "key": "users", "label": "Chrome 每週使用者" },
+      { "source": "static", "value": "20,000+", "label": "PoE1 詞綴對照" },
+      { "source": "static", "value": "8,000+", "label": "PoE2 詞綴對照" },
+      { "source": "static", "value": "2 × 2", "label": "國際服、台服 × PoE1、PoE2，依網址判斷" }
+    ],
+    "sections": [
+      {
+        "id": "localize",
+        "kicker": "中文化",
+        "title": "打中文、打英文、打縮寫，都找得到",
+        "body": "下拉選單用「中文 (English)」對照顯示，兩種語言都能搜。多個關鍵字可以中英混打，「移速」「火抗」「mvspd」這種簡稱也認得。不想用了，一鍵切回英文。",
+        "image": "poe-market-zh/filters.jpg",
+        "imageAlt": "交易站篩選器顯示中文與英文對照"
+      },
+      {
+        "id": "results",
+        "title": "搜尋結果上常用的那幾下",
+        "cards": [
+          { "title": "搜尋結果即時翻譯", "body": "滑鼠停留看英文原文；開雙語後英文常駐在下方，字體大小 10–25px 可調。" },
+          { "title": "階級選單", "body": "點「≈T▾」列出這條詞綴的所有階級，選一階就填入它的最低數值。" },
+          { "title": "大量賣家", "body": "自動載入前 50 或 100 筆，不用自己往下捲；額度快用完會先暫停。" },
+          { "title": "結果列 ＋ / −", "body": "每條詞綴旁點一下，就加入篩選或排除；合計詞綴會加底色分開。" }
+        ]
+      },
+      {
+        "id": "bookmarks",
+        "kicker": "書籤側邊欄",
+        "title": "常用的搜尋，換季也打得開",
+        "body": "兩層資料夾，可以拖曳排序、選遊戲圖示、釘選常用的。國際服和台服分開放，站內再分 PoE1、PoE2。",
+        "bullets": [
+          "書籤存的是和聯盟無關的搜尋編號，換季後照樣打得開",
+          "貼一份 PoB code，照部位建好資料夾，每件裝備一個搜尋（PoE1）",
+          "最近 20 筆搜尋自動記錄，可以一鍵加進資料夾",
+          "從 PoE Trade Extension 或 Better PathOfExile Trading 匯入現有書籤",
+          "設定、書籤、歷史一起匯出成一個檔，換電腦也還原得回來"
+        ]
+      },
+      {
+        "id": "sites",
+        "kicker": "選用功能",
+        "title": "pobb.in 看中文，poe.ninja 看雙語",
+        "body": "要另外同意權限才會啟用，名稱資料打開該代的頁面才下載。",
+        "bullets": [
+          "pobb.in：物品、詞綴、天賦、技能和網站介面字都換成繁中，聯盟名不翻",
+          "poe.ninja：網站本身已經有繁中，擴充不翻頁面，只在角色頁附另一種語言的小字",
+          "物價查詢（PoE1）：讀 poe.ninja 的公開匯率，要自己打開"
+        ]
+      },
+      {
+        "id": "servers",
+        "title": "國際服和台服各能用什麼",
+        "body": "台服頁面本來就是中文，所以只給工具，不載入任何翻譯資料。",
+        "table": {
+          "columns": ["功能", "國際服 pathofexile.com", "台服 pathofexile.tw"],
+          "rows": [
+            ["介面與詞綴中文化", "有", "頁面本身是中文"],
+            ["詞綴雙語顯示", "有", "不提供"],
+            ["通貨物價查詢", "PoE1，選用", "不提供"],
+            ["書籤側邊欄與搜尋歷史", "有", "有"],
+            ["＋/− 篩選按鈕", "有", "有"],
+            ["PoB 匯入（PoE1）", "有", "有"]
+          ]
+        }
+      },
+      {
+        "id": "privacy",
+        "title": "資料只在你的瀏覽器",
+        "cards": [
+          { "title": "譯名從哪來", "body": "依官方美服與台服 trade data API 的 id 對接，再用遊戲檔補缺。字典線上更新，修譯名不用重裝。" },
+          { "title": "不收集任何資料", "body": "書籤和搜尋紀錄只存在你的瀏覽器，隨時可以清除或匯出。" },
+          { "title": "Prefer English?", "body": "Pick English on first install. Bookmarks, history, +/− buttons and PoB import still work." }
+        ]
+      }
+    ],
+    "limits": ["PoE2 目前沒有 PoB 匯入和物價查詢。", "Firefox 版請用 GitHub 的手動安裝包。"],
+    "links": [
+      { "label": "手動安裝包", "href": "https://github.com/Hsiung-Shao/poe-market-zh/releases" }
+    ],
+    "closing": "裝好，打開交易站就能用",
+    "disclaimer": "玩家社群工具，與 Grinding Gear Games 無關。Path of Exile 為 Grinding Gear Games 的商標。"
+  },
+  {
+    "slug": "exile-appraiser",
+    "projectId": "exile-appraiser",
+    "name": "ExileAppraiser",
+    "accent": "#e0714a",
+    "release": true,
+    "hero": {
+      "kicker": "遊戲內查價 · PoE1 / PoE2",
+      "title": "指著物品，按 Ctrl+D",
+      "titleKey": "Ctrl+D",
+      "lede": "官方交易站的查價結果直接出現在游標旁邊，不用切出遊戲開網頁。想慢慢調篩選就按 Ctrl+Alt+D 鎖住面板。繁中或英文客戶端、國際服或台服都能解析。",
+      "chips": ["Windows", "國際服 · 台服", "繁中 · 英文客戶端", "無邊框 / 視窗模式"],
+      "image": "exile-appraiser/well-of-souls.png",
+      "imageAlt": "靈魂之井三選一面板上標出褻瀆詞綴的 Tier 與數值範圍"
+    },
+    "ctas": [
+      { "label": "下載安裝版", "href": "https://github.com/Hsiung-Shao/exile-appraiser/releases/latest", "primary": true },
+      { "label": "看使用教學", "href": "/blog/exile-appraiser-guide" }
+    ],
+    "stats": [
+      { "source": "downloads", "key": "combined", "label": "累計下載，含自動更新" },
+      { "source": "static", "value": "2 × 2", "label": "PoE1、PoE2 × 國際服、台服" },
+      { "source": "static", "value": "0", "label": "需要登入或 POESESSID 的地方" }
+    ],
+    "sections": [
+      {
+        "id": "runeshape",
+        "kicker": "PoE2 · 符文塑形",
+        "title": "符文塑形面板直接標上參考價",
+        "body": "開著面板時每一列旁自動標價，價格來自 poe.ninja；沒有 poe.ninja 價格的列會自動查交易站。",
+        "image": "exile-appraiser/runeshape.png",
+        "imageAlt": "符文塑形面板上每個選項旁標示參考價"
+      },
+      {
+        "id": "dust",
+        "kicker": "PoE1 · 拆粉排行",
+        "title": "哪些東西拆了最划算，排好給你看",
+        "body": "查價面板會顯示傳奇能拆出的粉塵量，另外有全部傳奇的拆粉效率排行。",
+        "image": "exile-appraiser/dust-ranking.png",
+        "imageAlt": "拆粉排行清單"
+      },
+      {
+        "id": "features",
+        "title": "查價之外的功能",
+        "cards": [
+          { "tag": "Shift + Space", "title": "懸浮選單", "body": "匯率、倉庫本頁價值、自動辨識開關、正則書籤和速查表都收在這一個選單。" },
+          { "tag": "PoE1 · PoE2", "title": "通貨價格區", "body": "查通貨時頂端顯示 poe.ninja 兌換價、7 天走勢和每小時成交量，堆疊直接算總值。" },
+          { "tag": "PoE1", "title": "倉庫價格與本頁價值", "body": "打開碎片頁的子頁，每格標上價格，再讀堆疊數量算出整頁總價。" },
+          { "tag": "PoE1 · PoE2", "title": "相關物品與未鑑定傳奇", "body": "查 Boss 碎片會列出同組物品；未鑑定傳奇先列可能的傳奇讓你選。" },
+          { "tag": "PoE2", "title": "褻瀆詞綴 Tier", "body": "查價時直接顯示遊戲給的 Tier，只有一般複製文字時標「推定」。" },
+          { "tag": "PoE1 · PoE2", "title": "Poe Regex 與書籤", "body": "書籤可分資料夾、設熱鍵、一鍵貼進遊戲，分享碼和 PobTools 互通。" },
+          { "tag": "PoE1 · PoE2", "title": "聊天與倉庫熱鍵", "body": "一鍵 /hideout、@last ty；按住 Ctrl 滾滾輪切倉庫頁籤。" },
+          { "tag": "外觀", "title": "主題和背景圖", "body": "四種主題、強調色和字級可調，查價面板可以換成自己的背景圖。" },
+          { "tag": "安裝版", "title": "背景自動更新", "body": "結束程式時套用新版，之後只下載有變動的部分。" }
+        ]
+      },
+      {
+        "id": "privacy",
+        "title": "截圖不存檔，也不送按鍵給遊戲",
+        "bullets": [
+          "OCR 在你的電腦上跑，截圖不存檔、不上傳",
+          "查價是匿名的，不用登入，也不用 POESESSID",
+          "查價失敗時會整理成 GitHub issue 草稿，由你確認後自己送出",
+          "記錄只存在本機，保留 7 天"
+        ]
+      },
+      {
+        "id": "install",
+        "title": "兩種版本，挑一個",
+        "steps": [
+          "安裝版（建議）：ExileAppraiser-Setup-<版本>.exe，不用管理員權限，會在背景自動更新",
+          "免安裝版：ExileAppraiser-<版本>-portable.exe，不會自動更新，新版要自己下載"
+        ]
+      }
+    ],
+    "limits": ["沒有程式碼簽章，第一次執行會跳 SmartScreen。", "遊戲要開無邊框或視窗模式。", "交易站有 Cloudflare，第一次要手動驗證一次。", "OCR 需要 Windows 內建的繁中或英文 OCR 語言包；台服沒有 poe.ninja 價格。"],
+    "links": [
+      { "label": "GitHub", "href": "https://github.com/Hsiung-Shao/exile-appraiser" }
+    ],
+    "closing": "下次撿到東西，按一下就知道價",
+    "disclaimer": "非官方粉絲工具，與 Grinding Gear Games 無關。"
+  },
+  {
+    "slug": "multistream-hub",
+    "projectId": "multistream-hub",
+    "name": "MultiStream Hub",
+    "accent": "#5aa9e6",
+    "hero": {
+      "kicker": "multistreaming.org · 免註冊 · 免費",
+      "title": "Twitch 和 YouTube 直播，排在同一個畫面看",
+      "lede": "比賽多視角、聯動時每個人的畫面，不用再開一堆分頁切來切去。每個直播跟聊天室都是可以拖曳、縮放的視窗，排好可以存起來下次直接套。",
+      "chips": ["最多 16 路同時播", "實況主開台週表", "繁中 · 简中 · English · 日本語 · 한국어", "手機專屬介面"],
+      "image": "multistream-hub/live-grid.png",
+      "imageAlt": "畫布上同時播放多路直播",
+      "wide": true
+    },
+    "ctas": [
+      { "label": "打開 MultiStream Hub", "href": "https://multistreaming.org", "primary": true },
+      { "label": "看使用教學", "href": "/blog/multistream-hub-guide" }
+    ],
+    "stats": [],
+    "sections": [
+      {
+        "id": "schedule",
+        "kicker": "開台週表",
+        "title": "誰在播、接下來誰要開，一頁看完",
+        "body": "實況主在 YouTube 和 Twitch 的直播整理在同一頁，接下來 7 天用時間軸排好；沒開待機室的，貼在社群或 X 上的週表圖也會整理成場次。勾幾位就能連聊天室一起丟進畫布。",
+        "image": "multistream-hub/schedule.webp",
+        "imageAlt": "開台週表，上方篩選工具列，下面是直播中的卡片"
+      },
+      {
+        "id": "layout",
+        "kicker": "版型與視窗",
+        "title": "拖過去就交換，拉四個角就縮放",
+        "body": "不想自己排就挑現成版型，會照你的螢幕比例把畫面填滿。團體聯動可以用共用聊天室的版型，右邊一個聊天室隨時切換要看哪一路。",
+        "image": "multistream-hub/drag-resize.webp",
+        "imageAlt": "拖曳與縮放直播視窗"
+      },
+      {
+        "id": "favorites",
+        "kicker": "收藏與布局",
+        "title": "收藏、分類、存好的布局，都在你的瀏覽器裡",
+        "body": "開台的收藏會直接列在空畫布上，點一下就加進來。資料主要存在目前的瀏覽器，換電腦前記得先匯出 JSON 備份。",
+        "image": "multistream-hub/favorites.webp",
+        "imageAlt": "收藏管理畫面"
+      },
+      {
+        "id": "recent",
+        "title": "最近加的功能",
+        "body": "10 月底到 11 月初上線的幾個。",
+        "cards": [
+          { "tag": "v3.9.0", "title": "歌回播放清單", "body": "歌回整理成可以直接播的清單，也能自己組歌單分享出去。" },
+          { "tag": "嵌入", "title": "直播班表小工具", "body": "個人或團體的週表可以產生嵌入碼，貼到自己的網站上。" },
+          { "tag": "個人頁", "title": "直播紀錄連回放", "body": "每位實況主的頁面列出最近的直播，點一下就到回放。" },
+          { "tag": "畫布", "title": "分享畫布", "body": "複製一條連結，朋友點開就是同一組直播。" }
+        ]
+      },
+      {
+        "id": "keys",
+        "title": "常用的幾個快捷鍵",
+        "cards": [
+          { "tag": "Ctrl + K", "title": "跳到搜尋框", "body": "貼網址或搜頻道名稱。" },
+          { "tag": "T", "title": "放大這一路", "body": "撐滿整個畫面，其他直播繼續播。" },
+          { "tag": "Ctrl + M", "title": "全部靜音", "body": "各視窗的音量比例會保留。" },
+          { "tag": "Alt + 數字", "title": "切換版型", "body": "快速套用不同的排法。" }
+        ]
+      },
+      {
+        "id": "how",
+        "title": "怎麼做的",
+        "cards": [
+          { "tag": "前端", "title": "React · TypeScript · Vite", "body": "桌面、手機與橫向模式各自調整操作密度。" },
+          { "tag": "開台偵測", "title": "Supabase · Cloudflare", "body": "排程分批去檢查，開台後通常幾分鐘到二十幾分鐘會反映；各排程是否正常都公開在系統狀態頁。" }
+        ]
+      }
+    ],
+    "limits": ["YouTube 用頻道名稱搜，只會找網站已經收錄的頻道；也可以直接貼直播網址。", "開越多路，CPU、記憶體跟網路吃越兇。"],
+    "links": [
+      { "label": "系統狀態頁", "href": "https://multistreaming.org/status" },
+      { "label": "讀：免費方案撐直播偵測", "href": "/blog/multistream-free-tier-traffic" }
+    ],
+    "closing": "打開就能用，不用註冊",
+    "disclaimer": "MultiStream Hub 是個人專案，與 Twitch、YouTube 無關。"
+  },
+  {
+    "slug": "kumori-music",
+    "projectId": "ai-music",
+    "name": "Kumori Music",
+    "accent": "#e58fa8",
+    "hero": {
+      "kicker": "YouTube · @KumoriMusic08",
+      "title": "Kumori Music，用 AI 做的動畫風原創歌",
+      "lede": "日文歌詞，動畫主題曲風的 OP / ED、J-Pop、EDM 都有，另外有一小時左右的合輯長片。企劃、作詞、生成、試聽、插圖到歌詞影片都是自己的流程，模型其實只佔一小部分。"
+    },
+    "ctas": [
+      { "label": "到 YouTube 聽歌", "href": "https://www.youtube.com/@KumoriMusic08", "primary": true },
+      { "label": "讀製作心得", "href": "/blog/what-i-learned-building-an-ai-music-pipeline" }
+    ],
+    "stats": [
+      { "source": "songs", "label": "首已公開的單曲" },
+      { "source": "static", "value": "2026-08-29", "label": "頻道上線、第一首發佈" }
+    ],
+    "songs": [
+      { "title": "借りものじゃない歌", "date": "2026-10-14", "youtubeId": "oJyVdrdmRBY", "tag": "OP 風" },
+      { "title": "片道ぶんの春", "date": "2026-10-12", "youtubeId": "1xgIw5FAW4E", "tag": "ED 風" },
+      { "title": "幕間に星を盗む", "date": "2026-10-09", "youtubeId": "1Njv5JzwjAU", "tag": "OP 風" },
+      { "title": "午前二時の生放送", "date": "2026-10-07", "youtubeId": "iDhmePPucR0", "tag": "OP 風" },
+      { "title": "獣火の旗", "date": "2026-10-05", "youtubeId": "5TmcTIuOirE", "tag": "OP 風" },
+      { "title": "暁を担ぐ者", "date": "2026-10-02", "youtubeId": "yJ8OSzJLvQk", "tag": "OP 風" },
+      { "title": "鉄門の向こうへ", "date": "2026-09-30", "youtubeId": "8IM7Y-kxtNc", "tag": "Battle" },
+      { "title": "洗濯機が止まるまで", "date": "2026-09-28", "youtubeId": "9ettaMZgE58", "tag": "J-Pop" },
+      { "title": "屋上の自動販売機", "date": "2026-09-25", "youtubeId": "nfCPHcJlxMg", "tag": "J-Pop" },
+      { "title": "雷雨のキス", "date": "2026-09-23", "youtubeId": "Gbje48UTPrM", "tag": "OP 風" },
+      { "title": "泣いた空に虹を", "date": "2026-09-21", "youtubeId": "hxJZdtwnpVQ", "tag": "J-Pop" },
+      { "title": "針先のランウェイ", "date": "2026-09-17", "youtubeId": "9zYoYBIKg-w", "tag": "OP 風" },
+      { "title": "零式覚醒", "date": "2026-09-15", "youtubeId": "n88z-fZbaCw", "tag": "OP 風" },
+      { "title": "群青未満のキャンバス", "date": "2026-09-12", "youtubeId": "ocjSFhY9qMo", "tag": "OP 風" },
+      { "title": "廃墟に咲く地図", "date": "2026-09-10", "youtubeId": "WVSpm1HqJhU", "tag": "OP 風" },
+      { "title": "星屑の台本", "date": "2026-09-08", "youtubeId": "LQnTwAuciR0", "tag": "OP 風" },
+      { "title": "スポットライトの裏側", "date": "2026-09-05", "youtubeId": "j5lVO43Tpu8", "tag": "OP 風" },
+      { "title": "紅焔ノ誓い", "date": "2026-09-03", "youtubeId": "ld8Mtf_iOzE", "tag": "OP 風" },
+      { "title": "名前のない体温", "date": "2026-08-30", "youtubeId": "Akx-EcUAMqM", "tag": "ED 風" },
+      { "title": "声が灯した炎", "date": "2026-08-29", "youtubeId": "FPolv4K_yv4", "tag": "第一首" }
+    ],
+    "sections": [
+      {
+        "id": "process",
+        "title": "一首歌是怎麼做出來的",
+        "body": "每一步都有人工把關，試聽沒過就重做或先擱著。生成失敗的原因也照實記下來，不會偷偷重抽。",
+        "steps": [
+          "企劃與作詞：先定立意和曲風，有的歌先寫一篇原創短篇故事。日文歌詞附繁中對譯和逐行讀音，兩輪盲讀才定稿。",
+          "生成：用本機的 ACE-Step 和 YuE2 各生成一版，沿用試聽通過的女聲設定。",
+          "試聽與技術檢查：檢查響度、峰值和有沒有截斷，再人工聽過才算數。",
+          "插圖與歌詞影片：約 20 張 2K 插圖，主歌和 Bridge 一句一張，同一張最多用 4 次。",
+          "上架：正式影片、30 秒直式 Shorts、縮圖和上架文案一起準備，依曲風放進播放清單。"
+        ]
+      }
+    ],
+    "limits": [],
+    "links": [
+      { "label": "讀：第一首歌《声が灯した炎》上線了", "href": "/blog/kumori-music-first-release" }
+    ],
+    "closing": "新歌會先發在 YouTube",
+    "disclaimer": "歌曲為 AI 輔助製作的原創作品，以動畫作品為靈感，與原作無關。"
+  }
+]

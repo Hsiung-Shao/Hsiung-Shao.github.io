@@ -1,59 +1,55 @@
 ---
 const links = [
-  { href: '/projects', label: 'Work' },
-  { href: '/poe', label: 'PoE Tools' },
-  { href: '/blog', label: 'Notes' },
-  { href: '/activity', label: 'Log' },
-  { href: '/now', label: 'Now' },
-  { href: '/about', label: 'Profile' },
+  { href: '/projects/pobtools', label: 'PobTools' },
+  { href: '/projects/poe-market-zh', label: 'Poe Market zh' },
+  { href: '/projects/exile-appraiser', label: 'ExileAppraiser' },
+  { href: '/projects/multistream-hub', label: 'MultiStream' },
+  { href: '/projects/kumori-music', label: 'Kumori Music' },
+  { href: '/downloads', label: '下載數' },
+  { href: '/blog', label: '文章' },
 ];
-const utility = [
-  { href: '/resume', label: 'Resume' },
-  { href: '/support', label: 'Support' },
-  { href: '/contact', label: 'Contact' },
+// 手機選單多放幾個桌機版收在頁尾的入口
+const mobileExtra = [
+  { href: '/projects', label: '全部專案' },
+  { href: '/activity', label: '活動紀錄' },
+  { href: '/about', label: '關於我' },
+  { href: '/resume', label: '履歷' },
+  { href: '/support', label: '贊助' },
 ];
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
 ---
 
-<header class="spatial-nav">
-  <div class="spatial-nav-inner">
-    <a href="/" class="spatial-brand" aria-label="熊少愆首頁"><strong>HSIUNG<br />SHAO</strong></a>
-    <p class="nav-practice">Independent software practice<br />Taiwan</p>
-
-    <nav class="spatial-links" aria-label="主要導覽">
+<header class="site-nav">
+  <div class="wrap">
+    <a href="/" class="brand" aria-label="熊少愆首頁">熊少愆</a>
+    <nav class="nav-links" aria-label="主要導覽">
       {links.map(link => <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>{link.label}</a>)}
     </nav>
-
-    <nav class="spatial-utility" aria-label="次要導覽">
-      {utility.map(link => <a href={link.href} class:list={{ active: isActive(link.href) }}>{link.label}</a>)}
-    </nav>
-
-    <button id="menu-toggle" class="spatial-menu-toggle" aria-label="開啟導覽" aria-expanded="false" aria-controls="mobile-menu">
-      <span></span><span></span>
+    <a class="btn btn-main btn-sm nav-cta" href="/#tools">下載工具</a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-label="開啟選單" aria-expanded="false" aria-controls="nav-mobile">
+      <span></span><span></span><span></span>
     </button>
   </div>
-
-  <nav id="mobile-menu" class="spatial-mobile-menu" aria-label="行動版導覽">
-    {[...links, ...utility].map(link => <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>{link.label}</a>)}
-  </nav>
 </header>
+<!-- 放在 header 外面:header 的 backdrop-filter 會讓裡面的 position: fixed 改以 header 為基準,選單會變成 0 高 -->
+<nav id="nav-mobile" class="nav-mobile" aria-label="行動版導覽">
+  {[...links, ...mobileExtra].map(link => <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>{link.label}</a>)}
+</nav>
 
 <script>
-  function setupSpatialNav() {
-    const toggle = document.getElementById('menu-toggle');
-    const menu = document.getElementById('mobile-menu');
+  function setupNav() {
+    const toggle = document.getElementById('nav-toggle');
+    const menu = document.getElementById('nav-mobile');
     if (!toggle || !menu || toggle.dataset.bound === 'true') return;
-
     toggle.dataset.bound = 'true';
     toggle.addEventListener('click', () => {
-      const expanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!expanded));
-      toggle.setAttribute('aria-label', expanded ? '開啟導覽' : '關閉導覽');
-      menu.classList.toggle('is-open', !expanded);
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? '關閉選單' : '開啟選單');
+      menu.classList.toggle('is-open', open);
     });
   }
-
-  document.addEventListener('astro:page-load', setupSpatialNav);
-  setupSpatialNav();
+  document.addEventListener('astro:page-load', setupNav);
+  setupNav();
 </script>

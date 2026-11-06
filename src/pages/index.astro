@@ -1,13 +1,8 @@
 ---
-import ConceptLayout from '../layouts/ConceptLayout.astro';
-import CinematicHome from '../components/CinematicHome.astro';
+import Layout from '../layouts/Layout.astro';
+import Home from '../components/Home.astro';
 ---
 
-<ConceptLayout
-  variant="cinematic"
-  title="熊少愆 | 獨立軟體開發與技術工作誌"
-  description="熊少愆的個人網站：全端系統、本地工具、遊戲資料與可驗證的繁體中文化工程。"
-  showChooser={false}
->
-  <CinematicHome />
-</ConceptLayout>
+<Layout title="熊少愆 | Path of Exile 繁中工具與個人專案" fresh>
+  <Home />
+</Layout>

@@ -6,7 +6,7 @@ import {
   loadProtectedTerms,
   scanProjectContent,
 } from './lib/content-policy.mjs';
-import { validatePoeProducts } from './lib/poe-products.mjs';
+import { validateProducts } from './lib/products.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const readJson = (path) => JSON.parse(readFileSync(resolve(root, path), 'utf8'));
@@ -166,14 +166,20 @@ for (const tool of poeTools.tools ?? []) {
   }
 }
 
-// /poe/<slug> 產品頁:slug 不重複、統計指得到真的下載規則、截圖檔存在且沒有路徑穿越。
-const poeProducts = readJson('src/data/poe-products.json');
-errors.push(...validatePoeProducts(poeProducts, {
+// /projects/<slug> 產品頁:slug 不重複、統計指得到真的下載規則、截圖檔存在且沒有路徑穿越。
+const products = readJson('src/data/products.json');
+errors.push(...validateProducts(products, {
   tools: poeTools.tools ?? [],
-  imageExists: path => existsSync(resolve(root, 'src/assets/poe', path)),
+  projects,
+  imageExists: path => existsSync(resolve(root, 'src/assets/products', path)),
 }));
+for (const product of products) {
+  if (product.hero?.image && !existsSync(resolve(root, 'src/assets/products', product.hero.image))) {
+    errors.push(`products.json(${product.slug}): 找不到首屏截圖 src/assets/products/${product.hero.image}`);
+  }
+}
 for (const tool of poeTools.tools ?? []) {
-  if (!poeProducts.some(product => product.slug === tool.slug)) {
+  if (!products.some(product => product.slug === tool.slug)) {
     errors.push(`poe-tools.json(${tool.projectId}): slug ${tool.slug} 沒有對應的產品頁`);
   }
 }

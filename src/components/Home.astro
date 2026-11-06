@@ -1,0 +1,160 @@
+---
+import ReleaseCard from './ReleaseCard.astro';
+import { featuredProjects, projects } from '../data/projects';
+import { visiblePosts } from '../data/posts';
+import { activity } from '../data/activity';
+import poeTools from '../data/poe-tools.json';
+import { products, resolveStats, snapshotFor } from '../data/products';
+
+// 首屏版本卡取 featured 專案中第一個有 release 快照的。改首頁展示什麼就改 projects.json 的 featured,
+// 不要在這裡寫死專案名(2026-10-02 前寫死過,改 featured 完全沒效果)。
+const heroProject = featuredProjects.find(project => snapshotFor(project.id)?.recent[0]);
+if (!heroProject) throw new Error('Home:沒有任何 featured 專案有 release 快照,請確認 projects.json 的 featured 與 releases.json');
+const heroRelease = snapshotFor(heroProject.id)!.recent[0];
+const heroProduct = products.find(product => product.projectId === heroProject.id);
+
+// 三個 PoE 工具:poe-tools.json 有的專案,數字取各產品頁的第一個統計
+const toolKinds: Record<string, string> = { pobtools: '桌面程式', 'poe-market-translate': '瀏覽器擴充', 'exile-appraiser': '遊戲內查價' };
+const tools = poeTools.tools.map(tool => {
+  const product = products.find(candidate => candidate.projectId === tool.projectId)!;
+  const project = projects.find(candidate => candidate.id === tool.projectId)!;
+  // 卡片上放下載數或使用者數,不放 static 的介紹數字
+  const counted = product.stats.findIndex(stat => stat.source === 'downloads' || stat.source === 'manual');
+  const first = resolveStats(product)[Math.max(counted, 0)];
+  return {
+    href: `/projects/${product.slug}`,
+    accent: product.accent,
+    kind: toolKinds[tool.projectId] ?? '工具',
+    version: snapshotFor(tool.projectId)?.recent[0]?.tag ?? '',
+    name: product.name,
+    description: project.description,
+    num: first?.value ?? '待更新',
+    numLabel: first?.label ?? '',
+  };
+});
+
+// 其他專案:公開、非封存、不在上面三個工具裡的
+const toolIds = new Set(poeTools.tools.map(tool => tool.projectId));
+const statusText: Record<string, { label: string; color: string }> = {
+  active: { label: '進行中', color: 'var(--accent)' },
+  maintained: { label: '維護中', color: '#7fc0a8' },
+  paused: { label: '暫停', color: 'var(--faint)' },
+};
+const order = ['active', 'maintained', 'paused'];
+const others = projects
+  .filter(project => project.visibility === 'public' && !toolIds.has(project.id) && order.includes(project.status))
+  .sort((a, b) => order.indexOf(a.status) - order.indexOf(b.status))
+  .map(project => {
+    const product = products.find(candidate => candidate.projectId === project.id);
+    const article = project.articles.find(slug => visiblePosts.some(post => post.slug === slug));
+    const href = product ? `/projects/${product.slug}` : article ? `/blog/${article}` : '/projects';
+    return { name: product?.name ?? project.title, description: project.description, status: statusText[project.status], href, cta: product ? '看介紹' : article ? '讀文章' : '看專案' };
+  });
+
+const recentActivity = [...activity].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
+const recentPosts = [...visiblePosts].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
+const typeLabels: Record<string, string> = { guide: '教學', engineering: '筆記', 'case-study': '技術案例', retrospective: '回顧' };
+
+const pobStats = resolveStats(products.find(product => product.slug === 'pobtools')!);
+const marketStats = resolveStats(products.find(product => product.slug === 'poe-market-zh')!);
+const figures = [
+  { num: pobStats[1]?.value, label: 'PobTools 完整包下載次數' },
+  { num: marketStats[0]?.value, label: `Poe Market zh ${marketStats[0]?.label ?? ''}` },
+  { num: pobStats[3]?.value, label: 'PobTools 已發佈版本' },
+];
+---
+
+<section class="hero">
+  <div class="wrap hero-grid home-hero">
+    <div>
+      <p class="kick">後端工程師 · 新北市</p>
+      <h1 class="h1" style="font-size: 56px; line-height: 1.18">Path of Exile 繁中工具，還有我下班做的其他東西</h1>
+      <p class="lede">白天我一個人維護公司 ERP。下班做自己會用的工具，全部免費、開源，有問題直接到 GitHub 開 issue 就好。</p>
+      <div class="btns">
+        <a class="btn btn-main" href="/projects/pobtools">下載 PobTools</a>
+        <a class="btn btn-sub" href="#projects">看全部專案</a>
+      </div>
+      <div class="figures">
+        {figures.map(figure => <div><div class="figure-num">{figure.num ?? '待更新'}</div><div class="figure-label">{figure.label}</div></div>)}
+      </div>
+    </div>
+    <ReleaseCard
+      name={heroProduct?.name ?? heroProject.title}
+      release={heroRelease}
+      limit={2}
+      footLeft="最新一版改了什麼"
+      footHref={heroProduct ? `/projects/${heroProduct.slug}` : heroRelease.url}
+      footLabel="看更新紀錄"
+    />
+  </div>
+</section>
+
+<section id="tools" class="sec alt">
+  <div class="wrap">
+    <h2 class="h2">三個 PoE 工具</h2>
+    <div class="head-row" style="margin-top: 12px; margin-bottom: 48px">
+      <p class="body" style="font-size: 17px">都是先做給自己用，後來發現很多人也需要。數字是檔案下載次數，不是使用人數。</p>
+      <a class="more" href="/downloads">看每日下載數</a>
+    </div>
+    <div class="grid g3">
+      {tools.map(tool => (
+        <a class="card tool-card" href={tool.href} style={`--p-accent: ${tool.accent}`}>
+          <div style="display: flex; justify-content: space-between; align-items: center">
+            <span class="chip mono" style="color: var(--p-accent)">{tool.kind}</span>
+            <span class="mono note">{tool.version}</span>
+          </div>
+          <h3 class="h3">{tool.name}</h3>
+          <p class="body">{tool.description}</p>
+          <div class="tool-foot">
+            <div><div class="mono" style="font-size: 22px; font-weight: 600">{tool.num}</div><div class="note" style="font-size: 12px">{tool.numLabel}</div></div>
+            <span class="more">看介紹</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="sec">
+  <div class="wrap">
+    <div class="head-row"><h2 class="h2">其他專案</h2><a class="more" href="/projects">看全部專案</a></div>
+    <ul class="rows">
+      {others.map(project => (
+        <li>
+          <span class="status" style={`color: ${project.status.color}`}>● {project.status.label}</span>
+          <span class="name">{project.name}</span>
+          <span class="body">{project.description}</span>
+          <a class="go more" href={project.href} style="color: var(--ink)">{project.cta}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<section class="sec sunk">
+  <div class="wrap">
+    <div class="head-row">
+      <h2 class="h2">最近在做什麼</h2>
+      <a class="more" href="/activity">看全部活動</a>
+    </div>
+    <ul class="log">
+      {recentActivity.map(entry => (
+        <li><time datetime={entry.date}>{entry.date.slice(5)}</time><div><div class="project">{entry.project}</div><p>{entry.summary}</p></div></li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="head-row"><h2 class="h2">使用教學與文章</h2><a class="more" href="/blog">看全部文章</a></div>
+    <div class="grid g3">
+      {recentPosts.map(post => (
+        <a class="card" href={`/blog/${post.slug}`}>
+          <span class="ptag" style="font-weight: 600">{typeLabels[post.type ?? 'engineering']}{post.project ? ` · ${post.project}` : ''}</span>
+          <h3 class="h3" style="margin-top: 14px; font-size: 19px; line-height: 1.55">{post.title}</h3>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
