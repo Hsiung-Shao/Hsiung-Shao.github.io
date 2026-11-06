@@ -354,8 +354,7 @@
     ],
     "limits": ["YouTube 用頻道名稱搜，只會找網站已經收錄的頻道；也可以直接貼直播網址。", "開越多路，CPU、記憶體跟網路吃越兇。"],
     "links": [
-      { "label": "系統狀態頁", "href": "https://multistreaming.org/status" },
-      { "label": "讀：免費方案撐直播偵測", "href": "/blog/multistream-free-tier-traffic" }
+      { "label": "系統狀態頁", "href": "https://multistreaming.org/status" }
     ],
     "closing": "打開就能用，不用註冊",
     "disclaimer": "MultiStream Hub 是個人專案，與 Twitch、YouTube 無關。"

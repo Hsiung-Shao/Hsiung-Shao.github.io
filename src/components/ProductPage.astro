@@ -63,7 +63,7 @@ const withVersion = (cta: { href: string; primary?: boolean }) => (cta.primary &
       </figure>
     )}
     {!heroImage && recentSongs[0] && (
-      <a class="shot song" href={youtubeUrl(recentSongs.at(-1)!.youtubeId)} target="_blank" rel="noopener noreferrer" style="border-radius: 14px">
+      <a class="shot song" href={youtubeUrl(product.songs!.at(-1)!.youtubeId)} target="_blank" rel="noopener noreferrer" style="border-radius: 14px">
         <img src={youtubeThumb(product.songs!.at(-1)!.youtubeId)} alt={`〈${product.songs!.at(-1)!.title}〉的影片縮圖`} width="480" height="360" />
         <div class="song-meta"><span class="ptag">第一首 · {product.songs!.at(-1)!.date}</span><div class="song-title">{product.songs!.at(-1)!.title}</div></div>
       </a>

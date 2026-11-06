@@ -22,8 +22,10 @@
 }
 
 body.site { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); }
-.site a { color: inherit; text-decoration: none; }
-.site a:hover { color: var(--p-accent); }
+/* 連結重設只套在新版頁面:舊頁面(body 還掛 cinematic-system)靠 global.css 的 .text-link、.article-body a 上色 */
+/* 用 :where 把權重壓到最低,.more、.btn-main 這類元件自己的顏色才不會被蓋掉 */
+:where(body.site:not(.cinematic-system), .site-nav, .site-footer, .nav-mobile) a { color: inherit; text-decoration: none; }
+:where(body.site:not(.cinematic-system), .site-nav, .site-footer, .nav-mobile) a:hover { color: var(--p-accent); }
 .site :focus-visible { outline: 2px solid var(--p-accent); outline-offset: 3px; }
 .site ::selection { background: var(--accent); color: var(--bg); }
 

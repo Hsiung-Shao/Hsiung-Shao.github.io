@@ -55,12 +55,19 @@ const recentActivity = [...activity].sort((a, b) => b.date.localeCompare(a.date)
 const recentPosts = [...visiblePosts].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
 const typeLabels: Record<string, string> = { guide: '教學', engineering: '筆記', 'case-study': '技術案例', retrospective: '回顧' };
 
-const pobStats = resolveStats(products.find(product => product.slug === 'pobtools')!);
-const marketStats = resolveStats(products.find(product => product.slug === 'poe-market-zh')!);
+// 首屏三個數字依 source/key 從產品資料找,不靠 stats 的排列順序;找不到就顯示「待更新」
+// 人工數字(Chrome 每週使用者)的標籤要帶 asOf 日期,所以沿用資料裡解析好的標籤
+function figure(slug: string, match: (stat: { source: string; key?: string }) => boolean, label: string, withStatLabel = false) {
+  const product = products.find(candidate => candidate.slug === slug);
+  if (!product) return { num: null, label };
+  const index = product.stats.findIndex(match);
+  const stat = index >= 0 ? resolveStats(product)[index] : undefined;
+  return { num: stat?.value ?? null, label: withStatLabel && stat ? `${product.name} ${stat.label}` : label };
+}
 const figures = [
-  { num: pobStats[1]?.value, label: 'PobTools 完整包下載次數' },
-  { num: marketStats[0]?.value, label: `Poe Market zh ${marketStats[0]?.label ?? ''}` },
-  { num: pobStats[3]?.value, label: 'PobTools 已發佈版本' },
+  figure('pobtools', stat => stat.source === 'downloads' && stat.key === 'full', 'PobTools 完整包下載次數'),
+  figure('poe-market-zh', stat => stat.source === 'manual' && stat.key === 'users', 'Poe Market zh 每週使用者', true),
+  figure('pobtools', stat => stat.source === 'releases', 'PobTools 已發佈版本'),
 ];
 ---
 
