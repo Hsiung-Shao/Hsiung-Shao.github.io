@@ -2,7 +2,7 @@
 import { products } from '../data/products';
 import projectsData from '../data/projects.json';
 
-// 第一層只放四項,五個專案收進「專案」下拉選單(2026-11 使用者覺得七個連結太擠)
+// 第一層只放五項,五個專案收進「專案」下拉選單(2026-11 使用者覺得七個連結太擠,之後要求補上贊助)
 const menuNotes: Record<string, string> = {
   pobtools: 'POB 繁中化啟動器',
   'poe-market-zh': '交易站中文化擴充',
@@ -15,13 +15,13 @@ const links = [
   { href: '/downloads', label: '下載數' },
   { href: '/blog', label: '文章' },
   { href: '/about', label: '關於我' },
+  { href: '/support', label: '贊助' },
 ];
 const mobileExtra = [
   { href: '/projects', label: '全部專案' },
   { href: '/activity', label: '活動紀錄' },
   { href: '/now', label: '現在在做什麼' },
   { href: '/resume', label: '履歷' },
-  { href: '/support', label: '贊助' },
   { href: '/contact', label: '聯絡' },
 ];
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';

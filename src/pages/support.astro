@@ -7,6 +7,45 @@ const options = [
   { kind: '每月', title: 'Patreon', description: '每月小額支持，隨時可以在 Patreon 調整或取消。', href: 'https://patreon.com/HsiungShao?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink', action: '到 Patreon 贊助', analyticsId: 'patreon', analyticsType: 'recurring', rel: 'noopener noreferrer', affiliate: false },
   { kind: '聯盟連結 · 我會拿到分潤', title: 'ExitLag', description: '剛好需要跨區連線加速的話，可以用我的推薦連結看方案。你完成註冊或購買後我可能拿到分潤，價格和服務以官方頁面為準。', href: 'https://www.exitlag.com/refer/10318098', action: '看 ExitLag 方案', analyticsId: 'exitlag', analyticsType: 'affiliate', rel: 'sponsored nofollow noopener noreferrer', affiliate: true },
 ];
+
+// 步驟依 2026-11-06 兩個平台頁面上實際看到的按鈕寫;ExitLag 是聯盟連結,刻意不給教學
+const oneTime = {
+  title: 'Buy Me a Coffee 請一杯咖啡',
+  href: 'https://buymeacoffee.com/hsiung',
+  steps: [
+    '點「到 Buy Me a Coffee 贊助」，會開啟我的頁面。',
+    '在「Buy 宅熊 (HsiungShao) a coffee」選要請幾杯：1、3、5、10，或自己輸入數量，一杯 $1。',
+    '想留話的話，填名字和留言；不填也可以。',
+    '「Make this monthly」不要勾，這樣就只扣這一次。',
+    '按「Support $N」，接著在跳出的付款畫面完成付款。',
+  ],
+  note: '只扣一次，不會之後自動續扣。',
+};
+const monthly = [
+  {
+    title: 'Buy Me a Coffee 會員',
+    href: 'https://buymeacoffee.com/hsiung',
+    steps: [
+      '打開我的 Buy Me a Coffee 頁面，切到上方的「Membership」分頁。',
+      '從四個方案選一個：維護支援 $1、支持開發 $3、熊窩夥伴 $5、功能贊助 $30，都是每月。',
+      '按方案的「Join」，照畫面登入或註冊，再完成付款。',
+      '之後每個月自動扣款；要換方案或取消，登入 Buy Me a Coffee 帳號就能管理。',
+    ],
+    note: '四個方案都寫著含 Discord 福利。只想固定每月請咖啡、不需要方案的話，也可以在首頁勾「Make this monthly」再按「Support」。',
+  },
+  {
+    title: 'Patreon',
+    href: 'https://patreon.com/HsiungShao',
+    steps: [
+      '點「到 Patreon 贊助」，會開啟我的 Patreon 頁面。',
+      '在「Membership options」選一個付費方案，按它的加入按鈕。',
+      '還沒有 Patreon 帳號的話，照畫面註冊或登入。',
+      '填好付款方式完成加入，之後每個月自動扣款。',
+      '要調整金額或取消，到 Patreon 的會員設定改就好，隨時都可以。',
+    ],
+    note: '頁面上的「Join for free」是免費加入，不會扣款；要贊助請選付費方案。',
+  },
+];
 ---
 
 <Layout title="贊助 | 熊少愆" description="工具都免費、開源。想支持網站和工具繼續更新，可以用 Buy Me a Coffee 或 Patreon。">
@@ -30,7 +69,42 @@ const options = [
     </div>
   </section>
 
-  <section class="sec alt">
+  <section id="how" class="sec alt">
+    <div class="wrap">
+      <h2 class="h2" style="font-size: 28px">怎麼贊助</h2>
+      <p class="sub">分成只贊助一次，和每個月自動贊助兩種。付款都是在平台自己的頁面完成，這個網站不會經手任何付款資料。</p>
+
+      <div class="split" style="margin-top: 48px">
+        <div>
+          <p class="kick">單次贊助</p>
+          <h3 class="h2" style="font-size: 24px">只贊助一次</h3>
+          <p class="sub" style="font-size: 15px">用 Buy Me a Coffee，選杯數付款就好，不會續扣。</p>
+        </div>
+        <div class="box" style="background: var(--bg)">
+          <h4 class="h3" style="font-size: 20px; font-weight: 900">{oneTime.title}</h4>
+          <ol class="list big" style="margin-top: 12px">{oneTime.steps.map(step => <li><span>{step}</span></li>)}</ol>
+          <p class="note" style="margin-top: 16px; line-height: 1.8">{oneTime.note}</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 64px">
+        <p class="kick">每月訂閱</p>
+        <h3 class="h2" style="font-size: 24px">每個月自動贊助</h3>
+        <p class="sub" style="font-size: 15px; margin-bottom: 28px">Buy Me a Coffee 和 Patreon 都可以，挑你常用的那個。兩邊都能隨時取消。</p>
+        <div class="grid g2" style="gap: 40px">
+          {monthly.map(guide => (
+            <div class="box" style="background: var(--bg)">
+              <h4 class="h3" style="font-size: 20px; font-weight: 900">{guide.title}</h4>
+              <ol class="list big" style="margin-top: 12px">{guide.steps.map(step => <li><span>{step}</span></li>)}</ol>
+              <p class="note" style="margin-top: 16px; line-height: 1.8">{guide.note}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
     <div class="wrap split">
       <h2 class="h2" style="font-size: 26px">贊助不會換到什麼</h2>
       <p style="margin: 0; font-size: 16px; line-height: 1.9; color: var(--body)">贊助不會影響工具要做什麼功能，也不會影響文章怎麼寫。聯盟連結只會出現在這一頁，而且都會標清楚，不會混在下載連結裡。</p>

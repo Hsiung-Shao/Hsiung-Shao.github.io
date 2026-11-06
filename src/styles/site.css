@@ -143,11 +143,12 @@ a.card:hover { transform: translateY(-2px); border-color: #5a554b; color: inheri
 
 /* 條列、步驟、表格 */
 .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: start; }
-.list { margin: 0; padding: 0; list-style: none; }
-.list li { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; padding: 16px 0; border-top: 1px solid var(--line); font-size: 15px; line-height: 1.75; }
-.list li::before { content: counter(list-item, decimal-leading-zero); font-family: var(--mono-font); color: var(--p-accent); }
+/* li 改成 grid 後不再是 list-item,內建的 list-item 計數器不會遞增,所以用自己的 step 計數器 */
+.list { margin: 0; padding: 0; list-style: none; counter-reset: step; }
+.list li { counter-increment: step; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; padding: 16px 0; border-top: 1px solid var(--line); font-size: 15px; line-height: 1.75; }
+.list li::before { content: counter(step, decimal-leading-zero); font-family: var(--mono-font); color: var(--p-accent); }
 .list.big li { grid-template-columns: 48px minmax(0, 1fr); font-size: 16px; }
-.list.big li::before { font-size: 22px; font-weight: 600; content: counter(list-item); }
+.list.big li::before { font-size: 22px; font-weight: 600; content: counter(step); }
 .limits { margin-top: 28px; padding: 18px 20px; border: 1px solid var(--line-strong); border-radius: 12px; font-size: 14px; line-height: 1.8; color: var(--muted); }
 .limits strong { display: block; margin-bottom: 4px; color: var(--ink); }
 .limits ul { margin: 0; padding-left: 18px; }
