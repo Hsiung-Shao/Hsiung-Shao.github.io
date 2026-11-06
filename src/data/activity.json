@@ -895,5 +895,37 @@
     "summary": "新增 YuE2 序列生成佇列：六首自選曲風新歌先備好詞稿、日文讀音與詞曲企劃，背景一次只跑一首，沿用已確認的女聲設定；偏離與錯誤照實記下、不自動重抽。首曲已開始作曲，其餘排隊中，音訊都還沒完成。",
     "tags": ["music", "generation", "tooling"],
     "commits": []
+  },
+  {
+    "date": "2026-10-16",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "階級面板在控制項捲出視窗時改貼齊視窗上下緣，不再跑出畫面；重新掃描前先收掉過期面板，異界的來源標籤改用官方譯名，並補上面板位置、點選與收合的測試。",
+    "tags": ["bugfix", "ui", "testing"],
+    "commits": ["753d8f6", "58c0cf9", "512c728"]
+  },
+  {
+    "date": "2026-10-25",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "完成地圖獎勵、最後通牒獎勵與獻祭物的傳奇下拉改為「中文 (English)」雙語選項；查不到譯名時從物品下拉補查，展開出錯只讓該欄位維持原樣。另修正快取讓路後簽章仍相符、導致該款讀不到翻譯資料而顯示英文的問題。",
+    "tags": ["i18n", "trade", "cache"],
+    "commits": ["463949f", "20e28b9", "1909c83", "278ffae", "9d46256", "11687f8", "bb4b3b7"]
+  },
+  {
+    "date": "2026-10-25",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "補翻交易站三組原本顯示英文的欄位：大宗交易選單的分隔標題、記憶勢力地圖的說明與防具篩選提示；分隔標題改以「群組＋下一個項目」對接，避免同鍵互相覆蓋而全部翻不到。",
+    "tags": ["i18n", "trade"],
+    "commits": ["1f03352"]
+  },
+  {
+    "date": "2026-10-25",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "新增跨對話的 GPU 租約機制：生成前先檢查租約，被別的工作占用就拒絕執行，HeartMuLa 改走租約，另做 GPU 管理面板與指令防護，製作手冊的 GPU 共用規則一併改成租約制。",
+    "tags": ["tooling", "generation", "gpu"],
+    "commits": []
   }
 ]
