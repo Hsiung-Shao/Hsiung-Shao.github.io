@@ -1,0 +1,35 @@
+---
+/**
+ * 頁面上的篩選按鈕:容器標 data-filter-group,按鈕標 data-filter="<值>"("all" 顯示全部),
+ * 被篩的項目標 data-filter-item 與 data-tags="值1 值2"。沒有 JS 時所有項目都會顯示。
+ * 可選的 data-filter-count 元素會更新成目前顯示的筆數。
+ */
+---
+
+<script>
+  function setupFilters() {
+    document.querySelectorAll<HTMLElement>('[data-filter-group]').forEach(group => {
+      if (group.dataset.bound === 'true') return;
+      group.dataset.bound = 'true';
+      const scope = document.querySelector<HTMLElement>(group.dataset.filterGroup || 'main') ?? document;
+      const buttons = group.querySelectorAll<HTMLButtonElement>('[data-filter]');
+      buttons.forEach(button => button.addEventListener('click', () => {
+        const value = button.dataset.filter ?? 'all';
+        buttons.forEach(other => other.setAttribute('aria-pressed', String(other === button)));
+        let shown = 0;
+        scope.querySelectorAll<HTMLElement>('[data-filter-item]').forEach(item => {
+          const match = value === 'all' || (item.dataset.tags ?? '').split(' ').includes(value);
+          item.hidden = !match;
+          if (match) shown++;
+        });
+        // 整組都被篩光的區塊(例如月份)一起藏起來
+        scope.querySelectorAll<HTMLElement>('[data-filter-section]').forEach(section => {
+          section.hidden = !section.querySelector('[data-filter-item]:not([hidden])');
+        });
+        scope.querySelectorAll<HTMLElement>('[data-filter-count]').forEach(count => { count.textContent = String(shown); });
+      }));
+    });
+  }
+  document.addEventListener('astro:page-load', setupFilters);
+  setupFilters();
+</script>

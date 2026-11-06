@@ -9,7 +9,7 @@
 | 類別 | 技術 |
 |------|------|
 | Framework | [Astro](https://astro.build) 5（靜態輸出，沒有前端框架島嶼） |
-| Styling | 自寫 CSS 設計系統（`src/styles/site.css`），舊頁面暫時沿用 Tailwind CSS 4 與 `global.css` |
+| Styling | 自寫 CSS 設計系統（`src/styles/site.css`），沒有 CSS 框架 |
 | Content | JSON 資料 + Markdown（[marked](https://marked.js.org)） |
 | Test | [Vitest](https://vitest.dev) |
 | Deploy | [GitHub Pages](https://pages.github.com) + GitHub Actions |
@@ -48,8 +48,7 @@ src/
 │   ├── blog/            # 文章列表與文章頁
 │   └── about、activity、now、resume、support、contact
 └── styles/
-    ├── site.css         # 新版設計系統
-    └── global.css       # 舊頁面用的樣式，第二階段改完後刪除
+    └── site.css         # 全站設計系統
 ```
 
 ## Getting Started

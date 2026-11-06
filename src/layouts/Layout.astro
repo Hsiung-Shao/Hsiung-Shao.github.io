@@ -3,7 +3,6 @@ import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
 import { ClientRouter } from 'astro:transitions';
-import '../styles/global.css';
 import '../styles/site.css';
 
 interface Props {
@@ -11,11 +10,9 @@ interface Props {
   description?: string;
   /** 產品頁的主色,其他頁面用預設橘色 */
   accent?: string;
-  /** 新版頁面設 true;第二階段改完其他頁面後拿掉這個開關 */
-  fresh?: boolean;
 }
 
-const { title, description = '熊少愆的個人網站：Path of Exile 繁中工具、多平台直播觀看網站、AI 音樂，還有寫這些東西時的筆記。', accent, fresh = false } = Astro.props;
+const { title, description = '熊少愆的個人網站：Path of Exile 繁中工具、多平台直播觀看網站、AI 音樂，還有寫這些東西時的筆記。', accent } = Astro.props;
 ---
 
 <!doctype html>
@@ -32,7 +29,7 @@ const { title, description = '熊少愆的個人網站：Path of Exile 繁中工
     <title>{title}</title>
     <Analytics />
   </head>
-  <body class:list={['site', { 'cinematic-system': !fresh }]} style={accent ? `--p-accent: ${accent}` : undefined}>
+  <body class="site" style={accent ? `--p-accent: ${accent}` : undefined}>
     <Navbar />
     <main>
       <slot />

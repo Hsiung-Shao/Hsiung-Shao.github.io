@@ -1,13 +1,39 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+// data-ga-* 給 Analytics.astro 記贊助點擊;連結受 validate-content 的內容契約保護,不要改網址
 const options = [
-  { index: '01', label: 'Direct support', title: '請我喝杯咖啡', description: '透過 Buy Me a Coffee 單次支持網站維護、文件整理與公開工具開發。', note: '這是直接贊助連結。', href: 'https://buymeacoffee.com/hsiung', action: '前往 Buy Me a Coffee', analyticsId: 'buy_me_a_coffee', analyticsType: 'direct', rel: 'noopener noreferrer' },
-  { index: '02', label: 'Ongoing support', title: '透過 Patreon 持續支持', description: '在 Patreon 定期支持網站內容、公開工具與繁體中文化專案的長期維護。', note: '這是直接贊助連結，可隨時依 Patreon 提供的方式調整或取消支持。', href: 'https://patreon.com/HsiungShao?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink', action: '前往 Patreon', analyticsId: 'patreon', analyticsType: 'recurring', rel: 'noopener noreferrer' },
-  { index: '03', label: 'Affiliate', title: '使用 ExitLag 聯盟連結', description: '有跨區連線需求時，可透過推薦連結查看 ExitLag 提供的方案。', note: '這是聯盟行銷連結；完成符合條件的註冊或購買後，我可能獲得分潤。價格與服務內容以官方頁面為準。', href: 'https://www.exitlag.com/refer/10318098', action: '查看 ExitLag', analyticsId: 'exitlag', analyticsType: 'affiliate', rel: 'sponsored nofollow noopener noreferrer' },
+  { kind: '單次', title: 'Buy Me a Coffee', description: '請我喝杯咖啡，單次贊助網站維護和工具開發。', href: 'https://buymeacoffee.com/hsiung', action: '到 Buy Me a Coffee 贊助', analyticsId: 'buy_me_a_coffee', analyticsType: 'direct', rel: 'noopener noreferrer', affiliate: false },
+  { kind: '每月', title: 'Patreon', description: '每月小額支持，隨時可以在 Patreon 調整或取消。', href: 'https://patreon.com/HsiungShao?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink', action: '到 Patreon 贊助', analyticsId: 'patreon', analyticsType: 'recurring', rel: 'noopener noreferrer', affiliate: false },
+  { kind: '聯盟連結 · 我會拿到分潤', title: 'ExitLag', description: '剛好需要跨區連線加速的話，可以用我的推薦連結看方案。你完成註冊或購買後我可能拿到分潤，價格和服務以官方頁面為準。', href: 'https://www.exitlag.com/refer/10318098', action: '看 ExitLag 方案', analyticsId: 'exitlag', analyticsType: 'affiliate', rel: 'sponsored nofollow noopener noreferrer', affiliate: true },
 ];
 ---
-<Layout title="支持本站 | 熊少愆" description="支持技術文章、公開工具與網站維護。">
-  <header class="page-intro site-shell"><span class="kicker">Support & disclosure</span><h1>讓公開工具與紀錄繼續累積。</h1><p>若文章或工具確實幫上忙，可以選擇單次或持續支持維護；若剛好有連線服務需求，也可以使用明確標示的聯盟連結。</p></header>
-  <section class="site-shell py-20"><div class="support-list">{options.map(option => <article><span class="support-number">{option.index}</span><div><span class="meta-label text-[var(--red)]">{option.label}</span><h2>{option.title}</h2><p>{option.description}</p><small>{option.note}</small></div><a class="command-link" href={option.href} target="_blank" rel={option.rel} data-ga-event="support_click" data-ga-support-method={option.analyticsId} data-ga-support-type={option.analyticsType}>{option.action} ↗</a></article>)}</div></section>
-  <section class="border-y border-[var(--line-strong)] bg-[var(--surface)]"><div class="content-shell py-12"><span class="kicker">Transparency</span><h2 class="display-type mt-4 text-3xl">揭露要比轉換率更重要。</h2><p class="mt-4 leading-8 text-[var(--muted)]">贊助與聯盟合作不影響文章結論或專案技術選擇。聯盟連結只會出現在明確標示的區域，不會偽裝成一般下載連結。</p></div></section>
+
+<Layout title="贊助 | 熊少愆" description="工具都免費、開源。想支持網站和工具繼續更新，可以用 Buy Me a Coffee 或 Patreon。">
+  <section class="page-head" style="padding-bottom: 56px">
+    <div class="wrap">
+      <h1 class="h1">贊助這些工具</h1>
+      <p class="lede" style="max-width: 42em">工具都免費、開源，不贊助也照樣能用。如果有幫上忙、想讓它繼續更新，可以用下面的方式支持，錢會拿去付伺服器和網域這些長期的費用。</p>
+    </div>
+  </section>
+
+  <section style="padding-bottom: 80px">
+    <div class="wrap grid g3">
+      {options.map(option => (
+        <div class:list={['option', { affiliate: option.affiliate }]}>
+          <span class="mono" style={`font-size: 12px; font-weight: 600; color: ${option.affiliate ? 'var(--quiet)' : 'var(--accent)'}`}>{option.kind}</span>
+          <h2 class="h3" style="font-size: 24px; font-weight: 900">{option.title}</h2>
+          <p class="body" style="flex-grow: 1">{option.description}</p>
+          <a class:list={['btn', option.affiliate ? 'btn-sub' : 'btn-main']} style="justify-content: center" href={option.href} target="_blank" rel={option.rel} data-ga-event="support_click" data-ga-support-method={option.analyticsId} data-ga-support-type={option.analyticsType}>{option.action}</a>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec alt">
+    <div class="wrap split">
+      <h2 class="h2" style="font-size: 26px">贊助不會換到什麼</h2>
+      <p style="margin: 0; font-size: 16px; line-height: 1.9; color: var(--body)">贊助不會影響工具要做什麼功能，也不會影響文章怎麼寫。聯盟連結只會出現在這一頁，而且都會標清楚，不會混在下載連結裡。</p>
+    </div>
+  </section>
 </Layout>

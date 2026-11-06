@@ -1,30 +1,53 @@
 ---
+import { products } from '../data/products';
+import projectsData from '../data/projects.json';
+
+// 第一層只放四項,五個專案收進「專案」下拉選單(2026-11 使用者覺得七個連結太擠)
+const menuNotes: Record<string, string> = {
+  pobtools: 'POB 繁中化啟動器',
+  'poe-market-zh': '交易站中文化擴充',
+  'exile-appraiser': '遊戲內查價',
+  'multistream-hub': '多直播同時觀看',
+  'kumori-music': 'AI 原創動畫風歌曲',
+};
+const projectLinks = products.map(product => ({ href: `/projects/${product.slug}`, label: product.name, accent: product.accent, note: menuNotes[product.slug] ?? '' }));
 const links = [
-  { href: '/projects/pobtools', label: 'PobTools' },
-  { href: '/projects/poe-market-zh', label: 'Poe Market zh' },
-  { href: '/projects/exile-appraiser', label: 'ExileAppraiser' },
-  { href: '/projects/multistream-hub', label: 'MultiStream' },
-  { href: '/projects/kumori-music', label: 'Kumori Music' },
   { href: '/downloads', label: '下載數' },
   { href: '/blog', label: '文章' },
+  { href: '/about', label: '關於我' },
 ];
-// 手機選單多放幾個桌機版收在頁尾的入口
 const mobileExtra = [
   { href: '/projects', label: '全部專案' },
   { href: '/activity', label: '活動紀錄' },
-  { href: '/about', label: '關於我' },
+  { href: '/now', label: '現在在做什麼' },
   { href: '/resume', label: '履歷' },
   { href: '/support', label: '贊助' },
+  { href: '/contact', label: '聯絡' },
 ];
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
+// 只有完全相同的路徑才標 aria-current,一頁只會有一個
+const isCurrent = (href: string) => currentPath === href;
+const inSection = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
+const inProjects = inSection('/projects');
 ---
 
 <header class="site-nav">
   <div class="wrap">
     <a href="/" class="brand" aria-label="熊少愆首頁">熊少愆</a>
     <nav class="nav-links" aria-label="主要導覽">
-      {links.map(link => <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>{link.label}</a>)}
+      <details class="nav-menu" data-nav-menu>
+        <summary class:list={{ on: inProjects }}>專案</summary>
+        <div class="nav-pop">
+          {projectLinks.map(link => (
+            <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>
+              <i style={`background: ${link.accent}`}></i>
+              <span>{link.label}<small>{link.note}</small></span>
+            </a>
+          ))}
+          <a class="nav-all" href="/projects" aria-current={isCurrent('/projects') ? 'page' : undefined}>看全部 {projectsData.length} 個專案 →</a>
+        </div>
+      </details>
+      {links.map(link => <a href={link.href} class:list={{ on: inSection(link.href) }} aria-current={isCurrent(link.href) ? 'page' : undefined}>{link.label}</a>)}
     </nav>
     <a class="btn btn-main btn-sm nav-cta" href="/#tools">下載工具</a>
     <button id="nav-toggle" class="nav-toggle" type="button" aria-label="開啟選單" aria-expanded="false" aria-controls="nav-mobile">
@@ -34,21 +57,32 @@ const isActive = (href: string) => currentPath === href || currentPath.startsWit
 </header>
 <!-- 放在 header 外面:header 的 backdrop-filter 會讓裡面的 position: fixed 改以 header 為基準,選單會變成 0 高 -->
 <nav id="nav-mobile" class="nav-mobile" aria-label="行動版導覽">
-  {[...links, ...mobileExtra].map(link => <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>{link.label}</a>)}
+  {[...projectLinks, ...links, ...mobileExtra].map(link => <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>{link.label}</a>)}
 </nav>
 
 <script>
   function setupNav() {
     const toggle = document.getElementById('nav-toggle');
     const menu = document.getElementById('nav-mobile');
+    const dropdown = document.querySelector<HTMLDetailsElement>('[data-nav-menu]');
     if (!toggle || !menu || toggle.dataset.bound === 'true') return;
     toggle.dataset.bound = 'true';
-    toggle.addEventListener('click', () => {
-      const open = toggle.getAttribute('aria-expanded') !== 'true';
+    const setMobile = (open: boolean) => {
       toggle.setAttribute('aria-expanded', String(open));
       toggle.setAttribute('aria-label', open ? '關閉選單' : '開啟選單');
       menu.classList.toggle('is-open', open);
+    };
+    toggle.addEventListener('click', () => setMobile(toggle.getAttribute('aria-expanded') !== 'true'));
+    // 點選單外面、按 Esc 都會關;視窗加寬到桌機版時也關掉手機選單,不然切換鈕藏起來就關不掉
+    document.addEventListener('click', event => {
+      if (dropdown?.open && !dropdown.contains(event.target as Node)) dropdown.open = false;
     });
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      if (dropdown?.open) dropdown.open = false;
+      if (menu.classList.contains('is-open')) setMobile(false);
+    });
+    window.matchMedia('(min-width: 901px)').addEventListener('change', event => { if (event.matches) setMobile(false); });
   }
   document.addEventListener('astro:page-load', setupNav);
   setupNav();

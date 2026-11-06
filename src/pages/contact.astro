@@ -1,14 +1,56 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { products } from '../data/products';
+
 const channels = [
-  { label: 'Email', value: 'jerry29221979@gmail.com', href: 'mailto:jerry29221979@gmail.com', note: '合作、工作機會與需要完整說明的問題' },
-  { label: 'GitHub', value: 'github.com/Hsiung-Shao', href: 'https://github.com/Hsiung-Shao', note: '公開專案、原始碼與 Issue' },
-  { label: 'X', value: 'x.com/Hsiungshao', href: 'https://x.com/Hsiungshao', note: '近況與簡短交流' },
-  { label: 'Discord', value: 'discord.gg/4HRneTBvmb', href: 'https://discord.gg/4HRneTBvmb', note: '社群與即時交流' },
+  { label: 'Email', value: 'jerry29221979@gmail.com', href: 'mailto:jerry29221979@gmail.com', note: '工作機會、合作，或需要說明背景的問題' },
+  { label: 'GitHub', value: 'github.com/Hsiung-Shao', href: 'https://github.com/Hsiung-Shao', note: '原始碼和各工具的 issue' },
+  { label: 'Discord', value: 'discord.gg/4HRneTBvmb', href: 'https://discord.gg/4HRneTBvmb', note: '社群和即時聊天' },
+  { label: 'X', value: 'x.com/Hsiungshao', href: 'https://x.com/Hsiungshao', note: '近況和簡短的交流' },
 ];
+// 各工具的問題回報管道,依各 repo README 寫的方式
+const issueWays: Record<string, { where: string; href: string }> = {
+  pobtools: { where: 'GitHub Issues 或 Discord', href: 'https://github.com/Hsiung-Shao/PobTools-zh/issues' },
+  'poe-market-zh': { where: 'GitHub Issues', href: 'https://github.com/Hsiung-Shao/poe-market-zh/issues' },
+  'exile-appraiser': { where: '程式內的回報按鈕或 GitHub Issues', href: 'https://github.com/Hsiung-Shao/exile-appraiser/issues' },
+  'multistream-hub': { where: '網站右下角的回饋按鈕', href: 'https://multistreaming.org' },
+};
+const issues = products.filter(product => issueWays[product.slug]).map(product => ({ name: product.name, accent: product.accent, ...issueWays[product.slug] }));
+const isExternal = (href: string) => /^https?:\/\//.test(href);
 ---
+
 <Layout title="聯絡熊少愆">
-  <header class="page-intro site-shell"><span class="kicker">Contact</span><h1>把問題說清楚，我會直接回應。</h1><p>合作邀請、工程問題或公開專案回饋，都可以透過以下管道聯絡。Email 適合帶有背景與需求的完整訊息。</p></header>
-  <section class="site-shell py-20"><div class="contact-list">{channels.map((channel, index) => <a href={channel.href} target={channel.href.startsWith('http') ? '_blank' : undefined} rel={channel.href.startsWith('http') ? 'noopener noreferrer' : undefined}><span class="meta-label text-[var(--quiet)]">0{index + 1}</span><div><span class="meta-label text-[var(--blue)]">{channel.label}</span><strong>{channel.value}</strong><p>{channel.note}</p></div><span aria-hidden="true">↗</span></a>)}</div></section>
-  <section class="border-t border-[var(--line-strong)] bg-[var(--surface)]"><div class="site-shell profile-close py-16"><div><span class="kicker">Good context helps</span><h2 class="display-type mt-3 text-3xl">來信時，請附上目標、現況與限制。</h2></div><p>若是技術問題，錯誤訊息、重現步驟與環境資訊會比單一句「不能用」更容易開始處理。客戶或私人資料請先移除。</p></div></section>
+  <section class="page-head" style="padding-bottom: 72px">
+    <div class="wrap split">
+      <div>
+        <h1 class="h1">聯絡我</h1>
+        <p class="lede">工作機會、合作或想問的事，Email 最好。工具壞掉的話直接到該工具的 GitHub 開 issue，我比較不會漏看。</p>
+      </div>
+      <div>
+        {channels.map(channel => (
+          <a class="channel" href={channel.href} target={isExternal(channel.href) ? '_blank' : undefined} rel={isExternal(channel.href) ? 'noopener noreferrer' : undefined}>
+            <span class="mono" style="font-size: 13px; font-weight: 600; color: var(--accent)">{channel.label}</span>
+            <div><div style="font-size: 18px; font-weight: 700">{channel.value}</div><div class="body" style="margin-top: 4px; font-size: 14px">{channel.note}</div></div>
+            <span aria-hidden="true" class="note" style="font-size: 18px">↗</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec alt">
+    <div class="wrap split">
+      <div>
+        <h2 class="h2" style="font-size: 28px">回報工具的問題</h2>
+        <p class="sub" style="font-size: 15px">附上錯誤訊息、怎麼重現、用的是哪個版本，會比只說「不能用」快很多。截圖前記得把帳號名稱之類的私人資料遮掉。</p>
+      </div>
+      <div>
+        {issues.map(issue => (
+          <a href={issue.href} target="_blank" rel="noopener noreferrer" style={`--p-accent: ${issue.accent}; display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); font-size: 15px`}>
+            <span style="font-weight: 700">{issue.name}</span><span class="more">{issue.where}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
 </Layout>

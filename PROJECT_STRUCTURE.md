@@ -6,7 +6,7 @@
 |---|---|
 | Framework | Astro 5 |
 | Pages | Astro components, no client framework islands |
-| Styling | Hand-written design system in `src/styles/site.css`; legacy pages still use Tailwind CSS 4 and `global.css` |
+| Styling | Hand-written design system in `src/styles/site.css`, no CSS framework |
 | Motion | Astro ClientRouter + CSS hover transitions |
 | Content | JSON data + Markdown rendering with marked |
 | Deployment | GitHub Pages + GitHub Actions |
@@ -77,6 +77,7 @@ myweb/
 
 | Date | Changes |
 |---|---|
+| 2026-11-06 | Redesign phase 2: blog index and article, projects, activity, now, about, resume, support and contact rebuilt on the same design system; navbar collapses the five product pages into a dropdown; Tailwind, `global.css` and the unused contact form removed; article reading time added. |
 | 2026-11-06 | Redesign phase 1 from the Claude Design dark "A" direction: new home, five `/projects/<slug>` product pages (adding MultiStream Hub and Kumori Music), `/downloads` with per-series toggles, redirects from `/poe/*` and `/concepts/*`, and removal of Three.js, React, the concept pages, and the cinematic home. |
 | 2026-10-02 | Logged a month of cross-project activity (headless engine rewrite, browser fallback path, extension data-source recovery), drafted three engineering retrospectives, and completed the directory and module inventory. |
 | 2026-09-18 | Documented the full Git Log synchronization handoff, including baselines, deduplication, content rules, privacy boundaries, and verification. |

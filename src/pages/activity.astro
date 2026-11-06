@@ -1,13 +1,76 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import FilterScript from '../components/FilterScript.astro';
 import { activity } from '../data/activity';
+import { products } from '../data/products';
+
 const sorted = [...activity].sort((a, b) => b.date.localeCompare(a.date));
 const grouped = new Map<string, typeof sorted>();
-for (const entry of sorted) { const month = entry.date.slice(0, 7); if (!grouped.has(month)) grouped.set(month, []); grouped.get(month)!.push(entry); }
+for (const entry of sorted) {
+  const month = entry.date.slice(0, 7);
+  if (!grouped.has(month)) grouped.set(month, []);
+  grouped.get(month)!.push(entry);
+}
+
+// 活動的專案名比產品頁名稱長(例如「AI Music / Kumori Music」),用包含關係對到主色
+const accentFor = (project: string) => products.find(product => project.includes(product.name))?.accent ?? (project === '個人網站' ? 'var(--accent)' : 'var(--ink)');
+const keyOf = (project: string) => `p${[...project].reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) >>> 0, 7).toString(36)}`;
+const counts = new Map<string, number>();
+for (const entry of sorted) counts.set(entry.project, (counts.get(entry.project) ?? 0) + 1);
+// 篩選按鈕只列紀錄最多的五個專案,其他的看「全部」
+const topProjects = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+const shortName = (project: string) => project.replace(/^AI Music \/ /, '');
+const firstMonth = sorted.at(-1)?.date.slice(0, 7);
+const latest = sorted[0]?.date;
+const thisMonth = latest ? grouped.get(latest.slice(0, 7))?.length ?? 0 : 0;
 ---
-<Layout title="活動日誌 | 熊少愆">
-  <header class="page-intro site-shell"><span class="kicker">Activity log / {sorted.length} entries</span><h1>跨專案的變更紀錄。</h1><p>從各專案 Git 與公開發布紀錄整理實際完成的工作。公開專案保留具體內容，受保護工作只留下不涉及客戶資訊的技術摘要。</p></header>
-  <section class="site-shell py-20">
-    {sorted.length === 0 ? <p class="text-[var(--muted)]">尚未有活動紀錄。</p> : Array.from(grouped.entries()).map(([month, entries]) => <section class="activity-month"><h2>{month}</h2><div>{entries.map(entry => <article><time>{entry.date}</time><div><span class="meta-label text-[var(--blue)]">{entry.project} / {entry.tier === 'protected' ? 'Protected' : 'Public'}</span><p>{entry.summary}</p><div class="flex flex-wrap gap-1">{entry.tags?.map(tag => <span class="tag">{tag}</span>)}</div>{entry.commits && entry.commits.length > 0 && <div class="activity-commits"><span>git</span>{entry.commits.map(commit => <code>{commit}</code>)}</div>}{entry.link && <a class="text-link mt-4 inline-block" href={entry.link} target="_blank" rel="noopener noreferrer">查看發布內容 ↗</a>}</div></article>)}</div></section>)}
+
+<Layout title="活動紀錄 | 熊少愆" description="從各專案 Git 紀錄整理的開發活動，同一件事的多個 commit 合成一則。">
+  <section class="page-head" style="padding-bottom: 40px">
+    <div class="wrap">
+      <h1 class="h1">活動紀錄</h1>
+      <p class="lede" style="max-width: 44em">從各專案的 Git 紀錄整理出來，同一件事的好幾個 commit 合成一則，只挑有代表性的。每天早上 8 點自動同步，客戶專案只寫技術做法。</p>
+      <div class="figures">
+        <div><div class="figure-num">{sorted.length}</div><div class="figure-label">則活動，從 {firstMonth} 開始</div></div>
+        {latest && <div><div class="figure-num">{thisMonth}</div><div class="figure-label">則在 {Number(latest.slice(5, 7))} 月</div></div>}
+        {latest && <div><div class="figure-num">{latest.slice(5)}</div><div class="figure-label">最新一則的日期</div></div>}
+      </div>
+    </div>
   </section>
+
+  <div class="sticky-bar">
+    <div class="wrap filters" data-filter-group="#activity-list" role="group" aria-label="依專案篩選">
+      <button type="button" class="seg" data-filter="all" aria-pressed="true">全部 <span class="mono">{sorted.length}</span></button>
+      {topProjects.map(([project, count]) => <button type="button" class="seg" data-filter={keyOf(project)} aria-pressed="false">{shortName(project)} <span class="mono">{count}</span></button>)}
+    </div>
+  </div>
+
+  <section id="activity-list" style="padding-bottom: 80px">
+    <div class="wrap">
+      {sorted.length === 0 ? <p class="body" style="padding-top: 48px">還沒有活動紀錄。</p> : [...grouped.entries()].map(([month, entries]) => (
+        <div class="month" data-filter-section>
+          <div><h2>{month}</h2><div class="note" style="margin-top: 8px">{entries.length} 則</div></div>
+          <div>
+            {entries.map(entry => (
+              <div class="entry" data-filter-item data-tags={keyOf(entry.project)} style={`--p-accent: ${accentFor(entry.project)}`}>
+                <time datetime={entry.date}>{entry.date.slice(5)}</time>
+                <div>
+                  <div class="who">{shortName(entry.project)}{entry.tier === 'protected' && <span class="note" style="margin-left: 8px; font-weight: 400">客戶專案，只寫技術做法</span>}</div>
+                  <p>{entry.summary}</p>
+                  {((entry.tags?.length ?? 0) > 0 || (entry.commits?.length ?? 0) > 0 || entry.link) && (
+                    <div class="meta">
+                      {entry.tags?.map(tag => <span class="chip-sm" style="margin: 0">{tag}</span>)}
+                      {entry.commits?.map(commit => <code class="sha">{commit}</code>)}
+                      {entry.link && <a class="more" href={entry.link} target="_blank" rel="noopener noreferrer" style="margin-left: 6px">看發佈內容</a>}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+  <FilterScript />
 </Layout>

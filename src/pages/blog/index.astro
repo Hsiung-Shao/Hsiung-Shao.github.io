@@ -1,51 +1,71 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
+import FilterScript from '../../components/FilterScript.astro';
 import { visiblePosts } from '../../data/posts';
+import { products, imageFor } from '../../data/products';
 
 const published = [...visiblePosts].sort((a, b) => b.date.localeCompare(a.date));
 const guides = published.filter(post => post.type === 'guide');
-const records = published.filter(post => post.type !== 'guide');
-const typeLabels = { engineering: '開發筆記', 'case-study': '技術案例', retrospective: '回顧', guide: '使用指南' };
-const guideImages: Record<string, string> = {
-  'multistream-hub-guide': '/images/guides/multistream/multistream-live-grid.png',
-  'pobtools-installation-guide': '/images/guides/pobtools/pobtools-pob-main.png',
-  'poe-market-zh-guide': '/images/guides/poe-market/poemarketzh-2-filters.jpg',
-  'exile-appraiser-guide': '/images/guides/exile-appraiser/well-of-souls-ocr.png',
-  'minecraft-mod-translation-guide': '/images/guides/minecraft/00-app-overview.png',
-};
+const typeLabels: Record<string, string> = { guide: '教學', engineering: '開發筆記', retrospective: '回顧', 'case-study': '技術案例' };
+const filters = ['all', 'guide', 'engineering', 'retrospective', 'case-study'].filter(type => type === 'all' || published.some(post => post.type === type));
+
+// 有產品頁的工具教學用產品頁的首屏截圖當封面,依序排前三篇;其他教學只放文字連結
+const productByProject = new Map(products.map(product => [product.name, product]));
+const covered = guides
+  .map(post => ({ post, product: productByProject.get(post.project ?? '') }))
+  .filter(item => item.product?.hero.image)
+  .slice(0, 3)
+  .map(item => ({ ...item, image: imageFor(item.product!.hero.image)! }));
+const coveredSlugs = new Set(covered.map(item => item.post.slug));
+const otherGuides = guides.filter(post => !coveredSlugs.has(post.slug));
 ---
 
-<Layout title="文章與使用指南 | 熊少愆" description="專案使用指南、工程決策、技術案例與開發回顧。">
-  <header class="page-intro site-shell">
-    <span class="kicker">Field notes / {published.length} articles</span>
-    <h1>從使用方法，寫到決策背後。</h1>
-    <p>公開工具需要能被正確使用，工程成果也需要留下原因。文章分成可照著操作的完整指南，以及記錄架構、取捨與失敗經驗的工作筆記。</p>
-  </header>
+<Layout title="文章與使用教學 | 熊少愆" description="PoE 工具、MultiStream Hub、Minecraft MOD 翻譯工具的使用教學，還有做這些東西時的開發筆記。">
+  <section class="page-head">
+    <div class="wrap">
+      <h1 class="h1">使用教學與開發筆記</h1>
+      <p class="lede" style="max-width: 42em">工具怎麼裝、怎麼用，還有做的時候踩到的坑。教學會跟著工具改版更新，畫面跟你看到的不一樣就是我還沒更新，可以到 GitHub 跟我說。</p>
+    </div>
+  </section>
 
-  <section class="site-shell py-20">
-    <div class="section-heading mb-10"><div><span class="kicker">Practical guides</span><h2>可以實際完成任務的指南</h2></div><p>安裝、設定、驗證與常見問題放在同一篇文章裡，不把重要步驟藏在零散說明中。</p></div>
-    <div class="guide-lead-grid">
-      {guides.slice(0, 3).map((post, index) => (
-        <a class="guide-lead" href={`/blog/${post.slug}`}>
-          <figure>{guideImages[post.slug] && <img src={guideImages[post.slug]} alt={`${post.project ?? post.title} 操作畫面`} loading={index === 0 ? 'eager' : 'lazy'} />}</figure>
-          <div><span class="meta-label text-[var(--red)]">Guide {String(index + 1).padStart(2, '0')}</span><h2>{post.title}</h2><p>{post.excerpt}</p></div>
+  <section style="padding-bottom: 80px">
+    <div class="wrap">
+      <div class="head-row" style="margin-bottom: 24px"><h2 class="h2" style="font-size: 28px">先看教學</h2><span class="mono note">{guides.length} 篇，照工具分</span></div>
+      <div class="grid g3">
+        {covered.map(({ post, product, image }) => (
+          <a class="media-card" href={`/blog/${post.slug}`} style={`--p-accent: ${product!.accent}`}>
+            <Image src={image} alt={`${product!.name} 畫面`} widths={[480, 960]} sizes="(max-width: 900px) 100vw, 380px" />
+            <div class="media-body">
+              <span class="ptag" style="font-weight: 600">{product!.name} · {post.date.slice(5)}</span>
+              <h3 class="h3">{post.title.replace(/^[^：]+：/, '')}</h3>
+              <p class="body" style="font-size: 14px">{post.excerpt}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+      {otherGuides.length > 0 && (
+        <div style="display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 24px; font-size: 15px">
+          {otherGuides.map(post => <a class="more" href={`/blog/${post.slug}`} style="color: var(--ink)">{post.title}</a>)}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section id="all-posts" class="sec alt">
+    <div class="wrap">
+      <div class="head-row" style="margin-bottom: 24px"><h2 class="h2" style="font-size: 28px">全部文章</h2><span class="mono note">共 <span data-filter-count>{published.length}</span> 篇，新的在上面</span></div>
+      <div class="filters" data-filter-group="#all-posts" role="group" aria-label="依文章類型篩選" style="margin-bottom: 12px">
+        {filters.map((type, index) => <button type="button" class="seg" data-filter={type} aria-pressed={index === 0 ? 'true' : 'false'}>{type === 'all' ? '全部' : typeLabels[type]}</button>)}
+      </div>
+      {published.map(post => (
+        <a class="post-row" href={`/blog/${post.slug}`} data-filter-item data-tags={post.type ?? 'engineering'}>
+          <div class="meta"><time datetime={post.date}>{post.date}</time><span>{typeLabels[post.type ?? 'engineering']}{post.draft ? ' · 草稿' : ''}</span></div>
+          <div><div class="title">{post.title}</div><div class="excerpt">{post.excerpt}</div></div>
+          <div class="proj">{post.project}</div>
         </a>
       ))}
     </div>
   </section>
-
-  <section class="border-y border-[var(--line-strong)] bg-[var(--surface)]">
-    <div class="site-shell py-20">
-      <div class="section-heading mb-4"><div><span class="kicker">All writing</span><h2>完整文章索引</h2></div><p>依發布時間排列，涵蓋公開指南、專案回顧與去識別化技術案例。</p></div>
-      <div class="post-index">
-        {[...guides.slice(3), ...records].sort((a, b) => b.date.localeCompare(a.date)).map(post => (
-          <article><a class="post-row" href={`/blog/${post.slug}`}>
-            <div class="font-mono text-xs text-[var(--quiet)]"><time>{post.date}</time><div class="mt-2 text-[var(--red)]">{post.type ? typeLabels[post.type] : '文章'}</div>{post.draft && <div class="mt-2">草稿</div>}</div>
-            <div><h2>{post.title}</h2><p>{post.excerpt}</p></div>
-            <div class="post-tags">{post.tags.slice(0, 4).map(tag => <span class="tag">{tag}</span>)}</div>
-          </a></article>
-        ))}
-      </div>
-    </div>
-  </section>
+  <FilterScript />
 </Layout>

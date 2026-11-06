@@ -10,6 +10,6 @@ export function getStaticPaths() {
 const product = products.find(candidate => candidate.slug === Astro.params.slug)!;
 ---
 
-<Layout title={`${product.name} | 熊少愆`} description={product.hero.lede} accent={product.accent} fresh>
+<Layout title={`${product.name} | 熊少愆`} description={product.hero.lede} accent={product.accent}>
   <ProductPage product={product} />
 </Layout>

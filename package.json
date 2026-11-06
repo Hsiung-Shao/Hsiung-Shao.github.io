@@ -21,10 +21,8 @@
     "record-history": "node scripts/record-download-history.mjs"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.17.1",
-    "marked": "^15.0.0",
-    "tailwindcss": "^4.1.18"
+    "marked": "^15.0.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",

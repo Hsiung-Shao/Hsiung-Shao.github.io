@@ -56,7 +56,7 @@
 
 ```bash
 npm run dev              # 開發伺服器
-npm test                 # vitest,100 個測試
+npm test                 # vitest,107 個測試
 npm run validate-content # 內容護欄(隱私掃描 + 資料結構),build 會自動先跑
 npm run build            # validate-content + astro build
 npm run typecheck        # astro check,必須 0 錯誤(CI 硬性 gate)
@@ -222,10 +222,14 @@ repo 連續 60 天沒有活動時 GitHub 會停用排程,bot 推 data 分支算�
   取 featured 中第一個有 release 快照的專案,把最新一版拆成修正/新增/調整(`scripts/lib/release-notes.mjs`)。
   要換首頁展示什麼就改資料,不要回頭在 astro 裡寫死專案名——2026-10-02 之前那段
   是寫死的,導致改 `featured` 完全沒有效果。找不到可用的 featured 專案時建置會直接失敗。
-- **第二階段還沒做**(2026-11-06):文章、活動、Now、關於、履歷、贊助、聯絡、專案總覽還是舊版面,
-  只換了導覽列、頁尾和配色。新版頁面在 `Layout` 傳 `fresh`,樣式在 `src/styles/site.css`;
-  舊頁面靠 `global.css` 的舊 class。這幾頁要先在 Claude Design 畫好、使用者核准後才實作,
-  全部改完再把 `global.css` 用不到的 class 刪掉、兩份樣式合併。
+- **全站只有一份樣式** `src/styles/site.css`(2026-11-06 第二階段後):沒有 Tailwind、沒有 global.css。
+  檔頭有一段最小重設,取代原本的 Tailwind preflight;新元件的間距請寫在元件上,不要依賴瀏覽器預設。
+  篩選按鈕共用 `src/components/FilterScript.astro`(data-filter-group / data-filter / data-filter-item)。
+- **中文長標題要手動斷行**:CSS 沒辦法對中文斷詞,`.h1` 是 `white-space: pre-line`,
+  在資料或模板的標題裡放 `\n` 指定斷點,不然會把「繁中」「直播」這類詞拆在兩行。
+- **verify skill 有兩份**:主 checkout 的 `.claude/skills/verify/` 仍是舊選擇器(`a.guide-lead`、`article-body`),
+  改版後要換成 worktree 裡更新過的版本(`a.post-row[data-tags=guide]`、`article.prose`),
+  worktree session 不能寫主 checkout 的 `.claude/`。
 - **導覽列不要把 `position: fixed` 的東西放進 header**:header 有 `backdrop-filter`,
   裡面的 fixed 元素會改以 header 為基準,手機選單曾因此變成 0 高。
 - **CI 分兩條**:`ci.yml`(PR 進 main 時跑 validate + test + build + typecheck)與

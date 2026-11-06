@@ -1,5 +1,4 @@
 import { defineConfig } from 'astro/config';
-import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://hsiung-shao.github.io',
@@ -13,8 +12,5 @@ export default defineConfig({
     '/concepts/bento': '/',
     '/concepts/cinematic': '/',
     '/concepts/editorial': '/',
-  },
-  vite: {
-    plugins: [tailwindcss()],
   },
 });

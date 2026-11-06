@@ -1,44 +1,93 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { resume } from '../data/resume';
+import { products } from '../data/products';
 
-const capabilities = [
-  { label: 'Systems', items: ['資料模型與 API', '權限與資料邊界', '跨平台相容與降級路徑', '本地模型與生成流程', '部署與維護流程'] },
-  { label: 'Languages', items: ['TypeScript / JavaScript', 'Python', 'C++', 'Lua', 'PHP', 'SQL'] },
-  { label: 'Platforms', items: ['React / Astro / Svelte', '瀏覽器擴充 (MV3)', 'Supabase / PostgreSQL', 'Electron', 'Cloudflare', 'Windows / Wine'] },
-];
+const notes: Record<string, string> = {
+  pobtools: 'POB 繁中化啟動器',
+  'poe-market-zh': '交易站中文化擴充',
+  'exile-appraiser': '遊戲內查價',
+  'multistream-hub': '多直播同時觀看',
+  'kumori-music': 'AI 原創動畫風歌曲',
+};
+// 關於頁的技能只取每組前六項,完整的在履歷
+const skills = resume.skills.map(group => ({ ...group, items: group.items.slice(0, 6) }));
+const job = resume.experience[0];
 ---
 
-<Layout title="關於熊少愆" description="全端工程師熊少愆的工作方法、技術能力與個人背景。">
-  <header class="page-intro site-shell">
-    <span class="kicker">Profile</span>
-    <h1>我不把自己限制在某個技術棧裡。</h1>
-    <p>我是熊少愆（Jerry），全端工程師，工作重心偏向後端、資料與系統設計。我關心的不只是功能能不能跑，而是資料是否可信、邊界是否清楚，以及半年後還能不能理解當時的決定。</p>
-  </header>
-
-  <section class="site-shell py-20">
-    <div class="profile-grid">
-      <div><span class="kicker">Working identity</span><h2 class="display-type mt-4 text-4xl">從問題出發，跨過必要的邊界。</h2></div>
-      <div class="profile-copy">
-        <p>我從 2019 年開始做後端開發，曾從零建構中型管理系統，目前的重心放在遊戲工具的在地化與長期維護：桌面程式的引擎改寫、瀏覽器擴充，以及把 AI 生成納入實際可交付的製作流程。這些專案橫跨瀏覽器、桌面程式、資料庫和遊戲生態，但核心方法一致：先把資料流與風險說清楚，再選擇足以解決問題的技術。</p>
-        <p>這類工具有個共同處境：它們依附在別人的產品上。遊戲會更新、網站會改版、執行環境可能根本不存在，所以我花在相容與降級路徑上的時間，常常比功能本身還多。</p>
-        <p>我喜歡研究新技術，但不把新穎當成目的。真正值得留下來的成果，應該有可驗證的輸出、清楚的使用方式，並能和既有系統共存。</p>
+<Layout title="關於熊少愆" description="熊少愆是後端工程師，白天一個人維護公司 ERP，下班做 Path of Exile 繁中工具、直播觀看網站和 AI 音樂。">
+  <section class="page-head" style="padding-block: 88px 80px">
+    <div class="wrap split" style="align-items: end">
+      <div>
+        <p class="kick">{resume.name} · Jerry · {resume.location}</p>
+        <h1 class="h1" style="font-size: 52px; line-height: 1.2">{'我是後端工程師，\n下班做遊戲工具'}</h1>
+      </div>
+      <div>
+        <p style="margin: 0; font-size: 18px; line-height: 1.9; color: var(--body)">白天我一個人負責公司內部的 ERP，從資料庫 schema、後端程式到前端畫面和第三方 API 串接都是我寫的，已經穩定跑了兩年多。</p>
+        <p style="margin: 16px 0 0; font-size: 18px; line-height: 1.9; color: var(--body)">下班做自己會用到的東西：Path of Exile 的繁中化和查價工具、多平台直播觀看網站，還有 AI 音樂。</p>
+        <div class="btns" style="margin-top: 28px"><a class="btn btn-main" href="/resume">看履歷</a><a class="btn btn-sub" href="/contact">聯絡我</a></div>
       </div>
     </div>
   </section>
 
-  <section class="border-y border-[var(--line-strong)] bg-[var(--surface)]">
-    <div class="site-shell py-20">
-      <div class="section-heading mb-10"><div><span class="kicker">Capability map</span><h2>技術能力不是一串標籤</h2></div><p>我用它們處理資料、建立介面、連接服務，最後交付一套可以維護的完整流程。</p></div>
-      <div class="capability-table">{capabilities.map((group, index) => <div><span class="meta-label text-[var(--blue)]">0{index + 1} / {group.label}</span><div>{group.items.map(item => <strong>{item}</strong>)}</div></div>)}</div>
+  <section class="sec alt">
+    <div class="wrap split">
+      <h2 class="h2" style="font-size: 32px">我花最多時間的地方</h2>
+      <div>
+        <p style="margin: 0; font-size: 17px; line-height: 1.9; color: var(--body)">我做的工具大多依附在別人的產品上。遊戲會改版，網站會換結構，執行環境也可能根本不存在，所以我花在相容性、資料驗證和長期維護的時間，常常比寫新功能還多。</p>
+        <p style="margin: 16px 0 0; font-size: 17px; line-height: 1.9; color: var(--body)">像 PobTools 的翻譯是從官方遊戲客戶端整理的，Poe Market zh 的譯名是依官方 id 對上去的，對不上的就保留英文，不亂猜。</p>
+      </div>
     </div>
   </section>
 
-  <section class="site-shell py-20">
-    <div class="section-heading mb-10"><div><span class="kicker">Experience</span><h2>工作與持續實作</h2></div><p>正式工作建立系統尺度，個人專案則讓我持續測試新的工具、架構與維護方式。</p></div>
-    <div class="work-row"><span class="index">2019—</span><div><h3>全端工程師（偏後端）</h3><p>中型管理系統的開發、重構與長期維護。</p></div><div class="work-meta"><p>資料庫架構、權限策略、第三方 API 正規化、前端流程與報表輸出。</p></div></div>
-    <div class="work-row"><span class="index">ONGOING</span><div><h3>獨立工具與公開紀錄</h3><p>從自身使用情境出發，完成可下載、可操作、可持續更新的工具。</p></div><div class="work-meta !border-[var(--green)]"><p>Path of Exile 工具生態、瀏覽器擴充、直播聚合、Minecraft 翻譯與 AI 音樂製作流程。</p></div></div>
-    <a class="text-link mt-6" href="/resume">完整履歷（可列印）→</a>
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="h2" style="font-size: 32px; margin-bottom: 32px">平常在用的技術</h2>
+      <div class="grid auto">
+        {skills.map(group => <div class="box"><p class="cv-lbl">{group.label}</p><div>{group.items.map(item => <span class="chip-sm" style="font-size: 13px; color: var(--body)">{item}</span>)}</div></div>)}
+      </div>
+    </div>
   </section>
 
-  <section class="border-t border-[var(--line-strong)] bg-[var(--night)] text-white"><div class="site-shell py-16 profile-close"><div><span class="kicker !text-[#8fb2ff]">Outside the editor</span><h2 class="display-type mt-3 text-3xl">遊戲、動畫，以及看到新技術就動手試。</h2></div><p>平常喜歡 Path of Exile、Minecraft、Valorant 與其他線上遊戲。很多工具都從真實遊玩中的不便開始，最後成為一個需要處理資料、相容性與使用體驗的完整工程問題。</p></div></section>
+  <section class="sec alt">
+    <div class="wrap split">
+      <div>
+        <h2 class="h2" style="font-size: 32px">經歷</h2>
+        <a class="more" href="/resume" style="display: inline-block; margin-top: 16px">完整履歷，可列印</a>
+      </div>
+      <div>
+        <div class="cv-row" style="grid-template-columns: 130px minmax(0, 1fr); border-top: 0">
+          <span class="mono note" style="font-size: 14px">{job.period}</span>
+          <div><div style="font-size: 18px; font-weight: 700">{job.role} · {job.industry}</div><p class="body" style="margin-top: 8px">一個人負責內部 ERP：客戶、訂單、採購、庫存、批號效期和報表，還有電子發票與電商訂單整合。</p></div>
+        </div>
+        <div class="cv-row" style="grid-template-columns: 130px minmax(0, 1fr)">
+          <span class="mono note" style="font-size: 14px">接案</span>
+          <div><div style="font-size: 18px; font-weight: 700">全端工程師 · 客戶名稱不公開</div><p class="body" style="margin-top: 8px">資料管理平台和品牌網站。可以公開的做法寫在<a class="more" href="/projects#cases" style="margin-left: 4px">技術案例</a></p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap split">
+      <div>
+        <h2 class="h2" style="font-size: 32px">下班做的東西</h2>
+        <p class="sub" style="font-size: 15px">很多都是玩遊戲時覺得不方便，就自己做一個。</p>
+      </div>
+      <div>
+        {products.map(product => (
+          <a href={`/projects/${product.slug}`} style="display: flex; justify-content: space-between; gap: 16px; padding: 16px 0; border-top: 1px solid var(--line); font-size: 16px">
+            <span style="font-weight: 700">{product.name}</span><span class="body" style="text-align: right">{notes[product.slug] ?? ''} →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sunk">
+    <div class="wrap split" style="align-items: center">
+      <h2 class="h2" style="font-size: 28px">工作以外</h2>
+      <p style="margin: 0; font-size: 17px; line-height: 1.9; color: var(--body)">平常玩 Path of Exile、Minecraft、Valorant，也看動畫，Kumori Music 的歌多半是以動畫作品為靈感寫的。</p>
+    </div>
+  </section>
 </Layout>

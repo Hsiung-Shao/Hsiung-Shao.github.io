@@ -4,84 +4,81 @@ import { resume, resumeProjects, otherResumeProjects } from '../data/resume';
 ---
 
 <Layout title="履歷 | 熊少愆" description="熊少愆（Jerry）的履歷：PHP／ERP 後端開發經歷、客戶專案，以及 Path of Exile 工具、直播與 AI 音樂等個人專案。">
-  <div class="resume-page">
-    <header class="page-intro site-shell resume-intro">
-      <span class="kicker">Resume</span>
-      <h1>{resume.name}<small>{resume.nameEn}</small></h1>
-      <p class="resume-headline">{resume.headline}・{resume.location}</p>
-      <ul class="resume-contact">
-        {resume.contact.map(item => <li><span class="meta-label">{item.label}</span><a href={item.href}>{item.value}</a></li>)}
-      </ul>
-      <div class="resume-actions">
-        <button type="button" class="command-link" data-resume-print>列印 / 存成 PDF</button>
-        <a class="command-link secondary" href="/projects">看完整作品</a>
+  <div class="cv-page">
+    <section class="page-head" style="padding-block: 72px 48px; border-bottom: 1px solid var(--line)">
+      <div class="wrap" style="display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 24px">
+        <div>
+          <h1 class="h1" style="font-size: 52px; line-height: 1.15">{resume.name}</h1>
+          <p class="mono note" style="margin-top: 10px; font-size: 15px">{resume.nameEn} · {resume.headline} · {resume.location}</p>
+        </div>
+        <div class="cv-actions" style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+          <span class="note">列印時會轉成白底黑字的 A4</span>
+          <button type="button" class="btn btn-main" data-resume-print style="border: 0; cursor: pointer; font-family: inherit">列印 / 存成 PDF</button>
+        </div>
       </div>
-    </header>
-
-    <section class="site-shell resume-section">
-      <h2 class="resume-heading"><span class="kicker">Summary</span>簡介</h2>
-      <div class="resume-summary">{resume.summary.map(paragraph => <p>{paragraph}</p>)}</div>
     </section>
 
-    <section class="site-shell resume-section">
-      <h2 class="resume-heading"><span class="kicker">Experience</span>工作經歷</h2>
-      {resume.experience.map(job => (
-        <article class="resume-item">
-          <div class="resume-item-head">
-            <div>
-              <h3>{job.role}<span>{job.company}</span></h3>
-              <p class="resume-sub">{job.industry}</p>
+    <section style="padding: 56px 0 88px">
+      <div class="wrap cv">
+        <aside class="cv-side">
+          <div class="cv-sec">
+            <p class="cv-lbl">聯絡</p>
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px">
+              {resume.contact.map(item => <a href={item.href}>{item.value}</a>)}
             </div>
-            {job.period && <span class="resume-period">{job.period}</span>}
           </div>
-          <p>{job.summary}</p>
-          <ul>{job.highlights.map(item => <li>{item}</li>)}</ul>
-          <div class="resume-tags">{job.tech.map(tech => <span class="tag">{tech}</span>)}</div>
-        </article>
-      ))}
-    </section>
-
-    <section class="site-shell resume-section">
-      <h2 class="resume-heading"><span class="kicker">Projects</span>個人專案</h2>
-      <div class="resume-projects">
-        {resumeProjects.map(({ project, note, metric }) => (
-          <article class="resume-item">
-            <div class="resume-item-head">
-              <h3>{project.link ? <a href={project.link} target="_blank" rel="noopener noreferrer">{project.title} ↗</a> : project.title}</h3>
-            </div>
-            <p>{note}</p>
-            {metric && <p class="resume-metric">{metric.label} {metric.value}（{metric.asOf}）</p>}
-            <div class="resume-tags">{project.tech.slice(0, 5).map(tech => <span class="tag">{tech}</span>)}</div>
-          </article>
-        ))}
-      </div>
-      <p class="resume-others">其他專案：{otherResumeProjects.map(project => project.title).join('、')}。詳細說明在 <a href="/projects">/projects</a>。</p>
-    </section>
-
-    <section class="site-shell resume-section">
-      <h2 class="resume-heading"><span class="kicker">Skills</span>技能</h2>
-      <div class="resume-skills">
-        {resume.skills.map(group => <div><span class="meta-label">{group.label}</span><p>{group.items.join('、')}</p></div>)}
-      </div>
-    </section>
-
-    <section class="site-shell resume-section">
-      <h2 class="resume-heading"><span class="kicker">Education</span>學歷</h2>
-      {resume.education.map(item => (
-        <article class="resume-item">
-          <div class="resume-item-head">
-            <h3>{item.school}<span>{item.department}・{item.degree}</span></h3>
-            <span class="resume-period">{item.period}</span>
+          <div class="cv-sec">
+            <p class="cv-lbl">技能</p>
+            {resume.skills.map(group => <div style="margin-bottom: 16px"><div style="font-size: 14px; font-weight: 700; margin-bottom: 8px">{group.label}</div>{group.items.map(item => <span class="chip-sm">{item}</span>)}</div>)}
           </div>
-        </article>
-      ))}
-    </section>
+          <div class="cv-sec">
+            <p class="cv-lbl">學歷</p>
+            {resume.education.map(item => <div style="margin-bottom: 10px; font-size: 15px; line-height: 1.7"><div style="font-weight: 700">{item.school} {item.department}</div><div class="mono note">{item.period}・{item.degree}</div></div>)}
+          </div>
+          <div class="cv-sec">
+            <p class="cv-lbl">證照</p>
+            <div style="font-size: 15px; line-height: 1.9; color: var(--body)">{resume.certifications.map(item => <div>{item}</div>)}</div>
+          </div>
+        </aside>
 
-    <section class="site-shell resume-section">
-      <h2 class="resume-heading"><span class="kicker">Credentials</span>證照與獲獎</h2>
-      <div class="resume-skills">
-        <div><span class="meta-label">技術士證照</span><p>{resume.certifications.join('、')}</p></div>
-        <div><span class="meta-label">競賽（高職時期）</span><ul class="resume-awards">{resume.awards.map(award => <li>{award.name}<strong>{award.result}</strong></li>)}</ul></div>
+        <div>
+          <div class="cv-sec">
+            <p class="cv-lbl">簡介</p>
+            {resume.summary.map(paragraph => <p style="margin: 0 0 14px; font-size: 17px; line-height: 1.9; color: var(--body)">{paragraph}</p>)}
+          </div>
+          <div class="cv-sec">
+            <p class="cv-lbl">工作經歷</p>
+            {resume.experience.map((job, index) => (
+              <article style={index > 0 ? 'margin-top: 32px' : undefined}>
+                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; align-items: baseline">
+                  <h2 style="margin: 0; font-size: 22px; font-weight: 900">{job.company} · {job.role}</h2>
+                  <span class="mono note" style="font-size: 14px">{job.period ?? job.industry}</span>
+                </div>
+                {job.period && <div class="note" style="margin-top: 4px">{job.industry}</div>}
+                <p class="body" style="margin-top: 10px">{job.summary}</p>
+                <ul style="margin: 8px 0 0; padding: 0">{job.highlights.map(item => <li class="cv-li">{item}</li>)}</ul>
+                <div style="margin-top: 12px">{job.tech.map(tech => <span class="chip-sm">{tech}</span>)}</div>
+              </article>
+            ))}
+          </div>
+          <div class="cv-sec">
+            <p class="cv-lbl">個人專案</p>
+            {resumeProjects.map(({ project, note, metric }) => (
+              <div class="cv-row">
+                <div>
+                  <div style="font-size: 16px; font-weight: 700">{project.link ? <a href={project.link} target="_blank" rel="noopener noreferrer">{project.title} ↗</a> : project.title}</div>
+                  {metric && <div class="mono" style="margin-top: 4px; font-size: 12px; color: var(--accent)">{metric.label} {metric.value}（{metric.asOf}）</div>}
+                </div>
+                <div style="font-size: 15px; line-height: 1.8; color: var(--body)">{note}</div>
+              </div>
+            ))}
+            <p class="note" style="margin-top: 16px; font-size: 14px">其他專案：{otherResumeProjects.map(project => project.title).join('、')}。詳細說明在 <a class="more" href="/projects">全部專案</a></p>
+          </div>
+          <div class="cv-sec">
+            <p class="cv-lbl">競賽（高職時期）</p>
+            {resume.awards.map(award => <div class="cv-row"><div style="font-size: 15px; font-weight: 700; color: var(--accent)">{award.result}</div><div style="font-size: 15px; line-height: 1.8; color: var(--body)">{award.name}</div></div>)}
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -94,7 +91,6 @@ import { resume, resumeProjects, otherResumeProjects } from '../data/resume';
     button.dataset.bound = 'true';
     button.addEventListener('click', () => window.print());
   }
-
   document.addEventListener('astro:page-load', setupResumePrint);
   setupResumePrint();
 </script>

@@ -1,9 +1,51 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { now } from '../data/now';
-const updatedLabel = now.updated ? new Date(now.updated).toLocaleDateString('zh-TW', { dateStyle: 'long' }) : '尚未更新';
+import { products } from '../data/products';
+
+const updated = now.updated ? new Date(now.updated).toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' }) : null;
+// now.json 的名稱和產品頁名稱不完全一樣(例如「AI Music / Kumori Music」),用包含關係找介紹頁
+const items = now.projects.map(project => {
+  const product = products.find(candidate => project.name.includes(candidate.name));
+  const isSite = project.name === '個人網站';
+  return {
+    ...project,
+    title: project.name.replace(/^AI Music \/ /, ''),
+    accent: product?.accent ?? 'var(--accent)',
+    href: product ? `/projects/${product.slug}` : isSite ? '/downloads' : null,
+    cta: product ? '看介紹' : isSite ? '看下載數' : null,
+  };
+});
 ---
-<Layout title="現在進行式 | 熊少愆">
-  <header class="page-intro site-shell"><span class="kicker">Now / updated {updatedLabel}</span><h1>目前投入時間的地方。</h1><p>這是一張短期工作快照：哪些系統正在推進、目前的焦點是什麼，以及公開內容與客戶工作的邊界。</p></header>
-  <section class="site-shell py-20"><div class="now-focus"><span class="meta-label text-[var(--red)]">Current focus</span><p>{now.focus}</p></div><div class="mt-12">{now.projects.map((project, index) => <article class="work-row"><span class="index">0{index + 1}</span><div><h3>{project.name}</h3><span class="meta-label text-[var(--blue)]">{project.tier === 'protected' ? 'Protected technical work' : 'Public project'}</span></div><div class="work-meta"><p>{project.status}</p></div></article>)}</div></section>
+
+<Layout title="現在在做什麼 | 熊少愆">
+  <section class="page-head" style="padding-bottom: 64px">
+    <div class="wrap split" style="align-items: end">
+      <div>
+        {updated && <p class="kick">更新於 {updated}</p>}
+        <h1 class="h1">現在在做什麼</h1>
+      </div>
+      <p style="margin: 0; font-size: 19px; line-height: 1.85; color: var(--body)">{now.focus}</p>
+    </div>
+  </section>
+
+  <section class="sec alt">
+    <div class="wrap">
+      <div class="grid g3">
+        {items.map(item => {
+          const body = (
+            <>
+              <h2 class="h3" style="font-size: 22px; font-weight: 900">{item.title}</h2>
+              <p class="body" style="flex-grow: 1">{item.status}</p>
+              {item.cta && <span class="more">{item.cta}</span>}
+            </>
+          );
+          return item.href
+            ? <a class="card" href={item.href} style={`--p-accent: ${item.accent}; display: flex; flex-direction: column; gap: 12px`}>{body}</a>
+            : <div class="card" style={`--p-accent: ${item.accent}; display: flex; flex-direction: column; gap: 12px`}>{body}</div>;
+        })}
+      </div>
+      <p class="note" style="margin-top: 32px; font-size: 14px; line-height: 1.8">這頁是近況的快照，不是完整紀錄。每一則改了什麼看 <a class="more" href="/activity" style="margin-left: 2px">活動紀錄</a></p>
+    </div>
+  </section>
 </Layout>

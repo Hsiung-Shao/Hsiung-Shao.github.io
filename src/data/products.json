@@ -285,7 +285,7 @@
     "accent": "#5aa9e6",
     "hero": {
       "kicker": "multistreaming.org · 免註冊 · 免費",
-      "title": "Twitch 和 YouTube 直播，排在同一個畫面看",
+      "title": "Twitch 和 YouTube 直播，\n排在同一個畫面看",
       "lede": "比賽多視角、聯動時每個人的畫面，不用再開一堆分頁切來切去。每個直播跟聊天室都是可以拖曳、縮放的視窗，排好可以存起來下次直接套。",
       "chips": ["最多 16 路同時播", "實況主開台週表", "繁中 · 简中 · English · 日本語 · 한국어", "手機專屬介面"],
       "image": "multistream-hub/live-grid.png",
@@ -366,7 +366,7 @@
     "accent": "#e58fa8",
     "hero": {
       "kicker": "YouTube · @KumoriMusic08",
-      "title": "Kumori Music，用 AI 做的動畫風原創歌",
+      "title": "Kumori Music，\n用 AI 做的動畫風原創歌",
       "lede": "日文歌詞，動畫主題曲風的 OP / ED、J-Pop、EDM 都有，另外有一小時左右的合輯長片。企劃、作詞、生成、試聽、插圖到歌詞影片都是自己的流程，模型其實只佔一小部分。"
     },
     "ctas": [
