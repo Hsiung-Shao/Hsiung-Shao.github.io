@@ -1,31 +1,31 @@
 {
-  "updated": "2026-10-15T08:00:00+08:00",
-  "focus": "目前主線是 PobTools 的介面改版與工具移植，以及 MultiStream Hub 的服務狀態頁與週表收錄。",
+  "updated": "2026-11-06T08:00:00+08:00",
+  "focus": "目前主線是 PobTools 改以 GGPK 官方資料為準的翻譯，以及 MultiStream Hub 的歌回播放清單、嵌入小工具與多語網址。",
   "projects": [
     {
       "name": "AI Music / Kumori Music",
       "tier": "personal",
-      "status": "持續製作動畫靈感原創歌曲，整合本地生成、人工編排、品牌視覺與 YouTube 發布流程"
+      "status": "試做先寫故事再作詞的新流程，並製作依曲風分類的合輯長片與播放清單"
     },
     {
       "name": "Poe Market zh",
       "tier": "personal",
-      "status": "新增大量賣家分頁與階級面板，中文化擴到 poe.ninja／pobb.in 並提供雙語顯示"
+      "status": "跟上官方交易站改用 Vue 3 的變動，poe.ninja 改成只附中英對照，設定收進側邊欄"
     },
     {
       "name": "PobTools",
       "tier": "personal",
-      "status": "啟動器與各工具視窗依設計稿改版，並把 ExileAppraiser 的搜尋字串工具移植進來"
+      "status": "翻譯改依 GGPK stat id 與官方譯文，新介面 F2 切語言不再重掛，Poe Regex 持續補頁"
     },
     {
       "name": "MultiStream Hub",
       "tier": "personal",
-      "status": "開台週表收進 X 來源，並支援沒寫時間的「時間未定」場次與其合併規則"
+      "status": "新增歌回播放清單與直播班表嵌入小工具，繁中網址改成 /zh-TW/ 並加上 VTuber 名錄"
     },
     {
       "name": "個人網站",
       "tier": "personal",
-      "status": "新增 PoE 工具下載數頁與每日趨勢紀錄，活動日誌改由每日排程同步"
+      "status": "全站改成深色設計，新增五個專案介紹頁，下載數頁可看 30 天每日新增"
     }
   ]
 }

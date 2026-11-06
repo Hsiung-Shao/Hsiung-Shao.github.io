@@ -927,5 +927,101 @@
     "summary": "新增跨對話的 GPU 租約機制：生成前先檢查租約，被別的工作占用就拒絕執行，HeartMuLa 改走租約，另做 GPU 管理面板與指令防護，製作手冊的 GPU 共用規則一併改成租約制。",
     "tags": ["tooling", "generation", "gpu"],
     "commits": []
+  },
+  {
+    "date": "2026-11-03",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "翻譯改以 GGPK 官方資料為準：說明行依 stat id 查譯文、跨行的描述整句重組再依繁中分行，下拉列改用語言無關的 id 對照；另新增可在設定頁停用的浮窗字典，先收 1,384 條初譯與 39 條錯譯修正。",
+    "tags": ["Path of Exile", "i18n", "translation-engine"],
+    "commits": ["6bfc865", "2b68d7d", "51aee23", "888890b", "99b0f59", "ffb7514"]
+  },
+  {
+    "date": "2026-11-04",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "Poe Regex 商店頁的連結與顏色片段改成只比對插槽字母，修正片段誤中「物理傷害: 10-20」這類文字；物品風味文字收進語料，離線稽核誤中從 1,243 降到 0；PoE1 另新增野獸與魔法物品詞綴名兩頁。",
+    "tags": ["Path of Exile", "regex", "testing"],
+    "commits": ["c5b226d", "a9aef42", "e468917"]
+  },
+  {
+    "date": "2026-11-05",
+    "project": "PobTools",
+    "tier": "personal",
+    "summary": "新介面按 F2 切換中英改成和經典視窗一樣只換顯示語言，不再整頁重掛，未套用的輸入、分頁與編輯中的物品都會保留；翻譯資料包改名並加上最低程式版本，舊版程式不會套用需要新引擎的資料。",
+    "tags": ["Path of Exile", "ui", "updater"],
+    "commits": ["452fca8", "4e73e9c", "6e24163"]
+  },
+  {
+    "date": "2026-10-29",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "官方交易站改用 Vue 3 後，詞綴搜尋補上新路徑，修好「額外 火焰」這類空格多關鍵字搜不到的問題，類型前綴與結果列字串也中文化；PoE2 命定與範圍天賦前綴在台服缺譯時，改用內層譯文組出中文。",
+    "tags": ["i18n", "trade", "bugfix"],
+    "commits": ["17fe382", "9785613", "a5bd1f8"]
+  },
+  {
+    "date": "2026-11-04",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "poe.ninja 從整頁中文化改成只附對照、不改頁面文字：英文頁附中文、繁中頁附英文，真詞綴與偽屬性同中文時附真詞綴；雙語小字可調字級與顏色，市集與網站共用同一組設定。",
+    "tags": ["i18n", "bilingual"],
+    "commits": ["7442ad6", "bb29e3a", "d2b5f48", "5ba12ba"]
+  },
+  {
+    "date": "2026-11-04",
+    "project": "Poe Market zh",
+    "tier": "personal",
+    "summary": "拿掉 popup 設定畫面，設定全部收進交易站側邊欄：點擴充圖示會打開交易站並展開設定，版面改成六區摺疊、收起時顯示摘要；版號更新到 329.5.23 並寫入版本紀錄。",
+    "tags": ["ui", "settings", "release"],
+    "commits": ["a504061", "617d22c", "91f54f3"]
+  },
+  {
+    "date": "2026-10-28",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "新增 /songs 歌回播放清單：依時間軸片段播放，支援循環、隨機、本地歌單與分享連結，聽滿 30 秒才計播放次數；社群可直接編輯時間軸並留快照供還原，另有 VTuber 個人頁與單曲頁。",
+    "tags": ["feature", "songs", "supabase"],
+    "commits": ["b31d01a", "2f08d3e", "14ca949", "8dd9023", "ad1925e", "8165fab"]
+  },
+  {
+    "date": "2026-11-04",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "繁中頁面改放在 /zh-TW/ 網址並加上 hreflang，語言只由網址決定；新增 /vtubers 名錄頁，個人週表頁加上同公司與同時段常開台的內鏈，收錄門檻改成近期有排程或近 90 天至少 5 場。",
+    "tags": ["seo", "i18n"],
+    "commits": ["eb381d6", "d074535"]
+  },
+  {
+    "date": "2026-11-04",
+    "project": "MultiStream Hub",
+    "tier": "personal",
+    "summary": "新增可嵌進其他網站的直播班表小工具，個人與團體各一種，輸出純 HTML 與 SVG 週表圖；歷史場次連到 VOD，影片不在了就退回頻道影片列表，/schedule 也改成依時段分帶的頭像密排。",
+    "tags": ["feature", "schedule", "embed"],
+    "commits": ["42c7e81", "2585434", "0e94c60", "03b48bd"]
+  },
+  {
+    "date": "2026-11-06",
+    "project": "個人網站",
+    "tier": "personal",
+    "summary": "全站照 Claude Design 的深色設計改版：先做首頁、五個專案介紹頁與 /downloads 下載數頁，再改文章、專案、活動、關於等 9 頁與下拉導覽列；拿掉 Three.js、React 與 Tailwind，只剩一份 site.css。",
+    "tags": ["redesign", "astro"],
+    "commits": ["187b7f5", "c8cdc38"]
+  },
+  {
+    "date": "2026-10-30",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "試做「故事篇」流程：先寫原創短篇故事，語言、世界觀與曲風用抽籤決定，詞作經兩輪未讀故事的盲讀修訂，再用 ACE-Step 與 YuE2 各生成一版。第一批因歌詞難懂、劇情句太白話沒通過，改規則後再做三批 15 首，還在等試聽。",
+    "tags": ["workflow", "generation", "lyrics"],
+    "commits": []
+  },
+  {
+    "date": "2026-11-05",
+    "project": "AI Music / Kumori Music",
+    "tier": "personal",
+    "summary": "完成 51 分 27 秒的アニメロック 8 曲合輯 Vol.3 與上架包，標題還在確認；上架流程加入依曲風分類的 YouTube 播放清單規則，合輯長片也比照單曲歸檔，Vol.1、Vol.2 一併補齊。",
+    "tags": ["compilation", "youtube", "workflow"],
+    "commits": []
   }
 ]
