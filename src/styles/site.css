@@ -217,7 +217,8 @@ summary.release-head::-webkit-details-marker { display: none; }
 .chart .base { stroke: var(--line-strong); }
 .chart-axis { display: flex; justify-content: space-between; margin-top: 8px; font-family: var(--mono-font); font-size: 11px; color: var(--faint); }
 .chart-total { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
-.release-list { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 32px; }
+/* align-items: start:收合的卡片不跟著同列展開的那張被拉高成空殼 */
+.release-list { display: grid; gap: 16px; align-items: start; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 32px; }
 
 /* 第二階段:一般頁面 */
 .page-head { padding-block: 80px 48px; }
