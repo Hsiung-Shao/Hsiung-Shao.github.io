@@ -269,6 +269,12 @@
       "full": 14119,
       "update": 7573,
       "data": 11298
+    },
+    {
+      "date": "2026-11-18",
+      "full": 14868,
+      "update": 8312,
+      "data": 11372
     }
   ],
   "poe-market-translate": [
@@ -603,19 +609,26 @@
     },
     {
       "date": "2026-11-14",
-      "manual": 843
+      "manual": 843,
+      "users": 8794
     },
     {
       "date": "2026-11-15",
-      "manual": 922
+      "manual": 922,
+      "users": 9169
     },
     {
       "date": "2026-11-16",
-      "manual": 973
+      "manual": 973,
+      "users": 9435
     },
     {
       "date": "2026-11-17",
       "manual": 992
+    },
+    {
+      "date": "2026-11-18",
+      "manual": 1024
     }
   ],
   "exile-appraiser": [
@@ -798,6 +811,10 @@
     {
       "date": "2026-11-17",
       "combined": 5018
+    },
+    {
+      "date": "2026-11-18",
+      "combined": 7263
     }
   ]
 }
